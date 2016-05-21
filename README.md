@@ -156,10 +156,6 @@ webpack --config "./webpack.config.server.js" --colors --display-error-details
 node "./source/start-server"
 ```
 
-## Miscellaneous
-
-This library will also expose the global `_server_` variable (set to `true`) inside the server-side bundle in case server/client detection is needed.
-
 ## Chunks
 
 This library will pass the `chunks()` function parameter (inside the `parameters` argument of the server-side function) which returns webpack-compiled chunks filename info:

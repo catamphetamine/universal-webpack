@@ -82,12 +82,6 @@ export default function configuration(webpack_configuration, settings)
 			root: configuration.context
 		}),
 
-		// Environment variables
-		new webpack.DefinePlugin
-		({
-			_server_ : true
-		}),
-
 		// Put the resulting Webpack compiled code into a sigle javascript file
 		new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 })
 	)
