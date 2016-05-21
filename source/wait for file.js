@@ -13,6 +13,8 @@ export default function wait_for_file(path)
 	// waits for condition to be met, then resolves the promise
 	return new Promise(resolve =>
 	{
+		const tick_interval = 300
+
 		// show the message not too often
 		let message_timer = 0
 		const message_interval = 2000 // in milliseconds
@@ -20,7 +22,7 @@ export default function wait_for_file(path)
 		tick
 		(
 			() => fs_exists(path),
-			300,
+			tick_interval,
 			resolve,
 			() =>
 			{

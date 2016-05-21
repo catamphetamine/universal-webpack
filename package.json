@@ -45,15 +45,12 @@
     "url": "git+https://github.com/halt-hammerzeit/universal-webpack.git"
   },
   "keywords": [
-    "javascript",
-    "retina",
-    "detect",
-    "screen",
-    "device",
-    "pixel",
-    "ratio",
-    "density",
-    "ddpx"
+    "webpack",
+    "isomorphic",
+    "universal",
+    "render",
+    "server",
+    "react"
   ],
   "author": "Halt Hammerzeit <halt.hammerzeit.at@gmail.com>",
   "license": "MIT",
@@ -62,7 +59,10 @@
   },
   "homepage": "https://github.com/halt-hammerzeit/universal-webpack#readme",
   "dependencies": {
-    "clean-webpack-plugin": "^0.1.9",
-    "fs-extra": "^0.30.0"
+    "fs-extra": "^0.30.0",
+    "minimist": "^1.2.0"
+  },
+  "bin": {
+    "universal-webpack": "./bin/universal-webpack.js"
   }
 }

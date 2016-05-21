@@ -1,5 +1,5 @@
 import path from 'path'
-import clean_plugin from 'clean-webpack-plugin'
+// import clean_plugin from 'clean-webpack-plugin'
 import webpack from 'webpack'
 
 import { is_object, clone, ends_with } from './helpers'
@@ -76,11 +76,21 @@ export default function configuration(webpack_configuration, settings)
 
 	configuration.plugins = configuration.plugins.concat
 	(
-		// Cleans the output folder
-		new clean_plugin([path.dirname(settings.server.output)],
-		{
-			root: configuration.context
-		}),
+		// Resorted from using it here because
+		// if the `build/server` folder is not there
+		// when Nodemon starts then it simply won't detect 
+		// updates of the server-side bundle
+		// and therefore won't restart on code changes.
+		//
+		// `build/server` folder needs to be present
+		// by the time Nodemon starts,
+		// and that's accomplished with a separate npm script.
+
+		// // Cleans the output folder
+		// new clean_plugin([path.dirname(settings.server.output)],
+		// {
+		// 	root: configuration.context
+		// }),
 
 		// Put the resulting Webpack compiled code into a sigle javascript file
 		new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 })

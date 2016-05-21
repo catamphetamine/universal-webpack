@@ -211,6 +211,29 @@ Without `source-map-support` enabled it would give me `No element indexed by XXX
 
 [`devtool`](https://webpack.github.io/docs/configuration.html#devtool) is set to `source-map` for server-side builds.
 
+## Nodemon
+
+I recommend using [nodemon](https://github.com/remy/nodemon) for running server-side Webpack bundle. Nodemon has a `--watch <directory>` command line parameter which restarts Node.js process each time the `<directory>` is updated (e.g. each time any file in that directory is modified).
+
+In other words, Nodemon will relaunch the server every time the code is rebuilt with Webpack.
+
+There's one little gotcha though: for the `--watch` feature to work the watched folder needs to exist by the time Nodemon is launched. That means that the server must be started only after the `settings.server.output` path folder has been created.
+
+To accomplish that this library provides a command line tool: `universal-webpack`. No need to install in globally: it is supposed to work locally through npm scripts. Usage example:
+
+### package.json
+
+```js
+...
+  "scripts": {
+    "start": "npm-run-all prepare-server-build start-development-workflow",
+    "start-development-workflow": "npm-run-all --parallel development-webpack-build-for-client development-webpack-build-for-server development-start-server",
+    "prepare-server-build": "universal-webpack --settings ./universal-webpack-settings.js prepare",
+    ...
+```
+
+The `prepare` command creates `settings.server.output` path folder, or clears it if it already exists.
+
 ## License
 
 [MIT](LICENSE)
