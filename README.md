@@ -5,6 +5,16 @@
 
 Helps setting up isomorphic (universal) Webpack build: the one that's working both on client and server.
 
+## Motivation
+
+In summer 2015 I wrote [`webpack-isomorphic-tools`](https://github.com/halt-hammerzeit/webpack-isomorphic-tools) to make isomorphic (universal) React rendering work on server-side when the project was built with Webpack.
+
+The goal was met and many people started using it to implement isomorphic (universal) rendering in their apps.
+
+Still it lacked some funky Webpack features like variuos Webpack plugins and other edge cases.
+
+So I did some research on Webpack builds for Node.js and came up with this proof-of-concept solution which seems to work good enough. It supports all Webpack features (all plugins, etc).
+
 ## Installation
 
 ```
