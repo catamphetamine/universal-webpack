@@ -1,0 +1,10 @@
+{
+	"folders":
+	[
+		{
+			"follow_symlinks": true,
+			"path": ".",
+			"folder_exclude_patterns": ["universal-webpack/node_modules", "universal-webpack/coverage", "universal-webpack/build", "project.sublime-workspace"]
+		}
+	]
+}
