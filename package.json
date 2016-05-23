@@ -59,6 +59,7 @@
   },
   "homepage": "https://github.com/halt-hammerzeit/universal-webpack#readme",
   "dependencies": {
+    "colors": "^1.1.2",
     "fs-extra": "^0.30.0",
     "minimist": "^1.2.0"
   },
