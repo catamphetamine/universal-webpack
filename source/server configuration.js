@@ -42,12 +42,29 @@ export default function configuration(webpack_configuration, settings)
 	// Output "*.map" file for human-readable stack traces
 	configuration.devtool = 'source-map'
 
+	// https://webpack.github.io/docs/configuration.html#externals
+	//
 	// `externals` allows you to specify dependencies for your library 
 	// that are not resolved by webpack, but become dependencies of the output. 
 	// This means they are imported from the environment during runtime.
 	//
 	// So that Webpack doesn't bundle "node_modules" into server.js.
-	configuration.externals = [/^[a-z\/\-0-9]+$/i]
+
+	configuration.externals = configuration.externals || []
+
+	if (configuration.resolve && configuration.resolve.alias)
+	{
+		const aliases = {}
+
+		for (let key of Object.keys(configuration.resolve.alias))
+		{
+			aliases[key] = true
+		}
+
+		configuration.externals.push(aliases)
+	}
+
+	configuration.externals.push(/^[a-z\/\-0-9]+$/i)
 
 	// Drop style-loader since it's no web browser
 	for (let loader of configuration.module.loaders)
