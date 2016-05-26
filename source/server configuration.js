@@ -2,7 +2,7 @@ import path from 'path'
 // import clean_plugin from 'clean-webpack-plugin'
 import webpack from 'webpack'
 
-import { is_object, clone, ends_with } from './helpers'
+import { is_object, clone, starts_with, ends_with } from './helpers'
 
 export default function configuration(webpack_configuration, settings)
 {
@@ -52,19 +52,32 @@ export default function configuration(webpack_configuration, settings)
 
 	configuration.externals = configuration.externals || []
 
-	if (configuration.resolve && configuration.resolve.alias)
+	configuration.externals.push(function(context, request, callback)
 	{
-		const aliases = {}
-
-		for (let key of Object.keys(configuration.resolve.alias))
+		// If any aliases are specified, then force-resolve them
+		if (configuration.resolve && configuration.resolve.alias)
 		{
-			aliases[key] = false
+			for (let key of Object.keys(configuration.resolve.alias))
+			{
+				if (request === key || starts_with(request, key + '/'))
+				{
+					return callback()
+				}
+			}
 		}
 
-		configuration.externals.push(aliases)
-	}
+		// Mark all node_modules as external
+		if (/^[a-z\/\-0-9]+$/i.test(request))
+		{
+			return callback(null, request)
+		}
 
-	configuration.externals.push(/^[a-z\/\-0-9]+$/i)
+		// Otherwise, it's not an alias and not a node_module,
+		// so resolve it as usual
+		return callback()
+	})
+
+	configuration.externals.push()
 
 	// Drop style-loader since it's no web browser
 	for (let loader of configuration.module.loaders)
