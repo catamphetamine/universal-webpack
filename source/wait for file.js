@@ -51,7 +51,7 @@ function tick(check_condition, interval, done, not_done_yet)
 
 		not_done_yet()
 
-		setTimeout(() => tick(check_condition, done, not_done_yet), interval)
+		setTimeout(() => tick(check_condition, interval, done, not_done_yet), interval)
 	})
 }
 
