@@ -1,7 +1,8 @@
-0.1.7 / 26.09.2016
+0.1.8 / 26.09.2016
 ==================
 
   * Fixed `resolve.alias`
+  * Fixed Babel export issues during server-side code importing
 
 0.1.3 / 23.09.2016
 ==================

@@ -37,6 +37,21 @@ export default function server(webpack_configuration, settings)
 
 		// Start webpage rendering server
 		// (this module will be compiled by Webpack server-side build from './source/server.js')
-		require(server_bundle_path)(additional)
+
+		const starter = require(server_bundle_path)
+
+		// Fixing Babel `module.exports.default` issues
+
+		if (typeof starter === 'function')
+		{
+			return starter(additional)
+		}
+		
+		if (typeof starter.default === 'function')
+		{
+			return starter.default(additional)
+		}
+
+		throw new Error(`[universal-webpack] Your server source file must export a function`)
 	})
 }
