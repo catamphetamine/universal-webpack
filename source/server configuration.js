@@ -58,7 +58,7 @@ export default function configuration(webpack_configuration, settings)
 
 		for (let key of Object.keys(configuration.resolve.alias))
 		{
-			aliases[key] = true
+			aliases[key] = false
 		}
 
 		configuration.externals.push(aliases)
