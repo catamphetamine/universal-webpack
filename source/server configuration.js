@@ -89,6 +89,13 @@ export default function configuration(webpack_configuration, settings)
 				throw new Error('No webpack loader specified for this `module.loaders` element')
 			}
 
+			// Don't mess with ExtractTextPlugin at all
+			// (even though it has `style` loader)
+			if (loader.loader.indexOf('extract-text-webpack-plugin/loader.js') >= 0)
+			{
+				continue
+			}
+
 			loader.loaders = loader.loader.split('!')
 			delete loader.loader
 		}
