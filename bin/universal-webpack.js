@@ -61,10 +61,8 @@ function usage(reason)
 
 	if (reason)
 	{
-		process.exit(1)
+		return process.exit(1)
 	}
-	else
-	{
-		process.exit(0)
-	}
+
+	process.exit(0)
 }
