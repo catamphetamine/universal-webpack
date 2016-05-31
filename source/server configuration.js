@@ -1,9 +1,11 @@
 import path from 'path'
+import querystring from 'querystring'
 // import clean_plugin from 'clean-webpack-plugin'
 import webpack from 'webpack'
 
 import { is_object, clone, starts_with, ends_with } from './helpers'
 
+// Tunes the client-side Webpack configuration for server-side build
 export default function configuration(webpack_configuration, settings)
 {
 	if (!webpack_configuration.context)
@@ -77,11 +79,11 @@ export default function configuration(webpack_configuration, settings)
 		return callback()
 	})
 
-	configuration.externals.push()
-
-	// Drop style-loader since it's no web browser
+	// Replace `style-loader` with `fake-style-loader`
+	// since it's no web browser
 	for (let loader of configuration.module.loaders)
 	{
+		// convert `loader` to `loaders` for convenience
 		if (!loader.loaders)
 		{
 			if (!loader.loader)
@@ -90,20 +92,32 @@ export default function configuration(webpack_configuration, settings)
 			}
 
 			// Don't mess with ExtractTextPlugin at all
-			// (even though it has `style` loader)
+			// (even though it has `style` loader,
+			//  it has its own ways)
 			if (loader.loader.indexOf('extract-text-webpack-plugin/loader.js') >= 0)
 			{
 				continue
 			}
 
+			// Replace `loader` with the corresponding `loaders`
 			loader.loaders = loader.loader.split('!')
 			delete loader.loader
 		}
 
+		// Replace `style-loader` with `fake-style-loader`
 		const style_loader = loader.loaders.filter(is_style_loader)[0]
 		if (style_loader)
 		{
-			loader.loaders.splice(loader.loaders.indexOf(style_loader), 1)
+			// Copy `style-loader` configuration
+			const fake_style_loader = parse_loader(style_loader)
+
+			// Since npm v3 enforces flat `node_modules` structure,
+			// `fake-style-loader` is gonna be right inside `node_modules`
+			fake_style_loader.name = 'fake-style-loader'
+			// fake_style_loader.name = path.resolve(__dirname, '../node_modules/fake-style-loader')
+
+			// Replace the loader
+			loader.loaders[loader.loaders.indexOf(style_loader)] = stringify_loader(fake_style_loader)
 		}
 	}
 
@@ -137,13 +151,16 @@ export default function configuration(webpack_configuration, settings)
 	return configuration
 }
 
-function is_style_loader(loader)
+// Converts loader string into loader info structure
+function parse_loader(loader)
 {
 	let name
+	let query
 
 	if (is_object(loader))
 	{
 		name = loader.loader
+		query = loader.query
 	}
 	else
 	{
@@ -152,8 +169,29 @@ function is_style_loader(loader)
 		if (name.indexOf('?') >= 0)
 		{
 			name = name.substring(0, name.indexOf('?'))
+			query = querystring.parse(name.substring(name.indexOf('?') + 1))
 		}
 	}
+
+	const result =
+	{
+		name,
+		query
+	}
+
+	return result
+}
+
+// Converts loader info into a string
+function stringify_loader(loader)
+{
+	return loader.name + (loader.query ? '?' + querystring.stringify(loader.query) : '')
+}
+
+// Checks if the passed loader is `style-loader`
+function is_style_loader(loader)
+{
+	let { name } = parse_loader(loader)
 
 	if (ends_with(name, '-loader'))
 	{
