@@ -10,12 +10,17 @@ export default function client_configuration(webpack_configuration, settings)
 
 	configuration.plugins = configuration.plugins || []
 
-	configuration.plugins = configuration.plugins.concat
+	configuration.plugins.push
 	(
 		// Writes client-side build chunks filename info
 		// for later use inside server-side rendering code
 		// (`<script src=.../>` and `<link rel="style" href=.../>` tags)
-		new chunks_plugin(configuration)
+		//
+		// Cloning Webpack configuration here
+		// because `webpack-dev-server` seems to alter it
+		// by changing the already predefined `.output.path`.
+		//
+		new chunks_plugin(clone(configuration))
 	)
 
 	// Done
