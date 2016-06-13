@@ -1,3 +1,8 @@
+0.1.13 / 13.06.2016
+==================
+
+  * Fixing `webpack-dev-server` overwriting `configuration.output.path`
+
 0.1.12 / 31.05.2016
 ==================
 
