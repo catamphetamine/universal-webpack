@@ -1,3 +1,8 @@
+0.1.14 / 25.06.2016
+==================
+
+  * `@papigers` fixed server-side code error swallowing
+
 0.1.13 / 13.06.2016
 ==================
 

@@ -53,14 +53,19 @@ export default function server(webpack_configuration, settings)
 		}
 
 		throw new Error(`[universal-webpack] Your server source file must export a function`)
-	}).catch(function(err)
-  {
-    // bright red color
-    console.log("\x1b[1m\x1b[31m")
-    
-    console.error(`\n${err.stack}`)
-    
-    // reset color and brightness
-    console.log('\x1b[39m\x1b[22m')
-  })
+	})
+	.catch(function(error)
+	{
+		// bright red color
+		console.log("\x1b[1m\x1b[31m")
+
+		// Output the error stack trace
+		console.error(`\n${error.stack || error}`)
+
+		// reset color and brightness
+		console.log('\x1b[39m\x1b[22m')
+
+		// exit with non-zero exit code (indicating that an error happened)
+		process.exit(1)
+	})
 }
