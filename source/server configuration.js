@@ -125,6 +125,15 @@ export default function configuration(webpack_configuration, settings)
 
 	configuration.plugins = configuration.plugins || []
 
+	// Remove HotModuleReplacementPlugin if any
+	for (let plugin of configuration.plugins)
+	{
+		if (plugin.constructor === webpack.HotModuleReplacementPlugin)
+		{
+			configuration.plugins.splice(configuration.plugins.indexOf(plugin), 1)
+		}
+	}
+
 	configuration.plugins = configuration.plugins.concat
 	(
 		// Resorted from using it here because

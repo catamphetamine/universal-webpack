@@ -1,3 +1,8 @@
+0.1.15 / 30.06.2016
+==================
+
+  * Removing `HotModuleReplacementPlugin` from server-side configuration
+
 0.1.14 / 25.06.2016
 ==================
 
