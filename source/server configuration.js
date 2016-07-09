@@ -39,7 +39,7 @@ export default function server_configuration(webpack_configuration, settings)
 	// What for is it here? I don't know. It's a copy & paste from the Webpack author's code.
 	configuration.output.pathinfo = true
 
-	// Output server bundle into it's own directory
+	// Output server bundle into its own directory
 	configuration.output.path = path.resolve(configuration.context, path.dirname(settings.server.output))
 
 	// Output "*.map" file for human-readable stack traces
@@ -109,8 +109,6 @@ export default function server_configuration(webpack_configuration, settings)
 		}
 	}
 
-	// Add a couple of utility plugins
-
 	configuration.plugins = configuration.plugins || []
 
 	// Remove HotModuleReplacementPlugin and CommonsChunkPlugin
@@ -120,6 +118,7 @@ export default function server_configuration(webpack_configuration, settings)
 			&& plugin.constructor !== webpack.optimize.CommonsChunkPlugin
 	})
 
+	// Add a couple of utility plugins
 	configuration.plugins = configuration.plugins.concat
 	(
 		// Resorted from using it here because
