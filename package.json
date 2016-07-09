@@ -1,6 +1,6 @@
 {
   "name": "universal-webpack",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "Isomorphic Webpack",
   "main": "index.umd.js",
   "jsnext:main": "index.es6.js",

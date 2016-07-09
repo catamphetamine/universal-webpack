@@ -7,7 +7,7 @@ import validate_npm_package_path from 'validate-npm-package-name'
 import { is_object, clone, starts_with, ends_with } from './helpers'
 
 // Tunes the client-side Webpack configuration for server-side build
-export default function configuration(webpack_configuration, settings)
+export default function server_configuration(webpack_configuration, settings)
 {
 	if (!webpack_configuration.context)
 	{
