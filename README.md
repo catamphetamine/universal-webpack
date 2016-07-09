@@ -188,6 +188,29 @@ It will output double the amount of all assets included in the project: one comp
 
 Also, it will perform two Webpack builds instead of one, but this shouldn't be much of an issue since developers' machines are highly multicore these days.
 
+## Advanced configuration
+
+```js
+{
+	// By default, all `node_modules` are marked as `external`
+	// for server-side Webpack build.
+	//
+	// With this setting one can explicitly define which modules 
+	// aren't gonna be marked as `external` dependencies.
+	// (and therefore are gonna be compiled with `babel-loader` by Webpack)
+	//
+	// Can be used for ES6-only `node_modules`.
+	// A more intelligent solution would be accepted:
+	// https://github.com/halt-hammerzeit/universal-webpack/issues/10
+	//
+	exclude_from_externals:
+	[
+		'lodash-es',
+		/^lodash-es$/
+	]
+}
+```
+
 ## Source maps
 
 I managed to get source maps working in my Node.js server-side code using [`source-map-support`](https://github.com/evanw/node-source-map-support) module.

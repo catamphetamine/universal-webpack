@@ -2,6 +2,7 @@ import path from 'path'
 import querystring from 'querystring'
 // import clean_plugin from 'clean-webpack-plugin'
 import webpack from 'webpack'
+import validate_npm_package_path from 'validate-npm-package-name'
 
 import { is_object, clone, starts_with, ends_with } from './helpers'
 
@@ -56,26 +57,13 @@ export default function configuration(webpack_configuration, settings)
 
 	configuration.externals.push(function(context, request, callback)
 	{
-		// If any aliases are specified, then force-resolve them
-		if (configuration.resolve && configuration.resolve.alias)
+		if (is_external(request, configuration, settings))
 		{
-			for (let key of Object.keys(configuration.resolve.alias))
-			{
-				if (request === key || starts_with(request, key + '/'))
-				{
-					return callback()
-				}
-			}
-		}
-
-		// Mark all node_modules as external
-		if (/^[a-z\/\-0-9]+$/i.test(request))
-		{
+			// Resolve dependency as external
 			return callback(null, request)
 		}
 
-		// Otherwise, it's not an alias and not a node_module,
-		// so resolve it as usual
+		// Resolve dependency as non-external
 		return callback()
 	})
 
@@ -125,14 +113,12 @@ export default function configuration(webpack_configuration, settings)
 
 	configuration.plugins = configuration.plugins || []
 
-	// Remove HotModuleReplacementPlugin if any
-	for (let plugin of configuration.plugins)
+	// Remove HotModuleReplacementPlugin and CommonsChunkPlugin
+	configuration.plugins = configuration.plugins.filter(plugin =>
 	{
-		if (plugin.constructor === webpack.HotModuleReplacementPlugin)
-		{
-			configuration.plugins.splice(configuration.plugins.indexOf(plugin), 1)
-		}
-	}
+		return plugin.constructor !== webpack.HotModuleReplacementPlugin
+			&& plugin.constructor !== webpack.optimize.CommonsChunkPlugin
+	})
 
 	configuration.plugins = configuration.plugins.concat
 	(
@@ -153,6 +139,7 @@ export default function configuration(webpack_configuration, settings)
 		// }),
 
 		// Put the resulting Webpack compiled code into a sigle javascript file
+		// (doesn't disable CommonsChunkPlugin)
 		new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 })
 	)
 
@@ -208,4 +195,75 @@ function is_style_loader(loader)
 	}
 
 	return name === 'style'
+}
+
+// Checks if a require()d dependency is external
+export function is_external(request, webpack_configuration, settings)
+{
+	// Mark `node_modules` as external.
+
+	let package_name = request
+	if (package_name.indexOf('/') >= 0)
+	{
+		package_name = package_name.substring(0, package_name.indexOf('/'))
+	}
+
+	// If it's not a module require call,
+	// then resolve it as non-external.
+	//
+	// https://github.com/npm/validate-npm-package-name
+	//
+	if (!validate_npm_package_path(package_name).validForNewPackages)
+	{
+		// The dependency is not external
+		return false
+	}
+
+	// If any aliases are specified, then resolve those aliases as non-external
+	if (webpack_configuration.resolve && webpack_configuration.resolve.alias)
+	{
+		for (let alias of Object.keys(webpack_configuration.resolve.alias))
+		{
+			// if (request === key || starts_with(request, key + '/'))
+			if (package_name === alias)
+			{
+				// The module is not external
+				return false
+			}
+		}
+	}
+
+	// Skip modules explicitly ignored by the user
+	if (settings.exclude_from_externals)
+	{
+		for (let exclusion_pattern of settings.exclude_from_externals)
+		{
+			let regexp = exclusion_pattern
+
+			if (typeof exclusion_pattern === 'string')
+			{
+				if (request === exclusion_pattern 
+					|| starts_with(request, exclusion_pattern + '/'))
+				{
+					// The module is not external
+					return false
+				}
+			}
+			else if (exclusion_pattern instanceof RegExp)
+			{
+				if (regexp.test(request))
+				{
+					// The module is not external
+					return false
+				}
+			}
+			else
+			{
+				throw new Error(`Invalid exclusion pattern: ${exclusion_pattern}. Only strings and regular expressions are allowed.`)
+			}
+		}
+	}
+
+	// The module is external
+	return true
 }

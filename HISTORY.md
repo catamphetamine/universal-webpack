@@ -1,3 +1,14 @@
+0.1.17 / 09.07.2016
+
+  * Plugin removal bug fix
+  * Added `exclude_from_externals` module
+  * Covered external modules resolution with tests
+
+0.1.16 / 09.07.2016
+==================
+
+  * Removing `CommonsChunkPlugin` from server-side configuration
+
 0.1.15 / 30.06.2016
 ==================
 
