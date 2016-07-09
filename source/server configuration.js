@@ -208,6 +208,7 @@ export function is_external(request, webpack_configuration, settings)
 	}
 
 	// Skip webpack loader specific require()d paths
+	// https://webpack.github.io/docs/loaders.html
 	if (starts_with(package_name, '!') || starts_with(package_name, '-!'))
 	{
 		// The dependency is not external
