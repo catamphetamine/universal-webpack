@@ -21,6 +21,10 @@ So I did some research on Webpack builds for Node.js and came up with this proof
 npm install universal-webpack --save
 ```
 
+## Example project
+
+You may refer to [this sample project](https://github.com/halt-hammerzeit/webpack-react-redux-isomorphic-render-example) as an example of using this library (see `webpack` directory, `package.json` and `code/page-server/web server.js`).
+
 ## Usage
 
 Suppose you have a typical `webpack.config.js` file. Create two new files called `webpack.config.client.js` and `webpack.config.server.js` with the following contents:
@@ -178,10 +182,6 @@ This library will pass the `chunks()` function parameter (inside the `parameters
 
 These filenames are required for `<script src=.../>` and `<link rel="style" href=.../>` tags in case of isomorphic (universal) rendering on the server-side.
 
-## Example project
-
-You may refer to [this sample project](https://github.com/halt-hammerzeit/webpack-react-redux-isomorphic-render-example) as an all-in-one illustration of using this little library.
-
 ## Drawbacks
 
 It will output double the amount of all assets included in the project: one complete bundle for client-side build and one complete bundle for server-side build. E.g. an asset `./images/dog.jpg` will be output both into `./build/client/9059f094ddb49c2b0fa6a254a6ebf2ad.jpg` and `./build/server/9059f094ddb49c2b0fa6a254a6ebf2ad.jpg`. If you find a way to avoid that, drop me a line.
@@ -256,6 +256,47 @@ To accomplish that this library provides a command line tool: `universal-webpack
 ```
 
 The `prepare` command creates `settings.server.output` path folder, or clears it if it already exists.
+
+In a moderately sized React project server restart times can reach ~10 seconds. Therefore the right way to go is to extract React rendering server-side code into a separate Node.js process (service), and then in the main Node.js web server just proxy all unmatched URLs to this React rendering service:
+
+```js
+import http_proxy from 'http-proxy'
+
+const target = `http://${react_rendering_service.host}:${react_rendering_service.port}`
+const react_proxy = http_proxy.createProxyServer({ target })
+
+// Various web application middleware
+app.use(...)
+app.use(...)
+app.use(...)
+
+// In the end, if nothing matched
+app.use((request, response) =>
+{
+	// Proxying failed
+	response.on('close', () =>
+	{
+		// reject(new Error(`Http response closed while proxying`))
+	})
+
+	// Proxying finished
+	response.on('finish', () =>
+	{
+		// resolve()
+	})
+
+	// Do the proxy
+	react_proxy.web(request, response, (error) =>
+	{
+		// reject(error)
+
+		response.writeHead(502)
+		response.end("There was an error proxying your request")
+	})
+})
+```
+
+This way only React rendering service will be restarted, and the main Node.js web server will be left untouched.
 
 ## License
 
