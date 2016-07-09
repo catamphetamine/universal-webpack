@@ -206,7 +206,7 @@ Also, it will perform two Webpack builds instead of one, but this shouldn't be m
 	exclude_from_externals:
 	[
 		'lodash-es',
-		/^lodash-es$/
+		/^some-other-es6-only-module(\/.*)?$/
 	]
 }
 ```
