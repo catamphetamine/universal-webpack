@@ -93,4 +93,17 @@ describe(`resolver`, function()
 		test('react-isomorphic-render', true)
 		test('react-isomorphic-render/redux', true)
 	})
+
+	it(`shouldn't externalise Webpack modules`, function()
+	{
+		const webpack_configuration = {}
+		const settings = {}
+
+		const test = (module, result) =>
+		{
+			is_external(module, webpack_configuration, settings).should.equal(result)
+		}
+
+		test('!!./../../node_modules/css-loader/index.js?importLoaders=2&sourceMap!./../../node_modules/autoprefixer-loader/index.js?browsers=last 2 version!./../../node_modules/sass-loader/index.js?outputStyle=expanded&sourceMap=true&sourceMapContents=true!./style.scss', false)
+	})
 })

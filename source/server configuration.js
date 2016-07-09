@@ -207,6 +207,13 @@ export function is_external(request, webpack_configuration, settings)
 		package_name = package_name.substring(0, package_name.indexOf('/'))
 	}
 
+	// Skip webpack loader specific require()d paths
+	if (starts_with(package_name, '!') || starts_with(package_name, '-!'))
+	{
+		// The dependency is not external
+		return false
+	}
+
 	// If it's not a module require call,
 	// then resolve it as non-external.
 	//
