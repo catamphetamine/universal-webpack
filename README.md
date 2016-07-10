@@ -300,7 +300,7 @@ app.use((request, response) =>
 })
 ```
 
-That way only the rendering service will have to be built with Webpack.
+This way only the rendering service will have to be built with Webpack.
 
 ## License
 
