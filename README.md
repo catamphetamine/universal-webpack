@@ -257,20 +257,24 @@ To accomplish that this library provides a command line tool: `universal-webpack
 
 The `prepare` command creates `settings.server.output` path folder, or clears it if it already exists.
 
-In a moderately sized React project server restart times can reach ~10 seconds. Therefore the right way to go is to extract React rendering server-side code into a separate Node.js process (service), and then in the main Node.js web server just proxy all unmatched URLs to this React rendering service:
+In a moderately sized React project server restart times can reach ~10 seconds. Therefore the right way to go is to extract React rendering server-side code into a separate Node.js process (service), and then in the main Node.js web server just proxy all unmatched URLs to this React rendering service, as explained in the following section. This way only React rendering service will be restarted, and the main Node.js web server will be left untouched.
+
+## Separate React rendering service from the main code
+
+If the sole purpose of using `universal-webpack` in your project is to enable server-side rendering of web pages, then the best practice is to extract the web page rendering code from the main Node.js application into a separate Node.js application, and then in the main Node.js application just proxy all unmatched URLs to this React rendering service.
 
 ```js
 import http_proxy from 'http-proxy'
 
-const target = `http://${react_rendering_service.host}:${react_rendering_service.port}`
-const react_proxy = http_proxy.createProxyServer({ target })
+const react_service = `http://${react_rendering_service.host}:${react_rendering_service.port}`
+const react_proxy = http_proxy.createProxyServer({ target: react_service })
 
-// Various web application middleware
+// Various web application middleware (statics, API, etc)
 app.use(...)
 app.use(...)
 app.use(...)
 
-// In the end, if nothing matched
+// In the end, if no middleware matched the incoming HTTP request URL
 app.use((request, response) =>
 {
 	// Proxying failed
@@ -296,7 +300,7 @@ app.use((request, response) =>
 })
 ```
 
-This way only React rendering service will be restarted, and the main Node.js web server will be left untouched.
+That way only the rendering service will have to be built with Webpack.
 
 ## License
 
