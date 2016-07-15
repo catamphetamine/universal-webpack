@@ -101,8 +101,9 @@ export default function(parameters)
 	// React application rendering
 	app.use((req, res) =>
 	{
-		// Math current URL to the corresponding React page
-		react-router.match(routes, req.originalUrl).then((error, result) =>
+		// Match current URL to the corresponding React page
+		// (can use `react-router`, `redux-router`, `react-router-redux`, etc)
+		react_router_match_url(routes, req.originalUrl).then((error, result) =>
 		{
 			if (error)
 			{
