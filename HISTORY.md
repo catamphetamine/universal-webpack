@@ -1,3 +1,8 @@
+0.1.26 / 19.07.2016
+===================
+
+  * Constrained "flash of unstyled content" fix to setting an additional flag: `css_bundle`. Because this feature can introduce a bug if used unproperly.
+
 0.1.21 / 19.07.2016
 ===================
 

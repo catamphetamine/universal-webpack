@@ -190,30 +190,6 @@ It will output double the amount of all assets included in the project: one comp
 
 Also, it will perform two Webpack builds instead of one, but this shouldn't be much of an issue since developers' machines are highly multicore these days.
 
-## Flash of unstyled content
-
-A "flash of unstyled content" is a well-known issue on the internets. One can observe it when refreshing the page in development mode: because Webpack's `style-loader` adds styles to the page dynamically there's a short period (a second maybe) when there are no CSS styles applied to the webpage (in production mode `extract-text-webpack-plugin` is used instead of `style-loader` so there's no "flash of unstyled content").
-
-I came up with a sort of a slightly hacky solution which seems to be working good enough. To leverage that solution one needs to pass the third parameter to the client-side webpack configuration creation function: an `options` object with `development` key set to either it's a development build configuration or a production build configuration (`true`/`false`).
-
-If the passed `development` option is set to `true`, then `universal-webpack` will enhance the client side Webpack configuration to also output all styles into a single CSS bundle (while retaining `style-loader`) which is later added to the webpage's `<head/>` as a `<link rel="stylesheet"/>` tag on the server side, therefore making that "flash of unstyled content" disappear.
-
-### webpack.config.client.development.js
-
-```js
-import { client_configuration } from 'universal-webpack'
-import settings from './universal-webpack-settings'
-import configuration from './webpack.config'
-
-export default client_configuration(configuration, settings, { development: true })
-```
-
-Also, `extract-text-webpack-plugin` package must be installed for this to work
-
-```
-npm install extract-text-webpack-plugin --save
-```
-
 ## Advanced configuration
 
 ```js
@@ -327,6 +303,37 @@ app.use((request, response) =>
 ```
 
 This way only the rendering service will have to be built with Webpack.
+
+## Flash of unstyled content
+
+(this is an "advanced" section which can be safely skipped)
+
+A "flash of unstyled content" is a well-known thing. One can observe it when refreshing the page in development mode: because Webpack's `style-loader` adds styles to the page dynamically there's a short period (a second maybe) when there are no CSS styles applied to the webpage (in production mode `extract-text-webpack-plugin` is used instead of `style-loader` so there's no "flash of unstyled content").
+
+It's not really a bug, many projects live with it and it doesn't really affect the development process that much, so one can safely skip reading this section. It's just if you're a perfectionist then it can get a little itchy.
+
+I came up with a sort of a slightly hacky solution which seems to be working. To enable the anti-unstyled-flash feature one needs to pass the third parameter to the client-side webpack configuration creation function - an `options` object with:
+
+ * `development` key set to `true` indicating that it's a development build configuration
+ * `css_bundle` key set to `true`
+
+If both `development` and `css_bundle` options are set to `true`, then `universal-webpack` will enhance the client side Webpack configuration to also output all styles into a single CSS bundle (while retaining `style-loader`) which is later added to the webpage's `<head/>` as a `<link rel="stylesheet"/>` tag on the server side, therefore making that "flash of unstyled content" disappear.
+
+There's a gotcha though. Because the whole CSS bundle gets inserted as a `<link rel="stylesheet"/>` tag in the `<head/>` it also means that the styles defined in that CSS bundle are static, not dynamic, and they aren't gonna "hot reload" themselves or something. So, my proposed solution is to have that `<link rel="stylesheet"/>` tag sit in the `<head/>` for a while (say, a couple of seconds) and then remove it from there. The styling of the webpage isn't gonna disappear at that moment because by that time the dynamic styles of `style-loader` have already kicked in.
+
+```js
+import { client_configuration } from 'universal-webpack'
+import settings from './universal-webpack-settings'
+import configuration from './webpack.config'
+
+export default client_configuration(configuration, settings, { development: true, css_bundle: true })
+```
+
+Also, `extract-text-webpack-plugin` package must be installed for this to work
+
+```
+npm install extract-text-webpack-plugin --save
+```
 
 ## License
 

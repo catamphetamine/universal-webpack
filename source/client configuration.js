@@ -24,7 +24,7 @@ export default function client_configuration(webpack_configuration, settings, op
 	)
 
 	// If it's a client-side development webpack build
-	if (options.development)
+	if (options.development && options.css_bundle)
 	{
 		const extract_text_plugin = require('extract-text-webpack-plugin')
 
