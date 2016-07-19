@@ -3,6 +3,7 @@ import fs from 'fs'
 
 import wait_for_file from './wait for file'
 import { chunk_info_file_path } from './chunks'
+import { is_object } from './helpers'
 
 export default function server(webpack_configuration, settings)
 {
@@ -52,7 +53,8 @@ export default function server(webpack_configuration, settings)
 			return starter.default(additional)
 		}
 
-		throw new Error(`[universal-webpack] Your server source file must export a function`)
+		throw new Error(`[universal-webpack] Your server source file must export a function. ` +
+			`Got ${is_object(starter) ? JSON.stringify(starter, null, 2) : starter}`)
 	})
 	.catch(function(error)
 	{
