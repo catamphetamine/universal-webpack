@@ -1,3 +1,6 @@
+import chai from 'chai'
+chai.should()
+
 import { is_external } from '../source/server configuration'
 
 describe(`resolver`, function()

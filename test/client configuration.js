@@ -1,3 +1,6 @@
+import chai from 'chai'
+chai.should()
+
 import webpack from 'webpack'
 import fs from 'fs'
 import { chunk_info_file_path } from '../source/chunks'
@@ -20,5 +23,5 @@ describe(`client configuration`, function()
 		// {
 		// 	fs.exists(chunk_info_file_path(client_configuration)).should.equal(true)
 		// })
-	}
+	})
 })

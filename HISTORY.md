@@ -1,3 +1,8 @@
+0.1.21 / 19.07.2016
+===================
+
+  * Added the third parameter to Webpack configuration creators. The parameter added is an object of options. It can have a property called `development` with `true/false` value. It is used in client-side configuration creation to solve the "flash of unstyled content" on page reload.
+
 0.1.17 - 0.1.20 / 09.07.2016
 ===================
 

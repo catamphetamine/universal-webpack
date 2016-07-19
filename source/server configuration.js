@@ -1,10 +1,9 @@
 import path from 'path'
-import querystring from 'querystring'
-// import clean_plugin from 'clean-webpack-plugin'
 import webpack from 'webpack'
 import validate_npm_package_path from 'validate-npm-package-name'
 
-import { is_object, clone, starts_with, ends_with } from './helpers'
+import { clone, starts_with } from './helpers'
+import { find_style_loaders, is_style_loader, parse_loader, stringify_loader } from './loaders'
 
 // Tunes the client-side Webpack configuration for server-side build
 export default function server_configuration(webpack_configuration, settings)
@@ -69,44 +68,20 @@ export default function server_configuration(webpack_configuration, settings)
 
 	// Replace `style-loader` with `fake-style-loader`
 	// since it's no web browser
-	for (let loader of configuration.module.loaders)
+	for (let loader of find_style_loaders(configuration))
 	{
-		// convert `loader` to `loaders` for convenience
-		if (!loader.loaders)
-		{
-			if (!loader.loader)
-			{
-				throw new Error('No webpack loader specified for this `module.loaders` element')
-			}
-
-			// Don't mess with ExtractTextPlugin at all
-			// (even though it has `style` loader,
-			//  it has its own ways)
-			if (loader.loader.indexOf('extract-text-webpack-plugin/loader.js') >= 0)
-			{
-				continue
-			}
-
-			// Replace `loader` with the corresponding `loaders`
-			loader.loaders = loader.loader.split('!')
-			delete loader.loader
-		}
-
-		// Replace `style-loader` with `fake-style-loader`
 		const style_loader = loader.loaders.filter(is_style_loader)[0]
-		if (style_loader)
-		{
-			// Copy `style-loader` configuration
-			const fake_style_loader = parse_loader(style_loader)
 
-			// Since npm v3 enforces flat `node_modules` structure,
-			// `fake-style-loader` is gonna be right inside `node_modules`
-			fake_style_loader.name = 'fake-style-loader'
-			// fake_style_loader.name = path.resolve(__dirname, '../node_modules/fake-style-loader')
+		// Copy `style-loader` configuration
+		const fake_style_loader = parse_loader(style_loader)
 
-			// Replace the loader
-			loader.loaders[loader.loaders.indexOf(style_loader)] = stringify_loader(fake_style_loader)
-		}
+		// Since npm v3 enforces flat `node_modules` structure,
+		// `fake-style-loader` is gonna be right inside `node_modules`
+		fake_style_loader.name = 'fake-style-loader'
+		// fake_style_loader.name = path.resolve(__dirname, '../node_modules/fake-style-loader')
+
+		// Replace the loader
+		loader.loaders[loader.loaders.indexOf(style_loader)] = stringify_loader(fake_style_loader)
 	}
 
 	configuration.plugins = configuration.plugins || []
@@ -144,56 +119,6 @@ export default function server_configuration(webpack_configuration, settings)
 
 	// Done
 	return configuration
-}
-
-// Converts loader string into loader info structure
-function parse_loader(loader)
-{
-	let name
-	let query
-
-	if (is_object(loader))
-	{
-		name = loader.loader
-		query = loader.query
-	}
-	else
-	{
-		name = loader
-
-		if (name.indexOf('?') >= 0)
-		{
-			name = name.substring(0, name.indexOf('?'))
-			query = querystring.parse(name.substring(name.indexOf('?') + 1))
-		}
-	}
-
-	const result =
-	{
-		name,
-		query
-	}
-
-	return result
-}
-
-// Converts loader info into a string
-function stringify_loader(loader)
-{
-	return loader.name + (loader.query ? '?' + querystring.stringify(loader.query) : '')
-}
-
-// Checks if the passed loader is `style-loader`
-function is_style_loader(loader)
-{
-	let { name } = parse_loader(loader)
-
-	if (ends_with(name, '-loader'))
-	{
-		name = name.substring(0, name.lastIndexOf('-loader'))
-	}
-
-	return name === 'style'
 }
 
 // Checks if a require()d dependency is external

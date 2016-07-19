@@ -1,3 +1,6 @@
+import chai from 'chai'
+chai.should()
+
 import path from 'path'
 import webpack from 'webpack'
 import server from '../source/server configuration'
@@ -13,7 +16,7 @@ describe(`server configuration`, function()
 		// const server_configuration = server(webpack_configuration, settings)
 		//
 		// `server_configuration` should not contain `CommonsChunkPlugin`
-	}
+	})
 
 	it(`should replace style-loader with fake-style-loader`, function()
 	{

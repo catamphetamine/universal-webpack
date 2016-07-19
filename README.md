@@ -2,16 +2,17 @@
 
 [![NPM Version][npm-badge]][npm]
 [![Build Status][travis-badge]][travis]
+[![Test Coverage][coveralls-badge]][coveralls]
 
 Helps setting up isomorphic (universal) Webpack build: the one that's working both on client and server.
 
 ## Motivation
 
-In summer 2015 I wrote [`webpack-isomorphic-tools`](https://github.com/halt-hammerzeit/webpack-isomorphic-tools) to make isomorphic (universal) React rendering work on server-side when the project was built with Webpack.
+In summer 2015 I wrote [`webpack-isomorphic-tools`](https://github.com/halt-hammerzeit/webpack-isomorphic-tools) as an experiment to make isomorphic (universal) React rendering work on server-side when the project was built with Webpack. At that time I barely knew how that "Webpack" thing worked so I ended up actually reimplementing some of the Webpack functionality on the server-side.
 
-The goal was met and many people started using it to implement isomorphic (universal) rendering in their apps.
+Still, the goal was met, the whole thing worked, and many people started using `webpack-isomorphic-tools` in their apps to implement isomorphic (universal) rendering.
 
-Still it lacked some funky Webpack features like variuos Webpack plugins and other edge cases.
+But while `webpack-isomorphic-tools` supports the core Webpack functionality (`resolve.alias`es and such) it still lacks some Webpack features like various plugins and other advanced stuff.
 
 So I did some research on Webpack builds for Node.js and came up with this proof-of-concept solution which seems to work good enough. It supports all Webpack features (all plugins, etc).
 
@@ -189,6 +190,30 @@ It will output double the amount of all assets included in the project: one comp
 
 Also, it will perform two Webpack builds instead of one, but this shouldn't be much of an issue since developers' machines are highly multicore these days.
 
+## Flash of unstyled content
+
+A "flash of unstyled content" is a well-known issue on the internets. One can observe it when refreshing the page in development mode: because Webpack's `style-loader` adds styles to the page dynamically there's a short period (a second maybe) when there are no CSS styles applied to the webpage (in production mode `extract-text-webpack-plugin` is used instead of `style-loader` so there's no "flash of unstyled content").
+
+I came up with a sort of a slightly hacky solution which seems to be working good enough. To leverage that solution one needs to pass the third parameter to the client-side webpack configuration creation function: an `options` object with `development` key set to either it's a development build configuration or a production build configuration (`true`/`false`).
+
+If the passed `development` option is set to `true`, then `universal-webpack` will enhance the client side Webpack configuration to also output all styles into a single CSS bundle (while retaining `style-loader`) which is later added to the webpage's `<head/>` as a `<link rel="stylesheet"/>` tag on the server side, therefore making that "flash of unstyled content" disappear.
+
+### webpack.config.client.development.js
+
+```js
+import { client_configuration } from 'universal-webpack'
+import settings from './universal-webpack-settings'
+import configuration from './webpack.config'
+
+export default client_configuration(configuration, settings, { development: true })
+```
+
+Also, `extract-text-webpack-plugin` package must be installed for this to work
+
+```
+npm install extract-text-webpack-plugin --save
+```
+
 ## Advanced configuration
 
 ```js
@@ -306,9 +331,12 @@ This way only the rendering service will have to be built with Webpack.
 ## License
 
 [MIT](LICENSE)
+
 [npm]: https://www.npmjs.org/package/universal-webpack
 [npm-badge]: https://img.shields.io/npm/v/universal-webpack.svg?style=flat-square
+
 [travis]: https://travis-ci.org/halt-hammerzeit/universal-webpack
 [travis-badge]: https://img.shields.io/travis/halt-hammerzeit/universal-webpack/master.svg?style=flat-square
+
 [coveralls]: https://coveralls.io/r/halt-hammerzeit/universal-webpack?branch=master
 [coveralls-badge]: https://img.shields.io/coveralls/halt-hammerzeit/universal-webpack/master.svg?style=flat-square
