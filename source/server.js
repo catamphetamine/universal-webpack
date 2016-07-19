@@ -1,9 +1,9 @@
 import path from 'path'
 import fs from 'fs'
+import util from 'util'
 
 import wait_for_file from './wait for file'
 import { chunk_info_file_path } from './chunks'
-import { is_object } from './helpers'
 
 export default function server(webpack_configuration, settings)
 {
@@ -53,8 +53,14 @@ export default function server(webpack_configuration, settings)
 			return starter.default(additional)
 		}
 
+		let stringified_starter = String(starter)
+		if (stringified_starter === '[object Object]')
+		{
+			stringified_starter = JSON.stringify(starter, null, 2)
+		}
+
 		throw new Error(`[universal-webpack] Your server source file must export a function. ` +
-			`Got ${is_object(starter) ? JSON.stringify(starter, null, 2) : starter}`)
+			`Got ${util.inspect(starter)}`)
 	})
 	.catch(function(error)
 	{
