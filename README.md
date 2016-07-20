@@ -18,7 +18,7 @@ So I did some research on Webpack builds for Node.js and came up with this proof
 
 ## `universal-webpack` vs `webpack-isomorphic-tools`
 
-`webpack-isomorphic-tools` hooks into `require()` function with the help of `require-hacker` and does what needs to be done.
+`webpack-isomorphic-tools` runs on the server-side and hooks into Node.js `require()` function with the help of `require-hacker` and does what needs to be done.
 
 `universal-webpack` doesn't hook into `require()` function - it's just a helper for transforming client-side Webpack configuration to a server-side Webpack configuration. It doesn't run on the server-side or something. It's just a Webpack configuration generator - turned out that Webpack has a `target: "node"` parameter which makes it output code that runs on Node.js without any issues.
 
