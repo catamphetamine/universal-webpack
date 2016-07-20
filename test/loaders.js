@@ -1,7 +1,7 @@
 import chai from 'chai'
 chai.should()
 
-import { find_style_loaders, is_style_loader, parse_loader, stringify_loader } from '../source/loaders'
+import { find_style_loaders, is_style_loader, parse_loader, stringify_loader, normalize_loaders } from '../source/loaders'
 
 describe(`webpack loader utilities`, function()
 {
@@ -87,5 +87,42 @@ describe(`webpack loader utilities`, function()
 			}
 		})
 		.should.equal('style-loader?query=true&gay=porn')
+	})
+
+	it(`should normalize loaders`, function()
+	{
+		let loader =
+		{
+			loader: 'style-loader',
+			query:
+			{
+				query: 'true',
+				gay: 'porn'
+			}
+		}
+
+		let execute = () => normalize_loaders(loader)
+		execute.should.throw(`Unable to normalize a module loader with a "query" object`)
+
+		loader =
+		{
+			query:
+			{
+				query: 'true',
+				gay: 'porn'
+			}
+		}
+
+		execute = () => normalize_loaders(loader)
+		execute.should.throw(`Neither "loaders" not "loader" are present inside a module loader`)
+
+		loader =
+		{
+			loader: 'style-loader?query=true&gay=porn!css-loader?a=b'
+		}
+
+		normalize_loaders(loader)
+
+		loader.should.deep.equal({ loaders: ['style-loader?query=true&gay=porn', 'css-loader?a=b'] })
 	})
 })

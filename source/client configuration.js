@@ -1,8 +1,8 @@
 import extract_text_plugin from 'extract-text-webpack-plugin'
 
 import chunks_plugin from './chunks plugin'
-import { clone } from './helpers'
-import { find_style_loaders, is_style_loader, starts_with } from './loaders'
+import { clone, starts_with } from './helpers'
+import { find_style_loaders, is_style_loader, normalize_loaders } from './loaders'
 
 export default function client_configuration(webpack_configuration, settings, options = {})
 {
@@ -66,6 +66,8 @@ export default function client_configuration(webpack_configuration, settings, op
 		// and set those module loaders to `extract-text-webpack-plugin` loader
 		for (let loader of find_style_loaders(configuration))
 		{
+			normalize_loaders(loader)
+
 			const style_loader = loader.loaders.filter(is_style_loader)[0]
 
 			const style_loader_and_before = loader.loaders.slice(0, loader.loaders.indexOf(style_loader) + 1)
@@ -121,6 +123,8 @@ export default function client_configuration(webpack_configuration, settings, op
 		// and set those module loaders to `extract-text-webpack-plugin` loader
 		for (let loader of find_style_loaders(configuration))
 		{
+			normalize_loaders(loader)
+			
 			const style_loader = loader.loaders.filter(is_style_loader)[0]
 
 			const style_loader_and_before = loader.loaders.slice(0, loader.loaders.indexOf(style_loader) + 1)

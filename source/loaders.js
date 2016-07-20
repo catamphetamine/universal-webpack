@@ -1,3 +1,4 @@
+import util from 'util'
 import querystring from 'querystring'
 
 import { is_object, ends_with } from './helpers'
@@ -100,4 +101,24 @@ export function is_style_loader(loader)
 	}
 
 	return name === 'style'
+}
+
+// Converts `loader` to `loaders`
+export function normalize_loaders(loader)
+{
+	if (!loader.loaders)
+	{
+		if (!loader.loader)
+		{
+			throw new Error(`Neither "loaders" not "loader" are present inside a module loader: ${util.inspect(loader)}`)
+		}
+
+		if (loader.query)
+		{
+			throw new Error(`Unable to normalize a module loader with a "query" object: ${util.inspect(loader)}`)
+		}
+
+		loader.loaders = loader.loader.split('!')
+		delete loader.loader
+	}
 }
