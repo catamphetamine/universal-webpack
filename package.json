@@ -1,14 +1,19 @@
 {
   "name": "universal-webpack",
-  "version": "0.1.27",
+  "version": "0.1.28",
   "description": "Isomorphic Webpack",
   "main": "index.umd.js",
   "jsnext:main": "index.es6.js",
   "peerDependencies": {
-    "webpack": "*"
+    "webpack": "*",
+    "extract-text-webpack-plugin": "*"
   },
   "dependencies": {
-    "babel-runtime": "^6.6.1"
+    "colors": "^1.1.2",
+    "fake-style-loader": "^1.0.1",
+    "fs-extra": "^0.30.0",
+    "minimist": "^1.2.0",
+    "validate-npm-package-name": "^2.2.2"
   },
   "devDependencies": {
     "babel-cli": "^6.6.5",
@@ -20,6 +25,7 @@
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-0": "^6.5.0",
     "chai": "^3.5.0",
+    "extract-text-webpack-plugin": "^1.0.1",
     "istanbul": "^1.1.0-alpha.1",
     "mocha": "^2.5.3",
     "npm-run-all": "^1.4.0",
@@ -53,13 +59,6 @@
     "url": "https://github.com/halt-hammerzeit/universal-webpack/issues"
   },
   "homepage": "https://github.com/halt-hammerzeit/universal-webpack#readme",
-  "dependencies": {
-    "colors": "^1.1.2",
-    "fake-style-loader": "^1.0.1",
-    "fs-extra": "^0.30.0",
-    "minimist": "^1.2.0",
-    "validate-npm-package-name": "^2.2.2"
-  },
   "bin": {
     "universal-webpack": "./bin/universal-webpack.js"
   }

@@ -20,6 +20,7 @@ So I did some research on Webpack builds for Node.js and came up with this proof
 
 ```
 npm install universal-webpack --save
+npm install extract-text-webpack-plugin --save
 ```
 
 ## Example project
@@ -327,12 +328,6 @@ import settings from './universal-webpack-settings'
 import configuration from './webpack.config'
 
 export default client_configuration(configuration, settings, { development: true, css_bundle: true })
-```
-
-Also, `extract-text-webpack-plugin` package must be installed for this to work
-
-```
-npm install extract-text-webpack-plugin --save
 ```
 
 ## License

@@ -1,5 +1,6 @@
 'use strict'
 
+// Not 'umd' actually, just 'CommonJS'
 exports = module.exports =
 {
 	server : require('./build/server'),

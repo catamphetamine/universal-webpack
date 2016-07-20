@@ -1,3 +1,8 @@
+0.1.28 / 20.07.2016
+===================
+
+  * `development: false` option now automatically extracts styles with `extract-text-webpack-plugin` (unless `css_bundle` is `false`) (the CSS bundle filename can be customized with `css_bundle: "filename.css"`)
+
 0.1.26 / 19.07.2016
 ===================
 
