@@ -16,6 +16,14 @@ But while `webpack-isomorphic-tools` supports the core Webpack functionality (`r
 
 So I did some research on Webpack builds for Node.js and came up with this proof-of-concept solution which seems to work good enough. It supports all Webpack features (all plugins, etc).
 
+## `universal-webpack` vs `webpack-isomorphic-tools`
+
+`webpack-isomorphic-tools` hooks into `require()` function with the help of `require-hacker` and does what needs to be done.
+
+`universal-webpack` doesn't hook into `require()` function - it's just a helper for transforming client-side Webpack configuration to a server-side Webpack configuration. It doesn't run on the server-side or something. It's just a Webpack configuration generator - turned out that Webpack has a `target: "node"` parameter which makes it output code that runs on Node.js without any issues.
+
+I wrote `webpack-isomorphic-tools` before `universal-webpack`, so `universal-webpack` is the recommended tool. However many people still use `webpack-isomorphic-tools` (including me) and find it somewhat less complicated for beginners.
+
 ## Installation
 
 ```
@@ -320,7 +328,7 @@ I came up with a sort of a slightly hacky solution which seems to be working. To
 
 If both `development` and `css_bundle` options are set to `true`, then `universal-webpack` will enhance the client side Webpack configuration to also output all styles into a single CSS bundle (while retaining `style-loader`) which is later added to the webpage's `<head/>` as a `<link rel="stylesheet"/>` tag on the server side, therefore making that "flash of unstyled content" disappear.
 
-There's a gotcha though. Because the whole CSS bundle gets inserted as a `<link rel="stylesheet"/>` tag in the `<head/>` it also means that the styles defined in that CSS bundle are static, not dynamic, and they aren't gonna "hot reload" themselves or something. So, my proposed solution is to have that `<link rel="stylesheet"/>` tag sit in the `<head/>` for a while (say, a couple of seconds) and then remove it from there. The styling of the webpage isn't gonna disappear at that moment because by that time the dynamic styles of `style-loader` have already kicked in. See [an example of how this can be done](https://github.com/halt-hammerzeit/webpack-react-redux-isomorphic-render-example/blob/122ce9376cacfed7d956587a10b84434f2eed69c/code/page-server/web%20server.js#L57-L99).
+There's a gotcha though. Because the whole CSS bundle gets inserted as a `<link rel="stylesheet"/>` tag in the `<head/>` it also means that the styles defined in that CSS bundle are static, not dynamic, and they aren't gonna "hot reload" themselves or something. So, my proposed solution is to have that `<link rel="stylesheet"/>` tag sit in the `<head/>` for a while (say, a couple of seconds) and then remove it from there. The styling of the webpage isn't gonna disappear at that moment because by that time the dynamic styles of `style-loader` have already kicked in. See [an example of how this can be done](https://github.com/halt-hammerzeit/webpack-react-redux-isomorphic-render-example/blob/7e8ba24fbd512f1e3f6984c9f0655b74afef0a8e/code/page-server/web%20server.js#L50-L61).
 
 ```js
 import { client_configuration } from 'universal-webpack'
