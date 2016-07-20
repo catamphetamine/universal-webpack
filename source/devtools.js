@@ -40,8 +40,8 @@ export default function devtools(parameters)
 			var stylesheet
 			var common_stylesheet
 
-			${style_url        && 'stylesheet        = ' + get_style_link_element_script(style_url)}
-			${common_style_url && 'common_stylesheet = ' + get_style_link_element_script(common_style_url)}
+			${style_url        ? 'stylesheet        = ' + get_style_link_element_script(style_url) : ''}
+			${common_style_url ? 'common_stylesheet = ' + get_style_link_element_script(common_style_url) : ''}
 
 			// Waits a "magical" time amount of one second
 			// for the dynamically added stylesheets
