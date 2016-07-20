@@ -321,14 +321,14 @@ A "flash of unstyled content" is a well-known thing. One can observe it when ref
 
 It's not really a bug, many projects live with it and it doesn't really affect the development process that much, so one can safely skip reading this section. It's just if you're a perfectionist then it can get a little itchy.
 
-I came up with a sort of a slightly hacky solution which seems to be working. To enable the anti-unstyled-flash feature one needs to pass the third parameter to the client-side webpack configuration creation function - an `options` object with:
+I came up with a solution which seems to be working good enough. To enable the anti-unstyled-flash feature one needs to pass the third parameter to the client-side webpack configuration creation function - an `options` object with:
 
  * `development` key set to `true` indicating that it's a development build configuration
  * `css_bundle` key set to `true`
 
 If both `development` and `css_bundle` options are set to `true`, then `universal-webpack` will enhance the client side Webpack configuration to also output all styles into a single CSS bundle (while retaining `style-loader`) which is later added to the webpage's `<head/>` as a `<link rel="stylesheet"/>` tag on the server side, therefore making that "flash of unstyled content" disappear.
 
-There's a gotcha though. Because the whole CSS bundle gets inserted as a `<link rel="stylesheet"/>` tag in the `<head/>` it also means that the styles defined in that CSS bundle are static, not dynamic, and they aren't gonna "hot reload" themselves or something. So, my proposed solution is to have that `<link rel="stylesheet"/>` tag sit in the `<head/>` for a while (say, a couple of seconds) and then remove it from there. The styling of the webpage isn't gonna disappear at that moment because by that time the dynamic styles of `style-loader` have already kicked in. See [an example of how this can be done](https://github.com/halt-hammerzeit/webpack-react-redux-isomorphic-render-example/blob/7e8ba24fbd512f1e3f6984c9f0655b74afef0a8e/code/page-server/web%20server.js#L50-L61).
+There's a gotcha though. Because the whole CSS bundle gets inserted as a `<link rel="stylesheet"/>` tag in the `<head/>` it also means that the styles defined in that CSS bundle are static, not dynamic, and they aren't gonna "hot reload" themselves or something. So, my proposed solution is to have that `<link rel="stylesheet"/>` tag sit in the `<head/>` for a while (say, a couple of seconds) and then remove it from there. The styling of the webpage isn't gonna disappear at that moment because by that time the dynamic styles of `style-loader` have already kicked in. See [an example of how this can be done](https://github.com/halt-hammerzeit/webpack-react-redux-isomorphic-render-example/blob/daf84daaa00c0d37ccd9502f36c7af26d640bee2/code/page-server/web%20server.js#L51-L63).
 
 ```js
 import { client_configuration } from 'universal-webpack'
