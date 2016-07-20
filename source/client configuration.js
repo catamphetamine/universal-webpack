@@ -70,8 +70,8 @@ export default function client_configuration(webpack_configuration, settings, op
 
 			const style_loader = loader.loaders.filter(is_style_loader)[0]
 
-			const style_loader_and_before = loader.loaders.slice(0, loader.loaders.indexOf(style_loader) + 1)
-			const after_style_loader      = loader.loaders.slice(loader.loaders.indexOf(style_loader) + 1)
+			const before_style_loader = loader.loaders.slice(0, loader.loaders.indexOf(style_loader))
+			const after_style_loader  = loader.loaders.slice(loader.loaders.indexOf(style_loader) + 1)
 
 			// The first argument to the .extract() function is the name of the loader 
 			// ("style-loader" in this case) to be applied to non-top-level-chunks in case of "allChunks: false" option.
@@ -83,7 +83,7 @@ export default function client_configuration(webpack_configuration, settings, op
 			// I'm also prepending another `style-loader` here
 			// to re-enable adding these styles to the <head/> of the page on-the-fly.
 			//
-			loader.loader = 'style-loader!' + extract_text_plugin_extract(extract_css, style_loader_and_before, after_style_loader, { remove: false })
+			loader.loader = 'style-loader!' + extract_text_plugin_extract(extract_css, before_style_loader, after_style_loader, { remove: false })
 			delete loader.loaders
 		}
 
@@ -124,7 +124,7 @@ export default function client_configuration(webpack_configuration, settings, op
 		for (let loader of find_style_loaders(configuration))
 		{
 			normalize_loaders(loader)
-			
+
 			const style_loader = loader.loaders.filter(is_style_loader)[0]
 
 			const style_loader_and_before = loader.loaders.slice(0, loader.loaders.indexOf(style_loader) + 1)

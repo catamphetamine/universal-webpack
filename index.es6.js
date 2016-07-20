@@ -2,7 +2,7 @@ export { default as server } from './source/server'
 export { default as server_configuration } from './source/server configuration'
 export { default as client_configuration } from './source/client configuration'
 export { default as prepare } from './source/prepare'
-export { devtools } from './source/utility'
+export { default as devtools } from './source/devtools'
 
 // for camelCased guys
 export { default as serverConfiguration } from './source/server configuration'

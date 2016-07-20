@@ -11,7 +11,7 @@ describe(`exports`, function()
 		server_configuration.should.be.a.function
 		client_configuration.should.be.a.function
 		prepare.should.be.a.function
-		devtools.should.be.a.string
+		devtools.should.be.a.function
 
 		serverConfiguration.should.be.a.function
 		clientConfiguration.should.be.a.function
@@ -26,7 +26,7 @@ describe(`exports`, function()
 		_.server_configuration.should.be.a.function
 		_.client_configuration.should.be.a.function
 		_.prepare.should.be.a.function
-		_.devtools.should.be.a.string
+		_.devtools.should.be.a.function
 
 		_.serverConfiguration.should.be.a.function
 		_.clientConfiguration.should.be.a.function
