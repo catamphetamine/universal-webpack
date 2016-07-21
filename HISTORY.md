@@ -1,3 +1,8 @@
+0.1.33 / 21.07.2016
+===================
+
+  * `server` running function now returns a `Promise` with a result of whatever is returned from the user supplied `server(parameters)` function
+
 0.1.31 / 20.07.2016
 ===================
 
