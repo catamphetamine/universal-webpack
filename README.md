@@ -199,6 +199,10 @@ It will output double the amount of all assets included in the project: one comp
 
 Also, it will perform two Webpack builds instead of one, but this shouldn't be much of an issue since developers' machines are highly multicore these days.
 
+## `extract-text-webpack-plugin`
+
+The third argument – `options` object – may be passed to `client_configuration` function. If `options.development === false`, then it will apply `extract-text-webpack-plugin` to CSS styles automatically, i.e. it will extract all CSS styles into one big bundle file. This is considered the "best practice" for production deployment.
+
 ## Advanced configuration
 
 ```js
