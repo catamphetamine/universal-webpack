@@ -200,7 +200,7 @@ It will output double the amount of all assets included in the project: one comp
 
 Also, it will perform two Webpack builds instead of one, but this shouldn't be much of an issue since developers' machines are highly multicore these days.
 
-In development mode `universal-webpack` will write the (changed) built files to disk every time a developer makes a change to a file, while `webpack-isomorphic-tools` won't and will serve the build files from memory (if `port` is set). Not much of a concern though, since modern SSDs are durable enough to take tons of write cycles every day ("To go over the writes limit, you have to do something like 5GB of writes a day for 5 years" © 2012).
+In development mode `universal-webpack` will write the (changed) built files to disk every time a developer makes a change to a file, while `webpack-isomorphic-tools` won't and will serve the built files from memory (if `port` is set). Not much of a concern though, since modern SSDs are durable enough to take tons of write cycles every day ("To go over the writes limit, you have to do something like 5GB of writes a day for 5 years" © 2012).
 
 ## `extract-text-webpack-plugin`
 
