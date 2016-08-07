@@ -142,6 +142,7 @@ The last thing to do is to create a startup file for the server side. This is th
 ```js
 import { server } from 'universal-webpack'
 import settings from '../universal-webpack-settings'
+// `configuration.context` and `configuration.output.path` are used
 import configuration from '../webpack.config'
 
 server(configuration, settings)
