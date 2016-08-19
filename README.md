@@ -225,7 +225,11 @@ The third argument – `options` object – may be passed to `client_configurati
 	[
 		'lodash-es',
 		/^some-other-es6-only-module(\/.*)?$/
-	]
+	],
+
+	// Enable `silent` flag to prevent client side webpack build
+	// from outputting chunk stats to the console.
+	silent: true
 }
 ```
 
