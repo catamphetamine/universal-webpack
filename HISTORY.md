@@ -1,3 +1,8 @@
+0.1.34 / 19.08.2016
+===================
+
+  * Added `silent` option (won't output client side webpack build stats to console; e.g. when using `webpack-dashboard`)
+
 0.1.33 / 21.07.2016
 ===================
 

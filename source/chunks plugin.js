@@ -42,12 +42,12 @@ Chunk_file_names_plugin.prototype.apply = function(compiler)
 		})
 
 		// output some info to the console if in development mode
-		// if (options.development)
-		// {
+		if (!options.silent)
+		{
 			// outputs stats info to the console
 			// (only needed in development mode)
 			output_webpack_stats(stats, json)
-		// }
+		}
 
 		// "publicPath" (will be prepended to chunk file names)
 		const assets_base_url = (webpack_configuration.devServer && webpack_configuration.devServer.publicPath) ? webpack_configuration.devServer.publicPath : json.publicPath
