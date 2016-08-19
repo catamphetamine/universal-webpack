@@ -93,12 +93,11 @@ export default function client_configuration(webpack_configuration, settings, op
 		configuration.plugins.push(extract_css)
 	}
 	
+	// Use `extract-text-webpack-plugin` 
+	// to extract all CSS into a separate file
+	// (in production)
 	if (options.development === false && options.css_bundle !== false)
 	{
-		// Use `extract-text-webpack-plugin` 
-		// to extract all CSS into a separate file
-		// (in production)
-
 		let css_bundle_filename = '[name]-[contenthash].css'
 
 		if (typeof options.css_bundle === 'string')
