@@ -4,9 +4,10 @@ import fs   from 'fs-extra'
 import output_webpack_stats from './output webpack stats'
 import { chunk_info_file_path } from './chunks'
 
-export default function Chunk_file_names_plugin(configuration)
+export default function Chunk_file_names_plugin(configuration, options)
 {
 	this.configuration = configuration
+	this.options = options
 }
 
 Chunk_file_names_plugin.prototype.apply = function(compiler)
@@ -42,7 +43,7 @@ Chunk_file_names_plugin.prototype.apply = function(compiler)
 		})
 
 		// output some info to the console if in development mode
-		if (!options.silent)
+		if (!this.options.silent)
 		{
 			// outputs stats info to the console
 			// (only needed in development mode)
