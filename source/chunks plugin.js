@@ -18,6 +18,8 @@ Chunk_file_names_plugin.prototype.apply = function(compiler)
 	// const webpack_configuration = compiler.options
 	const webpack_configuration = this.configuration
 
+	const options = this.options
+
 	// chunk filename info file path
 	const output_file_path = chunk_info_file_path(webpack_configuration)
 
@@ -43,7 +45,7 @@ Chunk_file_names_plugin.prototype.apply = function(compiler)
 		})
 
 		// output some info to the console if in development mode
-		if (!this.options.silent)
+		if (!options.silent)
 		{
 			// outputs stats info to the console
 			// (only needed in development mode)
