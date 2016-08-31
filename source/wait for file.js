@@ -21,7 +21,28 @@ export default function wait_for_file(path)
 
 		tick
 		(
-			() => fs_exists(path),
+			async () =>
+			{
+				// Check if the file exists in the filesystem
+				const exists = await fs_exists(path)
+
+				if (!exists)
+				{
+					return false
+				}
+
+				// Check if the file contents have been written to disk
+				// https://github.com/halt-hammerzeit/universal-webpack/issues/24
+				const contents = fs.readFileSync(path, 'utf8')
+
+				// Check if the file contents is empty
+				if (!contents)
+				{
+					return false
+				}
+
+				return true
+			},
 			tick_interval,
 			resolve,
 			() =>

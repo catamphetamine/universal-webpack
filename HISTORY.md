@@ -1,3 +1,8 @@
+0.1.39 / 01.09.2016
+===================
+
+  * Fixes server bundle not yet has been written to disk
+
 0.1.37 / 19.08.2016
 ===================
 
