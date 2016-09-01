@@ -210,16 +210,18 @@ The third argument – `options` object – may be passed to `client_configurati
 
 ```js
 {
-	// By default, all `node_modules` are marked as `external`
-	// for server-side Webpack build.
+	// By default, all files inside `node_modules` are marked as `external`
+	// for server-side Webpack build which means they won't be processed by Webpack.
 	//
 	// With this setting one can explicitly define which modules 
 	// aren't gonna be marked as `external` dependencies.
-	// (and therefore are gonna be compiled with `babel-loader` by Webpack)
+	// (and therefore are gonna be compiled by Webpack loaders)
 	//
-	// Can be used for ES6-only `node_modules`.
+	// Can be used, for example, for ES6-only `node_modules`.
 	// A more intelligent solution would be accepted:
 	// https://github.com/halt-hammerzeit/universal-webpack/issues/10
+	//
+	// Another use case is including CSS files from `node_modules`.
 	//
 	exclude_from_externals:
 	[
