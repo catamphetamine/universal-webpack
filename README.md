@@ -351,6 +351,21 @@ import configuration from './webpack.config'
 export default client_configuration(configuration, settings, { development: true, css_bundle: true })
 ```
 
+## resolve.moduleDirectories
+
+If you were using `resolve.moduleDirectories` for global paths instead of relative paths in your code then consider using `resolve.alias` instead
+
+```js
+resolve:
+{
+  alias:
+  {
+    components: path.resolve(__dirname, '../src/components'),
+    ...
+  }
+}
+```
+
 ## License
 
 [MIT](LICENSE)
