@@ -153,7 +153,7 @@ Calling `source/start-server.js` will basically call the function exported from 
 In the end you run all the above things like this (in parallel):
 
 ```bash
-webpack-dev-server --hot --inline --config "./webpack.config.client.js --port XXXX --colors --display-error-details"
+webpack-dev-server --hot --inline --config "./webpack.config.client.js" --port XXXX --colors --display-error-details
 ```
 
 ```bash
