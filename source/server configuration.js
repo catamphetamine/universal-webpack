@@ -26,6 +26,14 @@ export default function server_configuration(webpack_configuration, settings)
 	// https://webpack.github.io/docs/configuration.html#target
 	configuration.target = 'node'
 
+	// Tell Webpack to leave `__dirname` and `__filename` unchanged
+	// https://github.com/webpack/webpack/issues/1599#issuecomment-186841345
+	configuration.node =
+	{
+		__dirname  : false,
+		__filename : false
+	}
+
 	// https://webpack.github.io/docs/configuration.html#output-librarytarget
 	configuration.output.libraryTarget = 'commonjs2'
 
