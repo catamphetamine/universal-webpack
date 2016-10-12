@@ -6,6 +6,8 @@
 
 Helps setting up isomorphic (universal) Webpack build: the one that's working both on client and server.
 
+*Small Advertisement:* 📞 if you're looking for a React phone number component check out [`react-phone-number-input`](http://halt-hammerzeit.github.io/react-phone-number-input/)
+
 ## Motivation
 
 In summer 2015 I wrote [`webpack-isomorphic-tools`](https://github.com/halt-hammerzeit/webpack-isomorphic-tools) as an experiment to make isomorphic (universal) React rendering work on server-side when the project was built with Webpack. At that time I barely knew how that "Webpack" thing worked so I ended up actually reimplementing some of the Webpack functionality on the server-side.
