@@ -44,21 +44,21 @@ Suppose you have a typical `webpack.config.js` file. Create two new files called
 ### webpack.config.client.js
 
 ```js
-import { client_configuration } from 'universal-webpack'
+import { clientConfiguration } from 'universal-webpack'
 import settings from './universal-webpack-settings'
 import configuration from './webpack.config'
 
-export default client_configuration(configuration, settings)
+export default clientConfiguration(configuration, settings)
 ```
 
 ### webpack.config.server.js
 
 ```js
-import { server_configuration } from 'universal-webpack'
+import { serverConfiguration } from 'universal-webpack'
 import settings from './universal-webpack-settings'
 import configuration from './webpack.config'
 
-export default server_configuration(configuration, settings)
+export default serverConfiguration(configuration, settings)
 ```
 
 ### universal-webpack-settings.js
@@ -76,7 +76,7 @@ export default
 
 Use `webpack.config.client.js` instead of the old `webpack.config.js` for client side Webpack builds.
 
-The `server_configuration()` function takes the client-side Webpack configuration and tunes it a bit for server-side usage ([`target: "node"`](https://webpack.github.io/docs/configuration.html#target)).
+The `serverConfiguration()` function takes the client-side Webpack configuration and tunes it a bit for server-side usage ([`target: "node"`](https://webpack.github.io/docs/configuration.html#target)).
 
 The server-side bundle (`settings.server.output` file) is generated from `settings.server.input` file by Webpack when it's run with the `webpack.config.server.js` configuration. An example of `settings.server.input` file may look like this (it must export a function):
 
@@ -206,7 +206,7 @@ In development mode `universal-webpack` will write the (changed) built files to 
 
 ## `extract-text-webpack-plugin`
 
-The third argument – `options` object – may be passed to `client_configuration` function. If `options.development === false`, then it will apply `extract-text-webpack-plugin` to CSS styles automatically, i.e. it will extract all CSS styles into one big bundle file. This is considered the "best practice" for production deployment.
+The third argument – `options` object – may be passed to `clientConfiguration` function. If `options.development === false`, then it will apply `extract-text-webpack-plugin` to CSS styles automatically, i.e. it will extract all CSS styles into one big bundle file. This is considered the "best practice" for production deployment.
 
 ## Advanced configuration
 
@@ -346,11 +346,11 @@ If both `development` and `css_bundle` options are set to `true`, then `universa
 There's a gotcha though. Because the whole CSS bundle gets inserted as a `<link rel="stylesheet"/>` tag in the `<head/>` it also means that the styles defined in that CSS bundle are static, not dynamic, and they aren't gonna "hot reload" themselves or something. So, my proposed solution is to have that `<link rel="stylesheet"/>` tag sit in the `<head/>` for a while (say, a couple of seconds) and then remove it from there. The styling of the webpage isn't gonna disappear at that moment because by that time the dynamic styles of `style-loader` have already kicked in. See [an example of how this can be done](https://github.com/halt-hammerzeit/webpack-react-redux-isomorphic-render-example/blob/daf84daaa00c0d37ccd9502f36c7af26d640bee2/code/page-server/web%20server.js#L51-L63).
 
 ```js
-import { client_configuration } from 'universal-webpack'
+import { clientConfiguration } from 'universal-webpack'
 import settings from './universal-webpack-settings'
 import configuration from './webpack.config'
 
-export default client_configuration(configuration, settings, { development: true, css_bundle: true })
+export default clientConfiguration(configuration, settings, { development: true, css_bundle: true })
 ```
 
 ## resolve.moduleDirectories
