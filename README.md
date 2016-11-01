@@ -290,43 +290,28 @@ In a moderately sized React project server restart times can reach ~10 seconds. 
 If the sole purpose of using `universal-webpack` in your project is to enable server-side rendering of web pages, then the best practice is to extract the web page rendering code from the main Node.js application into a separate Node.js application, and then in the main Node.js application just proxy all unmatched URLs to this React rendering service.
 
 ```js
-import http_proxy from 'http-proxy'
+import express from 'express'
+import httpProxy from 'http-proxy'
 
-const react_service = `http://${react_rendering_service.host}:${react_rendering_service.port}`
-const react_proxy = http_proxy.createProxyServer({ target: react_service })
+const app = express()
 
-// Various web application middleware (statics, API, etc)
+const reactRenderingService = `http://localhost:3000`
+const proxy = httpProxy.createProxyServer({})
+
+// The usual web application middleware
+// (serving statics, REST API, etc)
 app.use(...)
 app.use(...)
 app.use(...)
 
-// In the end, if no middleware matched the incoming HTTP request URL
-app.use((request, response) =>
+// Proxy all unmatched HTTP requests to webpage rendering service
+app.use(function(request, response)
 {
-	// Proxying failed
-	response.on('close', () =>
-	{
-		// reject(new Error(`Http response closed while proxying`))
-	})
-
-	// Proxying finished
-	response.on('finish', () =>
-	{
-		// resolve()
-	})
-
-	// Do the proxy
-	react_proxy.web(request, response, (error) =>
-	{
-		// reject(error)
-
-		response.writeHead(502)
-		response.end("There was an error proxying your request")
-	})
+  proxy.web(request, response, { target: reactRenderingService })
 })
 ```
 
-This way only the rendering service will have to be built with Webpack.
+This way only the rendering service will have to be restarted and rebuilt on code changes.
 
 ## Flash of unstyled content
 
