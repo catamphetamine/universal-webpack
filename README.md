@@ -287,7 +287,7 @@ In a moderately sized React project server restart times can reach ~10 seconds. 
 
 ## Separate React rendering service from the main code
 
-If the sole purpose of using `universal-webpack` in your project is to enable server-side rendering of web pages, then the best practice is to extract the web page rendering code from the main Node.js application into a separate Node.js application, and then in the main Node.js application just proxy all unmatched URLs to this React rendering service.
+If the sole purpose of using `universal-webpack` in your project is to enable server-side rendering of web pages, then the best practice is to extract the web page rendering code from the main Node.js application into a separate Node.js application (`reactRenderingService` in the example below), and then in the main Node.js application just proxy all unmatched URLs to this React rendering service.
 
 ```js
 import express from 'express'
@@ -311,7 +311,7 @@ app.use(function(request, response)
 })
 ```
 
-This way only the rendering service will have to be restarted and rebuilt on code changes.
+This way only the rendering service will have to be restarted (by nodemon) and rebuilt (by Webpack) on code changes.
 
 ## Flash of unstyled content
 
