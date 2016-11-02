@@ -212,16 +212,20 @@ The third argument – `options` object – may be passed to `clientConfiguratio
 
 ```js
 {
-	// By default, all files inside `node_modules` are marked as `external`
-	// for server-side Webpack build which means they won't be processed by Webpack.
+	// By default, all `require()`d modules
+	// (`node_modules`, `resolve.modules`), 
+	// except for `resolve.alias`ed ones,
+	// are marked as `external` for server-side Webpack build
+	// which means they won't be processed and bundled by Webpack,
+	// instead being processed and `require()`d at runtime by Node.js.
 	//
 	// With this setting one can explicitly define which modules 
 	// aren't gonna be marked as `external` dependencies.
-	// (and therefore are gonna be compiled by Webpack loaders)
+	// (and therefore are gonna be compiled and bundled by Webpack)
 	//
 	// Can be used, for example, for ES6-only `node_modules`.
-	// A more intelligent solution would be accepted:
-	// https://github.com/halt-hammerzeit/universal-webpack/issues/10
+	// ( a more intelligent solution would be accepted
+	//   https://github.com/halt-hammerzeit/universal-webpack/issues/10 )
 	//
 	// Another use case is including CSS files from `node_modules`.
 	//
@@ -307,7 +311,11 @@ app.use(...)
 // Proxy all unmatched HTTP requests to webpage rendering service
 app.use(function(request, response)
 {
-  proxy.web(request, response, { target: reactRenderingService })
+  proxy.web(request, response, { target: reactRenderingService }, (error) =>
+  {
+  	console.error(error)
+  	response.status(500).send('Proxying failed for page rendering service')
+  })
 })
 ```
 
