@@ -239,8 +239,8 @@ The third argument – `options` object – may be passed to `clientConfiguratio
 	// from outputting chunk stats to the console.
 	silent: true,
 
-	// By default, chunkInfoFilename is `webpack-chunks.json`
-	chunkInfoFilename: 'submodule-webpack-chunks.json'
+	// By default, chunk_info_filename is `webpack-chunks.json`
+	chunk_info_filename: 'submodule-webpack-chunks.json'
 }
 ```
 

@@ -22,7 +22,7 @@ export default function client_configuration(webpack_configuration, settings, op
 		// because `webpack-dev-server` seems to alter it
 		// by changing the already predefined `.output.path`.
 		//
-		new chunks_plugin(clone(configuration), { silent: settings.silent, chunkFilename: settings.chunk_info_filename })
+		new chunks_plugin(clone(configuration), { silent: settings.silent, chunk_info_filename: settings.chunk_info_filename })
 	)
 
 	// Not sure about the name yet
