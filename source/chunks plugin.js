@@ -13,7 +13,7 @@ export default function Chunk_file_names_plugin(configuration, options)
 Chunk_file_names_plugin.prototype.apply = function(compiler)
 {
 	// // Webpack configuration
-	// // (has wrong `output.path` at this point 
+	// // (has wrong `output.path` at this point
 	// //  so `output.path` has to be passed when constructing an instance)
 	// const webpack_configuration = compiler.options
 	const webpack_configuration = this.configuration
@@ -21,7 +21,7 @@ Chunk_file_names_plugin.prototype.apply = function(compiler)
 	const options = this.options
 
 	// chunk filename info file path
-	const output_file_path = chunk_info_file_path(webpack_configuration)
+	const output_file_path = chunk_info_file_path(webpack_configuration, options.chunk_info_filename)
 
 	// when all is done
 	// https://github.com/webpack/docs/wiki/plugins
@@ -79,13 +79,13 @@ function filename_info(json, assets_base_url)
 	function get_assets(name, extension)
 	{
 		let chunk = json.assetsByChunkName[name]
-	
+
 		// a chunk could be a string or an array, so make sure it is an array
 		if (!(Array.isArray(chunk)))
 		{
 			chunk = [chunk]
 		}
-	
+
 		return chunk
 			// filter by extension
 			.filter(name => path.extname(name) === `.${extension}`)
