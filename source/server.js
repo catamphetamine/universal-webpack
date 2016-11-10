@@ -19,7 +19,7 @@ export default function server(webpack_configuration, settings)
 	// waits for the first Webpack server-side build to finish and produce `webpage_rendering_server.js`
 	return wait_for_file(server_bundle_path).then(function()
 	{
-		const chunk_info_json_file_path = chunk_info_file_path(webpack_configuration, settings.chunkFilename)
+		const chunk_info_json_file_path = chunk_info_file_path(webpack_configuration, settings.chunk_info_filename)
 
 		// Will be passed to the server code
 		const additional =

@@ -21,7 +21,7 @@ Chunk_file_names_plugin.prototype.apply = function(compiler)
 	const options = this.options
 
 	// chunk filename info file path
-	const output_file_path = chunk_info_file_path(webpack_configuration, options.chunkFilename)
+	const output_file_path = chunk_info_file_path(webpack_configuration, options.chunk_info_filename)
 
 	// when all is done
 	// https://github.com/webpack/docs/wiki/plugins
