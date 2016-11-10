@@ -122,7 +122,7 @@ export default function(parameters)
 				res.status(500)
 				return res.send('Server error')
 			}
-		
+
 			// Render React page
 
 			const page = redux.provide(result, store)
@@ -213,13 +213,13 @@ The third argument – `options` object – may be passed to `clientConfiguratio
 ```js
 {
 	// By default, all `require()`d modules
-	// (`node_modules`, `resolve.modules`), 
+	// (`node_modules`, `resolve.modules`),
 	// except for `resolve.alias`ed ones,
 	// are marked as `external` for server-side Webpack build
 	// which means they won't be processed and bundled by Webpack,
 	// instead being processed and `require()`d at runtime by Node.js.
 	//
-	// With this setting one can explicitly define which modules 
+	// With this setting one can explicitly define which modules
 	// aren't gonna be marked as `external` dependencies.
 	// (and therefore are gonna be compiled and bundled by Webpack)
 	//
@@ -237,7 +237,10 @@ The third argument – `options` object – may be passed to `clientConfiguratio
 
 	// Enable `silent` flag to prevent client side webpack build
 	// from outputting chunk stats to the console.
-	silent: true
+	silent: true,
+
+	// By default, chunkFilename is `webpack-chunks.json`
+	chunkFilename: 'submodule-webpack-chunks.json'
 }
 ```
 

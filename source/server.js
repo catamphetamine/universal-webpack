@@ -19,12 +19,12 @@ export default function server(webpack_configuration, settings)
 	// waits for the first Webpack server-side build to finish and produce `webpage_rendering_server.js`
 	return wait_for_file(server_bundle_path).then(function()
 	{
-		const chunk_info_json_file_path = chunk_info_file_path(webpack_configuration)
+		const chunk_info_json_file_path = chunk_info_file_path(webpack_configuration, settings.server.chunkFilename)
 
 		// Will be passed to the server code
 		const additional =
 		{
-			chunks: () => 
+			chunks: () =>
 			{
 				// clear Webpack require() cache for hot reload in development mode
 				if (process.env.NODE_ENV === 'development')
@@ -47,7 +47,7 @@ export default function server(webpack_configuration, settings)
 		{
 			return starter(additional)
 		}
-		
+
 		if (typeof starter.default === 'function')
 		{
 			return starter.default(additional)

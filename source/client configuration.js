@@ -22,7 +22,7 @@ export default function client_configuration(webpack_configuration, settings, op
 		// because `webpack-dev-server` seems to alter it
 		// by changing the already predefined `.output.path`.
 		//
-		new chunks_plugin(clone(configuration), { silent: settings.silent })
+		new chunks_plugin(clone(configuration), { silent: settings.silent, chunkFilename: settings.chunkFilename })
 	)
 
 	// Not sure about the name yet
@@ -41,7 +41,7 @@ export default function client_configuration(webpack_configuration, settings, op
 	if (options.development && options.css_bundle)
 	{
 		let css_bundle_filename = '[name]-[contenthash].css'
-		
+
 		if (typeof options.css_bundle === 'string')
 		{
 			css_bundle_filename = options.css_bundle
@@ -49,12 +49,12 @@ export default function client_configuration(webpack_configuration, settings, op
 
 		// Extract styles into a file
 		// (without removing them from the code in this case).
-		// 
+		//
 		// It copies contents of each `require("style.css")`
 		// into one big CSS file on disk
 		// which will be later read on the server-side
 		// and inserted into `<head><style></style></head>`,
-		// so that in development mode there's no 
+		// so that in development mode there's no
 		// "flash of unstyled content" on page reload.
 		//
 		// "allChunks: true" option means that the styles from all chunks
@@ -73,7 +73,7 @@ export default function client_configuration(webpack_configuration, settings, op
 			const before_style_loader = loader.loaders.slice(0, loader.loaders.indexOf(style_loader))
 			const after_style_loader  = loader.loaders.slice(loader.loaders.indexOf(style_loader) + 1)
 
-			// The first argument to the .extract() function is the name of the loader 
+			// The first argument to the .extract() function is the name of the loader
 			// ("style-loader" in this case) to be applied to non-top-level-chunks in case of "allChunks: false" option.
 			// since in this configuration "allChunks: true" option is used, this first argument is irrelevant.
 			//
@@ -92,8 +92,8 @@ export default function client_configuration(webpack_configuration, settings, op
 		// (without removing it from the code in this case)
 		configuration.plugins.push(extract_css)
 	}
-	
-	// Use `extract-text-webpack-plugin` 
+
+	// Use `extract-text-webpack-plugin`
 	// to extract all CSS into a separate file
 	// (in production)
 	if (options.development === false && options.css_bundle !== false)
@@ -107,7 +107,7 @@ export default function client_configuration(webpack_configuration, settings, op
 
 		// Extract styles into a file
 		// (removing them from the code in this case).
-		// 
+		//
 		// It moves contents of each `require("style.css")`
 		// into one big CSS file on disk
 		// which will be later read on the server-side
@@ -129,7 +129,7 @@ export default function client_configuration(webpack_configuration, settings, op
 			const style_loader_and_before = loader.loaders.slice(0, loader.loaders.indexOf(style_loader) + 1)
 			const after_style_loader      = loader.loaders.slice(loader.loaders.indexOf(style_loader) + 1)
 
-			// The first argument to the .extract() function is the name of the loader 
+			// The first argument to the .extract() function is the name of the loader
 			// ("style-loader" in this case) to be applied to non-top-level-chunks in case of "allChunks: false" option.
 			// since in this configuration "allChunks: true" option is used, this first argument is irrelevant.
 			//
@@ -167,7 +167,7 @@ function extract_text_plugin_instance(filename, options = {})
 			throw error
 		}
 	}
-	
+
 	return plugin
 }
 
@@ -191,6 +191,6 @@ function extract_text_plugin_extract(plugin, fallbackLoader, loader, options = {
 			throw error
 		}
 	}
-	
+
 	return result
 }
