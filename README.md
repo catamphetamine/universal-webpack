@@ -37,6 +37,8 @@ npm install extract-text-webpack-plugin --save
 
 You may refer to [this sample project](https://github.com/halt-hammerzeit/webpack-react-redux-isomorphic-render-example) as an example of using this library (see `webpack` directory, `package.json` and `code/page-server/web server.js`).
 
+Another sample project (from another author) can be found [here](https://github.com/NSLS/universal-webpack-boilerplate).
+
 ## Usage
 
 Suppose you have a typical `webpack.config.js` file. Create two new files called `webpack.config.client.js` and `webpack.config.server.js` with the following contents:
