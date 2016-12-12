@@ -168,7 +168,7 @@ webpack --watch --config "./webpack.config.server.babel.js" --colors --display-e
 nodemon "./source/start-server" --watch "./build/server"
 ```
 
-Notice the `.babel.js` postfix (instead of simply `.js`) as part of the two `webpack` commands above: it's an official hack for making Webpack use Babel internally to transpile config from ES6 to ES5. Without the `.babel.js` postfix it would just throw `SyntaxError: Unexpected token import` if the config is written in ES6. So `webpack.config.server.babel.js` is not actually a file name: the real file name is `webpack.config.server.js` but now Webpack also knows that that file is written in ES6 and it will be automatically transpiled using Babel.
+Notice the `.babel.js` postfix (instead of simply `.js`) as part of the two `webpack` commands above: it's an [official hack](http://stackoverflow.com/questions/31903692/how-to-use-es6-in-webpack-config) for making Webpack use Babel internally to transpile config from ES6 to ES5. Without the `.babel.js` postfix it would just throw `SyntaxError: Unexpected token import` if the config is written in ES6. So `webpack.config.server.babel.js` is not actually a file name: the real file name is `webpack.config.server.js` but now Webpack also knows that that file is written in ES6 and it will be automatically transpiled using Babel.
 
 The above three commands are for development mode. For production mode the same command sequence would be:
 
