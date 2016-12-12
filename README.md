@@ -41,9 +41,9 @@ Another sample project (from another author) can be found [here](https://github.
 
 ## Usage
 
-Suppose you have a typical `webpack.config.js` file. Create two new files called `webpack.config.client.js` and `webpack.config.server.js` with the following contents:
+Suppose you have a typical `webpack.config.js` file. Create two new files called `webpack.config.client.babel.js` and `webpack.config.server.babel.js` with the following contents:
 
-### webpack.config.client.js
+### webpack.config.client.babel.js
 
 ```js
 import { clientConfiguration } from 'universal-webpack'
@@ -53,7 +53,7 @@ import configuration from './webpack.config'
 export default clientConfiguration(configuration, settings)
 ```
 
-### webpack.config.server.js
+### webpack.config.server.babel.js
 
 ```js
 import { serverConfiguration } from 'universal-webpack'
@@ -76,11 +76,11 @@ export default
 }
 ```
 
-Use `webpack.config.client.js` instead of the old `webpack.config.js` for client side Webpack builds.
+Use `webpack.config.client.babel.js` instead of the old `webpack.config.js` for client side Webpack builds.
 
 The `serverConfiguration()` function takes the client-side Webpack configuration and tunes it a bit for server-side usage ([`target: "node"`](https://webpack.github.io/docs/configuration.html#target)).
 
-The server-side bundle (`settings.server.output` file) is generated from `settings.server.input` file by Webpack when it's run with the `webpack.config.server.js` configuration. An example of `settings.server.input` file may look like this (it must export a function):
+The server-side bundle (`settings.server.output` file) is generated from `settings.server.input` file by Webpack when it's run with the `webpack.config.server.babel.js` configuration. An example of `settings.server.input` file may look like this (it must export a function):
 
 ### source/server.js
 
@@ -167,8 +167,6 @@ webpack --watch --config "./webpack.config.server.babel.js" --colors --display-e
 ```bash
 nodemon "./source/start-server" --watch "./build/server"
 ```
-
-Notice the `.babel.js` postfix (instead of simply `.js`) as part of the two `webpack` commands above: it's an [official hack](http://stackoverflow.com/questions/31903692/how-to-use-es6-in-webpack-config) for making Webpack use Babel internally to transpile config from ES6 to ES5. Without the `.babel.js` postfix it would just throw `SyntaxError: Unexpected token import` if the config is written in ES6. So `webpack.config.server.babel.js` is not actually a file name: the real file name is `webpack.config.server.js` but now Webpack also knows that that file is written in ES6 and it will be automatically transpiled using Babel.
 
 The above three commands are for development mode. For production mode the same command sequence would be:
 
