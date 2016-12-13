@@ -65,6 +65,11 @@ export default function server_configuration(webpack_configuration, settings)
 
 	configuration.externals = configuration.externals || []
 
+	if (!Array.isArray(configuration.externals))
+	{
+		configuration.externals = [configuration.externals]
+	}
+
 	configuration.externals.push(function(context, request, callback)
 	{
 		if (is_external(request, configuration, settings))
