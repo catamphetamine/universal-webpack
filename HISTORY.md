@@ -1,3 +1,8 @@
+0.1.42 / 13.12.2016
+===================
+
+  * `context` is now `process.cwd()` by default (as per Webpack docs)
+
 0.1.40 / 21.09.2016
 ===================
 

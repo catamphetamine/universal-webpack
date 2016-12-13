@@ -214,8 +214,8 @@ The third argument – `options` object – may be passed to `clientConfiguratio
 
 ```js
 {
-	// By default, all `require()`d modules
-	// (`node_modules`, `resolve.modules`),
+	// By default, all `require()`d packages
+	// (e.g. everything from `node_modules`, `resolve.modules`),
 	// except for `resolve.alias`ed ones,
 	// are marked as `external` for server-side Webpack build
 	// which means they won't be processed and bundled by Webpack,
@@ -229,7 +229,11 @@ The third argument – `options` object – may be passed to `clientConfiguratio
 	// ( a more intelligent solution would be accepted
 	//   https://github.com/halt-hammerzeit/universal-webpack/issues/10 )
 	//
-	// Another use case is including CSS files from `node_modules`.
+	// Another use case is including assets from `node_modules`:
+	// in order to do so one must add those assets to `exclude_from_externals`.
+	// Otherwise, for example, when `require()`ing CSS files from `node_modules`
+	// Node.js will just throw `SyntaxError: Unexpected token .`
+	// because these CSS files need to be compiled by Webpack's `css-loader` first.
 	//
 	exclude_from_externals:
 	[

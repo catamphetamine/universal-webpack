@@ -7,14 +7,14 @@ import { chunk_info_file_path } from './chunks'
 
 export default function server(webpack_configuration, settings)
 {
-	if (!webpack_configuration.context)
-	{
-		throw new Error(`You must set "context" parameter in your Webpack configuration`)
-	}
+	// if (!webpack_configuration.context)
+	// {
+	// 	throw new Error(`You must set "context" parameter in your Webpack configuration`)
+	// }
 
 	// Path to `build/server.js`
 	// (built by Webpack)
-	const server_bundle_path = path.resolve(webpack_configuration.context, settings.server.output)
+	const server_bundle_path = path.resolve(webpack_configuration.context || process.cwd(), settings.server.output)
 
 	// waits for the first Webpack server-side build to finish and produce `webpage_rendering_server.js`
 	return wait_for_file(server_bundle_path).then(function()

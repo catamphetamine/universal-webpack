@@ -8,12 +8,15 @@ import { find_style_loaders, is_style_loader, parse_loader, stringify_loader } f
 // Tunes the client-side Webpack configuration for server-side build
 export default function server_configuration(webpack_configuration, settings)
 {
-	if (!webpack_configuration.context)
-	{
-		throw new Error(`You must set "context" parameter in your Webpack configuration`)
-	}
+	// if (!webpack_configuration.context)
+	// {
+	// 	throw new Error(`You must set "context" parameter in your Webpack configuration`)
+	// }
 
 	const configuration = clone(webpack_configuration)
+
+	// By default, Webpack sets `context` to `process.cwd()`
+	configuration.context = configuration.context || process.cwd()
 
 	// (without extension)
 	const output_file_name = path.basename(settings.server.output, path.extname(settings.server.output))
@@ -132,7 +135,12 @@ export default function server_configuration(webpack_configuration, settings)
 // Checks if a require()d dependency is external
 export function is_external(request, webpack_configuration, settings)
 {
-	// Mark `node_modules` as external.
+	// If someone finds a way to mark all assets (jpg, png, css, scss)
+	// as not external then create a Pull Request on github.
+	// Until then, all assets from `node_modules` have to be specified
+	// inside `exclude_from_externals` configuration parameter.
+
+	// Mark all files inside packages (e.g. `node_modules`) as external.
 
 	let package_name = request
 	if (package_name.indexOf('/') >= 0)

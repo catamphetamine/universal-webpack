@@ -29,7 +29,7 @@ Chunk_file_names_plugin.prototype.apply = function(compiler)
 	{
 		const json = stats.toJson
 		({
-			context: webpack_configuration.context,
+			context: webpack_configuration.context || process.cwd(),
 
 			// Add built modules information to chunk information.
 			// What for is it here? I don't know. It's a copy & paste from the Webpack author's code.
