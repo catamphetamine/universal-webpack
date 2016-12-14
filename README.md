@@ -152,6 +152,17 @@ import configuration from '../webpack.config'
 server(configuration, settings)
 ```
 
+### source/start-server.babel.js
+
+```js
+// Enable ES6
+// (ignoring all `build` and `node_modules` folders for speed-up)
+require('babel-register')({ ignore: /\/(build|node_modules)\// })
+
+// Run `source/start-server.js`
+require('./source/start-server.js')
+```
+
 Calling `source/start-server.js` will basically call the function exported from `source/server.js` built with Webpack.
 
 In the end you run all the above things like this (in parallel):
@@ -165,7 +176,7 @@ webpack --watch --config "./webpack.config.server.babel.js" --colors --display-e
 ```
 
 ```bash
-nodemon "./source/start-server" --watch "./build/server"
+nodemon "./source/start-server.babel" --watch "./build/server"
 ```
 
 The above three commands are for development mode. For production mode the same command sequence would be:
