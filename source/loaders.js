@@ -8,7 +8,11 @@ export function find_style_loaders(configuration)
 {
 	const style_loaders = []
 
-	for (let loader of configuration.module.loaders)
+	// Support Webpack 1 and Webpack 2
+	const uses_module_rules = !configuration.module.loaders && configuration.module.rules
+	const module_loaders = configuration.module.loaders || configuration.module.rules
+
+	for (let loader of module_loaders)
 	{
 		let loaders = loader.loaders
 
@@ -17,7 +21,7 @@ export function find_style_loaders(configuration)
 		{
 			if (!loader.loader)
 			{
-				throw new Error('No webpack loader specified for this `module.loaders` element')
+				throw new Error(`No webpack loader specified for this module.${uses_module_rules ? 'rules' : 'loaders'} element`)
 			}
 
 			// Don't mess with ExtractTextPlugin at all

@@ -52,6 +52,35 @@ describe(`webpack loader utilities`, function()
 		])
 	})
 
+	it(`should find style loaders (Webpack 2)`, function()
+	{
+		const configuration =
+		{
+			module:
+			{
+				rules:
+				[{
+					loaders:
+					[
+						'whatever-loader?argument=true',
+						'style-loader?parameter=false'
+					]
+				}]
+			}
+		}
+
+		find_style_loaders(configuration).should.deep.equal
+		([
+			{
+				loaders:
+				[
+					'whatever-loader?argument=true',
+					'style-loader?parameter=false'
+				]
+			}
+		])
+	})
+
 	it(`should detect style loader`, function()
 	{
 		is_style_loader('style-loader').should.equal(true)
