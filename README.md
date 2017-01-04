@@ -19,6 +19,8 @@ npm install extract-text-webpack-plugin@2.0.0-beta.4 --save
 
 I've been supporting Webpack 1 in this library for a long time but now the time has come to move to Webpack 2 since it's [almost ready to be released](https://github.com/webpack/webpack/milestone/10).
 
+See [Webpack 1 to 2 migration notes](https://webpack.js.org/guides/migrating/)
+
 For Webpack 1 use the `0.1.x` version of this library.
 
 ## Motivation
