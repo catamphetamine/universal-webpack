@@ -1,84 +1,41 @@
 import chai from 'chai'
 chai.should()
 
-import { find_style_loaders, is_style_loader, parse_loader, stringify_loader, normalize_loaders } from '../source/loaders'
+import { find_style_rules, is_style_loader, parse_loader, stringify_loader, normalize_rule_loaders } from '../source/loaders'
 
 describe(`webpack loader utilities`, function()
 {
 	it(`should find style loaders`, function()
 	{
-		const configuration =
+		let configuration
+
+		configuration =
 		{
 			module:
 			{
 				loaders:
 				[{
-					loader: 'babel-loader',
-					query: { a: 'b', c: 'd' }
-				},
-				{
-					loader: 'not-a-style-loader!not-a-style-loader-too'
-				},
-				{
-					loader: 'whatever-loader?argument=true!style-loader?parameter=false!css-loader'
+					loaders:
+					[{
+						loader: 'not-a-style-loader'
+					}]
 				},
 				{
 					loaders:
-					[
-						'whatever-loader?argument=true',
-						'style-loader?parameter=false'
-					]
+					[{
+						loader: 'style-loader'
+					}]
 				}]
 			}
 		}
 
-		find_style_loaders(configuration).should.deep.equal
-		([
-			{
-				loaders:
-				[
-					'whatever-loader?argument=true',
-					'style-loader?parameter=false',
-					'css-loader'
-				]
-			},
-			{
-				loaders:
-				[
-					'whatever-loader?argument=true',
-					'style-loader?parameter=false'
-				]
-			}
-		])
-	})
-
-	it(`should find style loaders (Webpack 2)`, function()
-	{
-		const configuration =
-		{
-			module:
-			{
-				rules:
-				[{
-					loaders:
-					[
-						'whatever-loader?argument=true',
-						'style-loader?parameter=false'
-					]
-				}]
-			}
-		}
-
-		find_style_loaders(configuration).should.deep.equal
-		([
-			{
-				loaders:
-				[
-					'whatever-loader?argument=true',
-					'style-loader?parameter=false'
-				]
-			}
-		])
+		find_style_rules(configuration).should.deep.equal
+		([{
+			use:
+			[{
+				loader: 'style-loader'
+			}]
+		}])
 	})
 
 	it(`should detect style loader`, function()
@@ -93,23 +50,30 @@ describe(`webpack loader utilities`, function()
 
 	it(`should parse loaders`, function()
 	{
-		parse_loader('style-loader?query=true&gay=porn').should.deep.equal
-		({
-			name: 'style-loader',
-			query:
+		const parsed =
+		{
+			loader: 'style-loader',
+			options:
 			{
 				query: 'true',
 				gay: 'porn'
 			}
-		})
+		}
+
+		parse_loader('style-loader?query=true&gay=porn').should.deep.equal(parsed)
+		parse_loader({ loader: 'style-loader?query=true&gay=porn' }).should.deep.equal(parsed)
+		parse_loader({ loader: 'style-loader', query: 'query=true&gay=porn' }).should.deep.equal(parsed)
+		parse_loader({ loader: 'style-loader', options: 'query=true&gay=porn' }).should.deep.equal(parsed)
+		parse_loader({ loader: 'style-loader', query: { query: 'true', 'gay': 'porn' }}).should.deep.equal(parsed)
+		parse_loader({ loader: 'style-loader', options: { query: 'true', 'gay': 'porn' }}).should.deep.equal(parsed)
 	})
 
 	it(`should stringify loaders`, function()
 	{
 		stringify_loader
 		({
-			name: 'style-loader',
-			query:
+			loader: 'style-loader',
+			options:
 			{
 				query: 'true',
 				gay: 'porn'
@@ -120,18 +84,20 @@ describe(`webpack loader utilities`, function()
 
 	it(`should normalize loaders`, function()
 	{
-		let loader =
+		let loader
+
+		loader =
 		{
 			loader: 'style-loader',
 			query:
 			{
-				query: 'true',
+				query: true,
 				gay: 'porn'
 			}
 		}
 
-		let execute = () => normalize_loaders(loader)
-		execute.should.throw(`Unable to normalize a module loader with a "query" object`)
+		let execute = () => normalize_rule_loaders(loader)
+		execute.should.throw(`You have both ".loader" and ".query"`)
 
 		loader =
 		{
@@ -142,16 +108,34 @@ describe(`webpack loader utilities`, function()
 			}
 		}
 
-		execute = () => normalize_loaders(loader)
-		execute.should.throw(`Neither "loaders" not "loader" are present inside a module loader`)
+		execute = () => normalize_rule_loaders(loader)
+		execute.should.throw(`Neither "loaders" nor "loader" nor "use" are present inside a module rule`)
 
 		loader =
 		{
 			loader: 'style-loader?query=true&gay=porn!css-loader?a=b'
 		}
 
-		normalize_loaders(loader)
+		normalize_rule_loaders(loader)
 
-		loader.should.deep.equal({ loaders: ['style-loader?query=true&gay=porn', 'css-loader?a=b'] })
+		loader.should.deep.equal
+		({
+			use:
+			[{
+				loader: 'style-loader',
+				options:
+				{
+					query: 'true',
+					gay: 'porn'
+				}
+			},
+			{
+				loader: 'css-loader',
+				options:
+				{
+					a: 'b'
+				}
+			}]
+		})
 	})
 })

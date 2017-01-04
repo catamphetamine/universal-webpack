@@ -3,7 +3,7 @@ import webpack from 'webpack'
 import validate_npm_package_path from 'validate-npm-package-name'
 
 import { clone, starts_with } from './helpers'
-import { find_style_loaders, is_style_loader, parse_loader, stringify_loader } from './loaders'
+import { find_style_rules, is_style_loader, parse_loader, stringify_loader, normalize_rule_loaders } from './loaders'
 
 // Tunes the client-side Webpack configuration for server-side build
 export default function server_configuration(webpack_configuration, settings)
@@ -84,20 +84,22 @@ export default function server_configuration(webpack_configuration, settings)
 
 	// Replace `style-loader` with `fake-style-loader`
 	// since it's no web browser
-	for (let loader of find_style_loaders(configuration))
+	for (let rule of find_style_rules(configuration))
 	{
-		const style_loader = loader.loaders.filter(is_style_loader)[0]
+		normalize_rule_loaders(rule)
+
+		const style_loader = rule.use.filter(is_style_loader)[0]
 
 		// Copy `style-loader` configuration
 		const fake_style_loader = parse_loader(style_loader)
 
 		// Since npm v3 enforces flat `node_modules` structure,
 		// `fake-style-loader` is gonna be right inside `node_modules`
-		fake_style_loader.name = 'fake-style-loader'
-		// fake_style_loader.name = path.resolve(__dirname, '../node_modules/fake-style-loader')
+		fake_style_loader.loader = 'fake-style-loader'
+		// fake_style_loader.loader = path.resolve(__dirname, '../node_modules/fake-style-loader')
 
 		// Replace the loader
-		loader.loaders[loader.loaders.indexOf(style_loader)] = stringify_loader(fake_style_loader)
+		rule.use[rule.use.indexOf(style_loader)] = fake_style_loader
 	}
 
 	configuration.plugins = configuration.plugins || []

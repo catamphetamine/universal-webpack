@@ -4,69 +4,87 @@ import querystring from 'querystring'
 import { is_object, ends_with } from './helpers'
 
 // Finds module loaders with `style-loader`
-export function find_style_loaders(configuration)
+export function find_style_rules(configuration)
 {
-	const style_loaders = []
+	const style_rules = []
 
-	// Support Webpack 1 and Webpack 2
 	const uses_module_rules = !configuration.module.loaders && configuration.module.rules
-	const module_loaders = configuration.module.loaders || configuration.module.rules
+	const rules = configuration.module.loaders || configuration.module.rules
 
-	for (let loader of module_loaders)
+	if (!rules)
 	{
-		let loaders = loader.loaders
+		throw new Error('No `module.loaders` or `module.rules` found in Webpack configuration')
+	}
 
-		// convert `loader` to `loaders` for convenience
-		if (!loader.loaders)
+	for (let rule of rules)
+	{
+		normalize_rule_loaders(rule)
+
+		// A bit of normalization here
+		if (rule.loaders)
 		{
-			if (!loader.loader)
-			{
-				throw new Error(`No webpack loader specified for this module.${uses_module_rules ? 'rules' : 'loaders'} element`)
-			}
+			rule.use = rule.loaders
+			delete rule.loaders
+		}
 
+		// convert `loader` to `use` for convenience
+		if (rule.loader)
+		{
 			// Don't mess with ExtractTextPlugin at all
 			// (even though it has `style` loader,
 			//  it has its own ways)
-			if (loader.loader.indexOf('extract-text-webpack-plugin/loader.js') >= 0)
+			if (rule.loader.indexOf('extract-text-webpack-plugin/loader.js') >= 0)
+			{
+				continue
+			}
+		}
+
+		if (!rule.use)
+		{
+			throw new Error(`No webpack loader specified for this module.${uses_module_rules ? 'rules' : 'loaders'} element: ${util.inspect(rule)}`)
+		}
+
+		// Check if this module loader has a `style-loader`
+		const style_loader = rule.use.filter(is_style_loader)[0]
+		if (style_loader)
+		{
+			// Don't mess with ExtractTextPlugin at all
+			// (even though it has `style` loader,
+			//  it has its own ways)
+			if (style_loader.loader.indexOf('extract-text-webpack-plugin/loader.js') >= 0)
 			{
 				continue
 			}
 
-			if (loader.loader.indexOf('!') >= 0)
-			{
-				// Replace `loader` with the corresponding `loaders`
-				loader.loaders = loader.loader.split('!')
-				delete loader.loader
-			}
-
-			// if (loader.query)
-			// {
-			// 	loader.loaders[0] += '?' + querystring.stringify(loader.query)
-			// 	delete loader.query
-			// }
-		}
-
-		// Check if this module loader has a `style-loader`
-		const style_loader = (loader.loaders || loader.loader.split('!')).filter(is_style_loader)[0]
-		if (style_loader)
-		{
-			style_loaders.push(loader)
+			style_rules.push(rule)
 		}
 	}
 
-	return style_loaders
+	return style_rules
 }
 
-// Converts loader string into loader info structure
+// Converts loader string into a Webpack 2 loader structure
 export function parse_loader(loader)
 {
 	let name
-	let query
+	let options
 
 	if (is_object(loader))
 	{
-		name = loader.loader
-		query = loader.query
+		if (!loader.loader)
+		{
+			throw new Error(`.loader not set for a used loader`)
+		}
+
+		const parsed = parse_loader(loader.loader)
+
+		name = parsed.loader
+		options = parsed.options || (loader.query || loader.options)
+
+		if (typeof options === 'string')
+		{
+			options = querystring.parse(options)
+		}
 	}
 	else
 	{
@@ -75,14 +93,18 @@ export function parse_loader(loader)
 		if (name.indexOf('?') >= 0)
 		{
 			name = name.substring(0, name.indexOf('?'))
-			query = querystring.parse(loader.substring(loader.indexOf('?') + 1))
+			options = querystring.parse(loader.substring(loader.indexOf('?') + 1))
 		}
 	}
 
 	const result =
 	{
-		name,
-		query
+		loader: name
+	}
+
+	if (options)
+	{
+		result.options = options
 	}
 
 	return result
@@ -91,13 +113,15 @@ export function parse_loader(loader)
 // Converts loader info into a string
 export function stringify_loader(loader)
 {
-	return loader.name + (loader.query ? '?' + querystring.stringify(loader.query) : '')
+	return loader.loader + (loader.options ? '?' + querystring.stringify(loader.options) : '')
 }
 
 // Checks if the passed loader is `style-loader`
 export function is_style_loader(loader)
 {
-	let { name } = parse_loader(loader)
+	const parsed = parse_loader(loader)
+
+	let name = parsed.loader
 
 	if (ends_with(name, '-loader'))
 	{
@@ -108,21 +132,29 @@ export function is_style_loader(loader)
 }
 
 // Converts `loader` to `loaders`
-export function normalize_loaders(loader)
+export function normalize_rule_loaders(rule)
 {
-	if (!loader.loaders)
+	if (rule.loaders)
 	{
-		if (!loader.loader)
-		{
-			throw new Error(`Neither "loaders" not "loader" are present inside a module loader: ${util.inspect(loader)}`)
-		}
-
-		if (loader.query)
-		{
-			throw new Error(`Unable to normalize a module loader with a "query" object: ${util.inspect(loader)}`)
-		}
-
-		loader.loaders = loader.loader.split('!')
-		delete loader.loader
+		rule.use = rule.loaders
+		delete rule.loaders
 	}
+
+	if (rule.loader)
+	{
+		if (rule.query)
+		{
+			throw new Error(`You have both ".loader" and ".query" properties set up directly inside a module rule: ${util.inspect(rule)}. Rewrite it either using ".loaders" or ".use".`)
+		}
+
+		rule.use = rule.loader.split('!')
+		delete rule.loader
+	}
+
+	if (!rule.use)
+	{
+		throw new Error(`Neither "loaders" nor "loader" nor "use" are present inside a module rule: ${util.inspect(rule)}`)
+	}
+
+	rule.use = rule.use.map(parse_loader)
 }

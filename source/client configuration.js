@@ -2,7 +2,7 @@ import extract_text_plugin from 'extract-text-webpack-plugin'
 
 import chunks_plugin from './chunks plugin'
 import { clone, starts_with } from './helpers'
-import { find_style_loaders, is_style_loader, normalize_loaders } from './loaders'
+import { find_style_rules, is_style_loader, normalize_rule_loaders } from './loaders'
 
 export default function client_configuration(webpack_configuration, settings, options = {})
 {
@@ -60,18 +60,22 @@ export default function client_configuration(webpack_configuration, settings, op
 		// "allChunks: true" option means that the styles from all chunks
 		// (think "entry points") will be extracted into a single big CSS file.
 		//
-		const extract_css = extract_text_plugin_instance(css_bundle_filename, { allChunks: true })
+		const extract_css = new extract_text_plugin
+		({
+			filename: css_bundle_filename,
+			allChunks: true
+		})
 
 		// Find module loaders with `style-loader`,
 		// and set those module loaders to `extract-text-webpack-plugin` loader
-		for (let loader of find_style_loaders(configuration))
+		for (let rule of find_style_rules(configuration))
 		{
-			normalize_loaders(loader)
+			normalize_rule_loaders(rule)
 
-			const style_loader = loader.loaders.filter(is_style_loader)[0]
+			const style_loader = rule.use.filter(is_style_loader)[0]
 
-			const before_style_loader = loader.loaders.slice(0, loader.loaders.indexOf(style_loader))
-			const after_style_loader  = loader.loaders.slice(loader.loaders.indexOf(style_loader) + 1)
+			const before_style_loader = rule.use.slice(0, rule.use.indexOf(style_loader))
+			const after_style_loader  = rule.use.slice(rule.use.indexOf(style_loader) + 1)
 
 			// The first argument to the .extract() function is the name of the loader
 			// ("style-loader" in this case) to be applied to non-top-level-chunks in case of "allChunks: false" option.
@@ -83,8 +87,18 @@ export default function client_configuration(webpack_configuration, settings, op
 			// I'm also prepending another `style-loader` here
 			// to re-enable adding these styles to the <head/> of the page on-the-fly.
 			//
-			loader.loader = 'style-loader!' + extract_text_plugin_extract(extract_css, before_style_loader, after_style_loader, { remove: false })
-			delete loader.loaders
+			rule.use =
+			[{
+				loader: 'style-loader'
+			},
+			{
+				loader: extract_css.extract
+				({
+					remove: false,
+					fallbackLoader: before_style_loader,
+					loader: after_style_loader
+				})
+			}]
 		}
 
 		// Add the `extract-text-webpack-plugin` to the list of plugins.
@@ -116,25 +130,33 @@ export default function client_configuration(webpack_configuration, settings, op
 		// "allChunks: true" option means that the styles from all chunks
 		// (think "entry points") will be extracted into a single big CSS file.
 		//
-		const extract_css = extract_text_plugin_instance(css_bundle_filename, { allChunks: true })
+		const extract_css = new extract_text_plugin
+		({
+			filename: css_bundle_filename,
+			allChunks: true
+		})
 
 		// Find module loaders with `style-loader`,
 		// and set those module loaders to `extract-text-webpack-plugin` loader
-		for (let loader of find_style_loaders(configuration))
+		for (let rule of find_style_rules(configuration))
 		{
-			normalize_loaders(loader)
+			normalize_rule_loaders(rule)
 
-			const style_loader = loader.loaders.filter(is_style_loader)[0]
+			const style_loader = rule.use.filter(is_style_loader)[0]
 
-			const style_loader_and_before = loader.loaders.slice(0, loader.loaders.indexOf(style_loader) + 1)
-			const after_style_loader      = loader.loaders.slice(loader.loaders.indexOf(style_loader) + 1)
+			const style_loader_and_before = rule.use.slice(0, rule.use.indexOf(style_loader) + 1)
+			const after_style_loader      = rule.use.slice(rule.use.indexOf(style_loader) + 1)
 
 			// The first argument to the .extract() function is the name of the loader
 			// ("style-loader" in this case) to be applied to non-top-level-chunks in case of "allChunks: false" option.
 			// since in this configuration "allChunks: true" option is used, this first argument is irrelevant.
 			//
-			loader.loader = extract_text_plugin_extract(extract_css, style_loader_and_before, after_style_loader)
-			delete loader.loaders
+			rule.loader = extract_css.extract
+			({
+				fallbackLoader: style_loader_and_before,
+				loader: after_style_loader
+			})
+			delete rule.use
 		}
 
 		// Add the `extract-text-webpack-plugin` to the list of plugins.
@@ -145,52 +167,4 @@ export default function client_configuration(webpack_configuration, settings, op
 
 	// Done
 	return configuration
-}
-
-// Supports both v1 and v2 of `extract-text-webpack-plugin`
-function extract_text_plugin_instance(filename, options = {})
-{
-	let plugin
-
-	try
-	{
-		plugin = new extract_text_plugin(filename, options)
-	}
-	catch (error)
-	{
-		if (starts_with(error.message, 'Breaking change: ExtractTextPlugin now only takes a single argument.'))
-		{
-			plugin = new extract_text_plugin({ ...options, filename })
-		}
-		else
-		{
-			throw error
-		}
-	}
-
-	return plugin
-}
-
-// Supports both v1 and v2 of `extract-text-webpack-plugin`
-function extract_text_plugin_extract(plugin, fallbackLoader, loader, options = {})
-{
-	let result
-
-	try
-	{
-		result = plugin.extract(fallbackLoader, loader, options)
-	}
-	catch (error)
-	{
-		if (starts_with(error.message, 'Breaking change: extract now only takes a single argument.'))
-		{
-			result = plugin.extract({ ...options, fallbackLoader, loader })
-		}
-		else
-		{
-			throw error
-		}
-	}
-
-	return result
 }

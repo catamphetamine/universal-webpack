@@ -1,3 +1,8 @@
+0.2.0 / 05.01.2016
+==================
+
+  * Now only supports Webpack 2 (which is gonna be released soon; use `@2.2.0-rc.3` in the meanwhile). Use the old `0.1.x` version for Webpack 1.
+
 0.1.44 / 19.12.2016
 ===================
 
