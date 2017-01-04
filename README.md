@@ -8,6 +8,18 @@ Helps setting up isomorphic (universal) Webpack build: the one that's working bo
 
 *Small Advertisement:* 📞 if you're looking for a React phone number component check out [`react-phone-number-input`](http://halt-hammerzeit.github.io/react-phone-number-input/)
 
+## Webpack 2
+
+This library now **only supports Webpack 2**.
+
+```sh
+npm install webpack@2.2.0-rc.3 --save
+```
+
+I've been supporting Webpack 1 in this library for a long time but now the time has come to move to Webpack 2 since it's [almost ready to be released](https://github.com/webpack/webpack/milestone/10).
+
+For Webpack 1 use the `0.1.x` version of this library.
+
 ## Motivation
 
 In summer 2015 I wrote [`webpack-isomorphic-tools`](https://github.com/halt-hammerzeit/webpack-isomorphic-tools) as an experiment to make isomorphic (universal) React rendering work on server-side when the project was built with Webpack. At that time I barely knew how that "Webpack" thing worked so I ended up actually reimplementing some of the Webpack functionality on the server-side.
