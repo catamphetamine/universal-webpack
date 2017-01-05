@@ -91,13 +91,38 @@ describe(`webpack loader utilities`, function()
 			loader: 'style-loader',
 			query:
 			{
+				query: 'true',
+				gay: 'porn'
+			}
+		}
+
+		normalize_rule_loaders(loader)
+
+		loader.should.deep.equal
+		({
+			use:
+			[{
+				loader: 'style-loader',
+				options:
+				{
+					query: 'true',
+					gay: 'porn'
+				}
+			}]
+		})
+
+		loader =
+		{
+			loader: 'style-loader!another-loader',
+			query:
+			{
 				query: true,
 				gay: 'porn'
 			}
 		}
 
 		let execute = () => normalize_rule_loaders(loader)
-		execute.should.throw(`You have both ".loader" and ".query"`)
+		execute.should.throw(`You have both a compound ".loader" and a ".query"`)
 
 		loader =
 		{

@@ -18,16 +18,6 @@ export function find_style_rules(configuration)
 
 	for (let rule of rules)
 	{
-		normalize_rule_loaders(rule)
-
-		// A bit of normalization here
-		if (rule.loaders)
-		{
-			rule.use = rule.loaders
-			delete rule.loaders
-		}
-
-		// convert `loader` to `use` for convenience
 		if (rule.loader)
 		{
 			// Don't mess with ExtractTextPlugin at all
@@ -38,6 +28,8 @@ export function find_style_rules(configuration)
 				continue
 			}
 		}
+
+		normalize_rule_loaders(rule)
 
 		if (!rule.use)
 		{
@@ -142,12 +134,25 @@ export function normalize_rule_loaders(rule)
 
 	if (rule.loader)
 	{
-		if (rule.query)
+		let loaders = rule.loader.split('!')
+
+		if (rule.query || rule.options)
 		{
-			throw new Error(`You have both ".loader" and ".query" properties set up directly inside a module rule: ${util.inspect(rule)}. Rewrite it either using ".loaders" or ".use".`)
+			const parsed_loader = parse_loader(loaders[0])
+
+			if (loaders.length > 1 || parsed_loader.options)
+			{
+				throw new Error(`You have both a compound ".loader" and a ".query" (or an ".options") property set up directly inside a module rule: ${util.inspect(rule)}. Rewrite it either using ".loaders" or ".use".`)
+			}
+
+			loaders = [parsed_loader]
+
+			parsed_loader.options = rule.query || rule.options
+			delete rule.query
+			delete rule.options
 		}
 
-		rule.use = rule.loader.split('!')
+		rule.use = loaders
 		delete rule.loader
 	}
 
