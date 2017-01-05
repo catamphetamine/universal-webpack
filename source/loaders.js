@@ -3,6 +3,8 @@ import querystring from 'querystring'
 
 import { is_object, ends_with } from './helpers'
 
+// https://webpack.js.org/configuration/module/
+
 // Finds module loaders with `style-loader`
 export function find_style_rules(configuration)
 {
