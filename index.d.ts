@@ -25,7 +25,7 @@ export interface UniversalConfiguration {
 }
 
 // Server Runner
-export function server(webpackConfig: webpack.Configuration, settings: UniversalConfiguration): void;
+export function server(webpackConfig: webpack.Configuration, settings: UniversalConfiguration): any;
 
 // Server Configuration
 export function server_configuration(webpackConfig: webpack.Configuration, settings: UniversalConfiguration): webpack.Configuration;
