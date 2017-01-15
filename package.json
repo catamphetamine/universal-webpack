@@ -61,5 +61,6 @@
   "homepage": "https://github.com/halt-hammerzeit/universal-webpack#readme",
   "bin": {
     "universal-webpack": "./bin/universal-webpack.js"
-  }
+  },
+  "typings": "index.d.ts"
 }
