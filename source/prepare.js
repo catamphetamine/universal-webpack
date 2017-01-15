@@ -10,13 +10,8 @@ import fs from 'fs-extra'
 //
 export default function prepare(settings, webpack_configuration)
 {
-	// if (!webpack_configuration.context)
-	// {
-	// 	throw new Error('Base folder not specified')
-	// }
-
 	// By default, Webpack sets `context` to `process.cwd()`
-	const base_path = webpack_configuration.context || process.cwd()
+	const base_path = (webpack_configuration && webpack_configuration.context) || process.cwd()
 
 	if (!settings.server.output)
 	{
