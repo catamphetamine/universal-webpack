@@ -26,8 +26,10 @@ export default function server(webpack_configuration, settings)
 		{
 			chunks: () =>
 			{
-				// clear Webpack require() cache for hot reload in development mode
-				if (process.env.NODE_ENV === 'development')
+				// Just in case `nodemon` was not set up to watch and
+				// restart the Node.js process on bundle rebuild,
+				// clear Webpack require() cache for hot reload in development mode.
+				if (process.env.NODE_ENV !== 'production')
 				{
 					delete require.cache[chunk_info_json_file_path]
 				}
