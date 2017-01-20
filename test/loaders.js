@@ -86,6 +86,8 @@ describe(`webpack loader utilities`, function()
 	{
 		let loader
 
+		// Convert `loader` and `query` to `use` and `options`
+
 		loader =
 		{
 			loader: 'style-loader',
@@ -111,6 +113,25 @@ describe(`webpack loader utilities`, function()
 			}]
 		})
 
+		// Convert `use` string to array
+
+		loader =
+		{
+			use: 'style-loader'
+		}
+
+		normalize_rule_loaders(loader)
+
+		loader.should.deep.equal
+		({
+			use:
+			[{
+				loader: 'style-loader'
+			}]
+		})
+
+		// Shouldn't convert compound `loader` and `query`
+
 		loader =
 		{
 			loader: 'style-loader!another-loader',
@@ -124,6 +145,8 @@ describe(`webpack loader utilities`, function()
 		let execute = () => normalize_rule_loaders(loader)
 		execute.should.throw(`You have both a compound ".loader" and a ".query"`)
 
+		// No `loader` is specified
+
 		loader =
 		{
 			query:
@@ -135,6 +158,8 @@ describe(`webpack loader utilities`, function()
 
 		execute = () => normalize_rule_loaders(loader)
 		execute.should.throw(`Neither "loaders" nor "loader" nor "use" are present inside a module rule`)
+
+		// Convert compound `loader` to `use` array
 
 		loader =
 		{

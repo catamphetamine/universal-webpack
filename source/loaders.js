@@ -163,5 +163,10 @@ export function normalize_rule_loaders(rule)
 		throw new Error(`Neither "loaders" nor "loader" nor "use" are present inside a module rule: ${util.inspect(rule)}`)
 	}
 
+	if (typeof rule.use === 'string')
+	{
+		rule.use = [rule.use]
+	}
+
 	rule.use = rule.use.map(parse_loader)
 }
