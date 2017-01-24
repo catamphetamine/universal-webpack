@@ -4,7 +4,7 @@ var path = require('path')
 var fs = require('fs')
 
 var minimist = require('minimist')
-var universal_webpack = require('../index.umd')
+var universal_webpack = require('../index.common')
 
 var command_line_arguments = minimist(process.argv.slice(2))
 

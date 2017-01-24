@@ -1,3 +1,8 @@
+0.2.5 / 24.01.2016
+==================
+
+  * Added `babel-register` options for server side startup speed up
+
 0.2.0 / 05.01.2016
 ==================
 

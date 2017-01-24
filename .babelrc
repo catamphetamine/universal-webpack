@@ -9,7 +9,6 @@
 	"plugins":
 	[
 		"transform-runtime",
-		"add-module-exports",
 		"transform-react-display-name"
 	]
 }

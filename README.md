@@ -78,15 +78,14 @@ import configuration from './webpack.config'
 export default serverConfiguration(configuration, settings)
 ```
 
-### universal-webpack-settings.js
+### universal-webpack-settings.json
 
 ```js
-export default
 {
-	server:
+	"server":
 	{
-		input: './source/server.js',
-		output: './build/server/server.js'
+		"input": "./source/server.js",
+		"output": "./build/server/server.js"
 	}
 }
 ```
@@ -316,7 +315,7 @@ To accomplish that this library provides a command line tool: `universal-webpack
   "scripts": {
     "start": "npm-run-all prepare-server-build start-development-workflow",
     "start-development-workflow": "npm-run-all --parallel development-webpack-build-for-client development-webpack-build-for-server development-start-server",
-    "prepare-server-build": "universal-webpack --settings ./universal-webpack-settings.js prepare",
+    "prepare-server-build": "universal-webpack --settings ./universal-webpack-settings.json prepare",
     ...
 ```
 
@@ -394,6 +393,21 @@ resolve:
     ...
   }
 }
+```
+
+## Server-side startup time optimization
+
+In case `babel-register` is used to run the server-side bundle, there have been reports that leveraging the `ignore` option of `babel-register` might speed things up significantly by telling Babel explicitly not to parse the server-side bundle.
+
+```js
+// Prevents Babel from transpiling server-side bundle
+// resulting in faster server-side hot-reload (startup) times.
+require('babel-register')(
+	require('universal-webpack').babelRegisterOptions(
+		require('../webpack/universal-webpack-settings'),
+		require('../webpack/webpack.config')
+	)
+)
 ```
 
 ## License
