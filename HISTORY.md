@@ -1,3 +1,8 @@
+0.2.6 / 28.01.2016
+==================
+
+  * Fixed the latest version of extract text plugin
+
 0.2.5 / 24.01.2016
 ==================
 

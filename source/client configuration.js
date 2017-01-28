@@ -86,19 +86,33 @@ export default function client_configuration(webpack_configuration, settings, op
 			//
 			// I'm also prepending another `style-loader` here
 			// to re-enable adding these styles to the <head/> of the page on-the-fly.
-			//
-			rule.use =
-			[{
-				loader: 'style-loader'
-			},
+			
+			const extract_css_loader = extract_css.extract
+			({
+				remove: false,
+				fallbackLoader: before_style_loader,
+				loader: after_style_loader
+			})
+
+			// https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/368
+			if (Array.isArray(extract_css_loader))
 			{
-				loader: extract_css.extract
-				({
-					remove: false,
-					fallbackLoader: before_style_loader,
-					loader: after_style_loader
-				})
-			}]
+				rule.use =
+				[{
+					loader: 'style-loader'
+				},
+				...extract_css_loader]
+			}
+			else
+			{
+				rule.use =
+				[{
+					loader: 'style-loader'
+				},
+				{
+					loader: extract_css_loader
+				}]
+			}
 		}
 
 		// Add the `extract-text-webpack-plugin` to the list of plugins.
@@ -150,13 +164,22 @@ export default function client_configuration(webpack_configuration, settings, op
 			// The first argument to the .extract() function is the name of the loader
 			// ("style-loader" in this case) to be applied to non-top-level-chunks in case of "allChunks: false" option.
 			// since in this configuration "allChunks: true" option is used, this first argument is irrelevant.
-			//
-			rule.loader = extract_css.extract
+
+			const extract_css_loader = extract_css.extract
 			({
 				fallbackLoader: style_loader_and_before,
 				loader: after_style_loader
 			})
-			delete rule.use
+
+			if (Array.isArray(extract_css_loader))
+			{
+				rule.use = extract_css_loader
+			}
+			else
+			{
+				rule.loader = extract_css_loader
+				delete rule.use
+			}
 		}
 
 		// Add the `extract-text-webpack-plugin` to the list of plugins.
