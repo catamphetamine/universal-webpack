@@ -1,3 +1,9 @@
+0.3.0 / 30.01.2016
+==================
+
+  * Instead of using `fake-style-loader` now using `css-loader/locals`
+  * Not emitting `file-loader`'s files during the server side build now (make sure your favicon is included on the client side then)
+
 0.2.6 / 28.01.2016
 ==================
 

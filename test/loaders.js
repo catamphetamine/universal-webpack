@@ -1,7 +1,7 @@
 import chai from 'chai'
 chai.should()
 
-import { find_style_rules, is_style_loader, parse_loader, stringify_loader, normalize_rule_loaders } from '../source/loaders'
+import { find_style_rules, loader_name_filter, parse_loader, stringify_loader, normalize_rule_loaders } from '../source/loaders'
 
 describe(`webpack loader utilities`, function()
 {
@@ -13,17 +13,30 @@ describe(`webpack loader utilities`, function()
 		{
 			module:
 			{
-				loaders:
+				rules:
 				[{
-					loaders:
+					use:
 					[{
 						loader: 'not-a-style-loader'
 					}]
 				},
 				{
-					loaders:
+					use:
 					[{
 						loader: 'style-loader'
+					}]
+				},
+				{
+					use:
+					[{
+						loader : '/Users/kuchumovn/work/CollegeConsortium/node_modules/extract-text-webpack-plugin/loader.js',
+						omit   : 1
+					},
+					{
+						loader : 'style-loader'
+					},
+					{
+						loader : 'css-loader'
 					}]
 				}]
 			}
@@ -40,12 +53,12 @@ describe(`webpack loader utilities`, function()
 
 	it(`should detect style loader`, function()
 	{
-		is_style_loader('style-loader').should.equal(true)
-		is_style_loader('style-loader?query=true&gay=porn').should.equal(true)
-		is_style_loader('style').should.equal(true)
-		is_style_loader('style?query=true').should.equal(true)
+		loader_name_filter('style')('style-loader').should.equal(true)
+		loader_name_filter('style')('style-loader?query=true&gay=porn').should.equal(true)
+		loader_name_filter('style')('style').should.equal(true)
+		loader_name_filter('style')('style?query=true').should.equal(true)
 
-		is_style_loader('style_loader').should.equal(false)
+		loader_name_filter('style')('style_loader').should.equal(false)
 	})
 
 	it(`should parse loaders`, function()

@@ -8,6 +8,11 @@ import client from '../source/client configuration'
 
 describe(`client configuration`, function()
 {
+	it(`should retain style-loader for ExtractTextPlugin when "css_bundle" is "true"`, function()
+	{
+		// Submit a Pull Request
+	})
+
 	it(`should output chunks info file after Webpack build`, function()
 	{
 		// Submit a Pull Request

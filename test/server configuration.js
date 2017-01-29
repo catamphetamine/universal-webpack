@@ -3,37 +3,95 @@ chai.should()
 
 import path from 'path'
 import webpack from 'webpack'
-import server from '../source/server configuration'
+import server, { replace_style_loader, dont_emit_file_loader } from '../source/server configuration'
 
 describe(`server configuration`, function()
 {
-	it(`should remove unnecessary plugins`, function()
+	it(`should add "emit: false" for "file-loader" and "url-loader"`, function()
 	{
-		// Submit a Pull Request
+		const configuration =
+		{
+			module:
+			{
+				rules:
+				[{
+					test: /\.css$/,
+					use:
+					[{
+						loader: 'file-loader',
+						options: { a: 'b' }
+					}]
+				},
+				{
+					test: /\.png$/,
+					use:
+					[{
+						loader: 'url-loader'
+					}]
+				}]
+			}
+		}
 
-		// const webpack_configuration = {}
-		// const settings = {}
+		dont_emit_file_loader(configuration)
+
+		configuration.module.rules[0].use.should.deep.equal
+		([{
+			loader: 'file-loader',
+			options: { a: 'b', emitFile: false }
+		}])
+
+		configuration.module.rules[1].use.should.deep.equal
+		([{
+			loader: 'file-loader',
+			options: { emitFile: false }
+		}])
+	})
+
+	it(`should replace "style-loader" and "css-loader" with "css-loader/locals" on the server side`, function()
+	{
+		const configuration =
+		{
+			module:
+			{
+				rules:
+				[{
+					test: /\.css$/,
+					use:
+					[{
+						loader: 'style-loader'
+					},
+					{
+						loader: 'css-loader'
+					}]
+				}]
+			}
+		}
+
+		replace_style_loader(configuration)
+
+		configuration.module.rules[0].use.should.deep.equal
+		([{
+			loader: 'css-loader/locals'
+		}])
+	})
+
+	it(`should build`, function(done)
+	{
+		done()
+
 		// const server_configuration = server(webpack_configuration, settings)
 		//
-		// `server_configuration` should not contain `CommonsChunkPlugin`
-	})
-
-	it(`should replace style-loader with fake-style-loader`, function()
-	{
-		// Submit a Pull Request
-	})
-
-	it(`shouldn't replace style-loader with fake-style-loader for ExtractTextPlugin`, function()
-	{
-		// Submit a Pull Request
-	})
-
-	it(`should build`, function()
-	{
 		// https://webpack.github.io/docs/node.js-api.html
-		// webpack(client_configuration, function(error, stats)
+		// webpack(server_configuration, function(error, stats)
 		// {
+		// 	if (error)
+		// {
+		// 	return done(error)
+		// }
+		//
 		// 	const result = require(path.join(webpack_configuration.context, settings.server.output))
+		// 	result.should.deep.equal({ ... })
+		// 	done()
 		// })
 	})
 })

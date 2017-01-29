@@ -2,7 +2,7 @@ import extract_text_plugin from 'extract-text-webpack-plugin'
 
 import chunks_plugin from './chunks plugin'
 import { clone, starts_with } from './helpers'
-import { find_style_rules, is_style_loader, normalize_rule_loaders } from './loaders'
+import { find_style_rules, loader_name_filter, normalize_rule_loaders } from './loaders'
 
 export default function client_configuration(webpack_configuration, settings, options = {})
 {
@@ -72,7 +72,7 @@ export default function client_configuration(webpack_configuration, settings, op
 		{
 			normalize_rule_loaders(rule)
 
-			const style_loader = rule.use.filter(is_style_loader)[0]
+			const style_loader = rule.use.filter(loader_name_filter('style'))[0]
 
 			const before_style_loader = rule.use.slice(0, rule.use.indexOf(style_loader))
 			const after_style_loader  = rule.use.slice(rule.use.indexOf(style_loader) + 1)
@@ -156,7 +156,7 @@ export default function client_configuration(webpack_configuration, settings, op
 		{
 			normalize_rule_loaders(rule)
 
-			const style_loader = rule.use.filter(is_style_loader)[0]
+			const style_loader = rule.use.filter(loader_name_filter('style'))[0]
 
 			const style_loader_and_before = rule.use.slice(0, rule.use.indexOf(style_loader) + 1)
 			const after_style_loader      = rule.use.slice(rule.use.indexOf(style_loader) + 1)

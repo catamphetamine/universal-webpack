@@ -13,8 +13,8 @@ Helps setting up isomorphic (universal) Webpack build: the one that's working bo
 This library now **only supports Webpack 2**.
 
 ```sh
-npm install webpack@2.2.0-rc.3 --save
-npm install extract-text-webpack-plugin@2.0.0-beta.4 --save
+npm install webpack@2.2.0 --save
+npm install extract-text-webpack-plugin@2.0.0-rc.2 --save
 ```
 
 I've been supporting Webpack 1 in this library for a long time but now the time has come to move to Webpack 2 since it's [almost ready to be released](https://github.com/webpack/webpack/milestone/10).
@@ -223,13 +223,9 @@ This library will pass the `chunks()` function parameter (inside the `parameters
 
 These filenames are required for `<script src=.../>` and `<link rel="style" href=.../>` tags in case of isomorphic (universal) rendering on the server-side.
 
-## Drawbacks
+## Gotchas
 
-It will output double the amount of all assets included in the project: one complete bundle for client-side build and one complete bundle for server-side build. E.g. an asset `./images/dog.jpg` will be output both into `./build/client/9059f094ddb49c2b0fa6a254a6ebf2ad.jpg` and `./build/server/9059f094ddb49c2b0fa6a254a6ebf2ad.jpg`. If you find a way to avoid that, drop me a line.
-
-Also, it will perform two Webpack builds instead of one, but this shouldn't be much of an issue since developers' machines are highly multicore these days.
-
-In development mode `universal-webpack` will write the (changed) built files to disk every time a developer makes a change to a file, while `webpack-isomorphic-tools` won't and will serve the built files from memory (if `port` is set). Not much of a concern though, since modern SSDs are durable enough to take tons of write cycles every day ("To go over the writes limit, you have to do something like 5GB of writes a day for 5 years" © 2012).
+It emits no assets from the server-side code so make sure you include all assets at least on the client side (e.g. "favicon").
 
 ## `extract-text-webpack-plugin`
 

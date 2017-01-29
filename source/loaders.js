@@ -8,53 +8,24 @@ import { is_object, ends_with } from './helpers'
 // Finds module loaders with `style-loader`
 export function find_style_rules(configuration)
 {
-	const style_rules = []
-
-	const uses_module_rules = !configuration.module.loaders && configuration.module.rules
-	const rules = configuration.module.loaders || configuration.module.rules
-
-	if (!rules)
+	// Sanity check
+	if (!configuration.module.rules)
 	{
-		throw new Error('No `module.loaders` or `module.rules` found in Webpack configuration')
+		throw new Error('No `module.rules` found in Webpack configuration. Migrate your configuration to Webpack 2: https://webpack.js.org/guides/migrating/')
 	}
 
-	for (let rule of rules)
+	return configuration.module.rules.filter( ( rule ) =>
 	{
-		if (rule.loader)
-		{
-			// Don't mess with ExtractTextPlugin at all
-			// (even though it has `style` loader,
-			//  it has its own ways)
-			if (rule.loader.indexOf('extract-text-webpack-plugin/loader.js') >= 0)
-			{
-				continue
-			}
-		}
-
-		normalize_rule_loaders(rule)
-
-		if (!rule.use)
-		{
-			throw new Error(`No webpack loader specified for this module.${uses_module_rules ? 'rules' : 'loaders'} element: ${util.inspect(rule)}`)
-		}
+		normalize_rule_loaders( rule )
 
 		// Check if this module loader has a `style-loader`
-		const style_loader = rule.use.filter(is_style_loader)[0]
-		if (style_loader)
-		{
-			// Don't mess with ExtractTextPlugin at all
-			// (even though it has `style` loader,
-			//  it has its own ways)
-			if (style_loader.loader.indexOf('extract-text-webpack-plugin/loader.js') >= 0)
-			{
-				continue
-			}
+		const style_loader = rule.use.filter( loader_name_filter( 'style' ) )[0]
 
-			style_rules.push(rule)
-		}
-	}
+		// Is it `extract-text-webpack-plugin` loader
+		const extract_text_plugin_loader = rule.use.filter( loader => loader.loader.indexOf( 'extract-text-webpack-plugin/loader.js' ) >= 0 )[0]
 
-	return style_rules
+		return style_loader && !extract_text_plugin_loader
+	} )
 }
 
 // Converts loader string into a Webpack 2 loader structure
@@ -111,29 +82,34 @@ export function stringify_loader(loader)
 }
 
 // Checks if the passed loader is `style-loader`
-export function is_style_loader(loader)
+export function loader_name_filter ( loader_name )
 {
-	const parsed = parse_loader(loader)
-
-	let name = parsed.loader
-
-	if (ends_with(name, '-loader'))
+	return function ( loader )
 	{
-		name = name.substring(0, name.lastIndexOf('-loader'))
-	}
+		const parsed = parse_loader( loader )
 
-	return name === 'style'
+		let name = parsed.loader
+
+		if ( ends_with( name, '-loader' ) )
+		{
+			name = name.substring( 0, name.lastIndexOf( '-loader' ) )
+		}
+
+		return name === loader_name
+	}
 }
 
 // Converts `loader` to `loaders`
 export function normalize_rule_loaders(rule)
 {
+	// Convert `loaders` to `use`
 	if (rule.loaders)
 	{
 		rule.use = rule.loaders
 		delete rule.loaders
 	}
 
+	// If a `loader` shorthand is used, convert it to `use`
 	if (rule.loader)
 	{
 		let loaders = rule.loader.split('!')
