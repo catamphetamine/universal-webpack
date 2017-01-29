@@ -234,10 +234,6 @@ export function dont_emit_file_loader( configuration )
 
 		if ( loader )
 		{
-			// `url-loader` can inline assets ignoring the `emitFile` option,
-			// so replace `url-loader` with `file-loader` since there's
-			// no real difference between these two for the server-side.
-			loader.loader = 'file-loader'
 			loader.options = loader.options || {}
 			loader.options.emitFile = false
 		}

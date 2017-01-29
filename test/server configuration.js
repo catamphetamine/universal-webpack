@@ -18,15 +18,15 @@ describe(`server configuration`, function()
 					test: /\.css$/,
 					use:
 					[{
-						loader: 'file-loader',
-						options: { a: 'b' }
+						loader: 'file-loader'
 					}]
 				},
 				{
 					test: /\.png$/,
 					use:
 					[{
-						loader: 'url-loader'
+						loader: 'url-loader',
+						options: { limit: 10000 }
 					}]
 				}]
 			}
@@ -37,13 +37,13 @@ describe(`server configuration`, function()
 		configuration.module.rules[0].use.should.deep.equal
 		([{
 			loader: 'file-loader',
-			options: { a: 'b', emitFile: false }
+			options: { emitFile: false }
 		}])
 
 		configuration.module.rules[1].use.should.deep.equal
 		([{
-			loader: 'file-loader',
-			options: { emitFile: false }
+			loader: 'url-loader',
+			options: { limit: 10000, emitFile: false }
 		}])
 	})
 
