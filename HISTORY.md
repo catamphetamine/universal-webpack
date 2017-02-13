@@ -1,3 +1,8 @@
+0.3.2 / 14.01.2016
+==================
+
+  * Added `configuration` named parameter to the `server()` caller (along with the old `chunks()` named function parameter)
+
 0.3.0 / 30.01.2016
 ==================
 

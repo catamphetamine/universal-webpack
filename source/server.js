@@ -24,7 +24,9 @@ export default function server(webpack_configuration, settings)
 		// Will be passed to the server code
 		const additional =
 		{
-			chunks: () =>
+			configuration : webpack_configuration,
+
+			chunks()
 			{
 				// Just in case `nodemon` was not set up to watch and
 				// restart the Node.js process on bundle rebuild,
@@ -34,6 +36,7 @@ export default function server(webpack_configuration, settings)
 					delete require.cache[chunk_info_json_file_path]
 				}
 
+				// In production mode `require()` cache will be in effect
 				return require(chunk_info_json_file_path)
 			}
 		}
