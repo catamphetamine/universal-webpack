@@ -1,12 +1,12 @@
 {
   "name": "universal-webpack",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Isomorphic Webpack",
   "main": "index.common.js",
   "module": "index.es6.js",
   "peerDependencies": {
     "webpack": "*",
-    "extract-text-webpack-plugin": "*"
+    "extract-text-webpack-plugin": "^2.0.0-rc.3"
   },
   "dependencies": {
     "colors": "^1.1.2",

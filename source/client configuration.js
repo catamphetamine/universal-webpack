@@ -89,9 +89,9 @@ export default function client_configuration(webpack_configuration, settings, op
 			
 			const extract_css_loader = extract_css.extract
 			({
-				remove: false,
-				fallbackLoader: before_style_loader,
-				loader: after_style_loader
+				remove   : false,
+				fallback : before_style_loader,
+				use      : after_style_loader
 			})
 
 			// https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/368
@@ -167,8 +167,8 @@ export default function client_configuration(webpack_configuration, settings, op
 
 			const extract_css_loader = extract_css.extract
 			({
-				fallbackLoader: style_loader_and_before,
-				loader: after_style_loader
+				fallback : style_loader_and_before,
+				use      : after_style_loader
 			})
 
 			if (Array.isArray(extract_css_loader))
