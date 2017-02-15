@@ -1,4 +1,9 @@
-0.3.2 / 14.01.2016
+0.3.3 / 15.02.2016
+==================
+
+  * Renamed `extract-text-webpack-plugin` deprecated options: `fallbackLoader` -> `fallback`, `loader` -> `use`
+
+0.3.2 / 14.02.2016
 ==================
 
   * Added `configuration` named parameter to the `server()` caller (along with the old `chunks()` named function parameter)
