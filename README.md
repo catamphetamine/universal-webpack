@@ -198,7 +198,7 @@ The above three commands are for development mode. For production mode the same 
 ```bash
 webpack --config "./webpack.config.client.babel.js" --colors --display-error-details
 webpack --config "./webpack.config.server.babel.js" --colors --display-error-details
-node "./source/start-server"
+node "./source/start-server.babel"
 ```
 
 ## Chunks
