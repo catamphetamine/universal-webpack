@@ -3,7 +3,7 @@ chai.should()
 
 import path from 'path'
 import webpack from 'webpack'
-import server, { replace_style_loader, dont_emit_file_loader } from '../source/server configuration'
+import server, { replace_style_loader, dont_emit_file_loader, extract_package_name } from '../source/server configuration'
 
 describe(`server configuration`, function()
 {
@@ -93,5 +93,14 @@ describe(`server configuration`, function()
 		// 	result.should.deep.equal({ ... })
 		// 	done()
 		// })
+	})
+
+	it(`should extract npm package name`, function()
+	{
+		extract_package_name('react').should.equal('react')
+		extract_package_name('react/lib/anything').should.equal('react')
+		extract_package_name('@incomplete').should.equal('@incomplete')
+		extract_package_name('@private/dependency').should.equal('@private/dependency')
+		extract_package_name('@private/dependency/lib/anything').should.equal('@private/dependency')
 	})
 })

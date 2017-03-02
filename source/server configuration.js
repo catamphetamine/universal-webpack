@@ -138,11 +138,7 @@ export function is_external(request, webpack_configuration, settings)
 
 	// Mark all files inside packages (e.g. `node_modules`) as external.
 
-	let package_name = request
-	if (package_name.indexOf('/') >= 0)
-	{
-		package_name = package_name.substring(0, package_name.indexOf('/'))
-	}
+	const package_name = extract_package_name(request)
 
 	// Skip webpack loader specific require()d paths
 	// https://webpack.github.io/docs/loaders.html
@@ -258,4 +254,35 @@ export function replace_style_loader( configuration )
 			rule.use = rule.use.filter( loader => !loader_name_filter( 'style' )( loader ) )
 		}
 	}
+}
+
+// Extracts npm package name.
+// Correctly handles "private" npm packages like `@namespace/package`.
+export function extract_package_name(path)
+{
+	if (path.indexOf('/') === -1)
+	{
+		return path
+	}
+
+	// For regular npm packages
+	let package_name = path.slice(0, path.indexOf('/'))
+
+	// Handle "private" npm packages
+	if (package_name[0] === '@')
+	{
+		const start_from = package_name.length + '/'.length
+		const to = path.indexOf('/', start_from)
+
+		if (to >= 0)
+		{
+			package_name += path.slice(start_from - '/'.length, to)
+		}
+		else
+		{
+			package_name = path
+		}
+	}
+
+	return package_name
 }

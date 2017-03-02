@@ -1,3 +1,8 @@
+0.3.4 / 02.03.2016
+==================
+
+  * Fixed npm "private" packages (`@private/package`) not being marked as external dependencies
+
 0.3.3 / 15.02.2016
 ==================
 
