@@ -173,10 +173,13 @@ export function is_external(request, webpack_configuration, settings)
 		}
 	}
 
+	// Allows camelCasing
+	const exclude_from_externals = settings.exclude_from_externals || settings.excludeFromExternals
+
 	// Skip modules explicitly ignored by the user
-	if (settings.exclude_from_externals)
+	if (exclude_from_externals)
 	{
-		for (let exclusion_pattern of settings.exclude_from_externals)
+		for (let exclusion_pattern of exclude_from_externals)
 		{
 			let regexp = exclusion_pattern
 
