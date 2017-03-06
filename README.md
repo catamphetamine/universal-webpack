@@ -52,7 +52,10 @@ npm install extract-text-webpack-plugin --save
 
 You may refer to [this sample project](https://github.com/halt-hammerzeit/webpack-react-redux-isomorphic-render-example) as an example of using this library (see `webpack` directory, `package.json` and `code/page-server/web server.js`).
 
-Another sample project (from another author) can be found [here](https://github.com/NSLS/universal-webpack-boilerplate).
+Other sample projects (from other github users who asked me to add these links to this readme):
+
+  * [one](https://github.com/NSLS/universal-webpack-boilerplate)
+  * [two](https://github.com/krasevych/react-redux-styled-hot-universal)
 
 ## Usage
 
