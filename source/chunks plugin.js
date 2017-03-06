@@ -53,7 +53,7 @@ Chunk_file_names_plugin.prototype.apply = function(compiler)
 		}
 
 		// "publicPath" (will be prepended to chunk file names)
-		const assets_base_url = (webpack_configuration.devServer && webpack_configuration.devServer.publicPath) ? webpack_configuration.devServer.publicPath : json.publicPath
+		const assets_base_url = (process.env.NODE_ENV !== 'production' && webpack_configuration.devServer && webpack_configuration.devServer.publicPath) ? webpack_configuration.devServer.publicPath : json.publicPath
 
 		// Generate chunk filename info
 		const chunk_filename_info = filename_info(json, assets_base_url)

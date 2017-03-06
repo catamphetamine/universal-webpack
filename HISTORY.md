@@ -1,3 +1,8 @@
+0.3.6 / 06.03.2016
+==================
+
+  * Only checking `devServer` setting for `publicPath` in development mode
+
 0.3.4 / 02.03.2016
 ==================
 
