@@ -1,6 +1,6 @@
 import path from 'path'
 
-const node_modules = `${path.sep}node_modules${path.sep}`
+const node_modules = `${path.posix.sep}node_modules${path.posix.sep}`
 
 // Exclude `node_modules` anywhere in the path,
 // and also the server-side bundle output by `universal-webpack`.
