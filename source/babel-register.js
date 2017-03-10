@@ -4,7 +4,7 @@ const node_modules = `${path.posix.sep}node_modules${path.posix.sep}`
 
 // Exclude `node_modules` anywhere in the path,
 // and also the server-side bundle output by `universal-webpack`.
-// 
+//
 // Babel excludes all `node_modules` by default,
 // so by overriding the default `ignore` behavior
 // the `node_modules` exclusion feature must be duplicated.
@@ -16,7 +16,7 @@ const node_modules = `${path.posix.sep}node_modules${path.posix.sep}`
 export function babel_register_options(universal_webpack_settings, webpack_configuration)
 {
 	const server_side_bundle_path = path.resolve(webpack_configuration.context, universal_webpack_settings.server.output)
-	
+
 	// `babel-register` options
 	const options =
 	{
@@ -28,9 +28,15 @@ export function babel_register_options(universal_webpack_settings, webpack_confi
 				return true
 			}
 
+			let localFileName = filename;
+			if (path.sep = path.win32.sep) {
+				localFileName = localFileName.replace(/[/]/g, '\\');
+			}
+
 			// Ignore the server-side bundle
-			if (filename === server_side_bundle_path)
+			if (localFileName === server_side_bundle_path)
 			{
+				console.log('exclude bundle: ' + server_side_bundle_path);
 				return true
 			}
 
