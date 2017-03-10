@@ -36,7 +36,7 @@ export function babel_register_options(universal_webpack_settings, webpack_confi
 			// Ignore the server-side bundle
 			if (localFileName === server_side_bundle_path)
 			{
-				console.log('exclude bundle: ' + server_side_bundle_path);
+				// console.log('exclude bundle: ' + server_side_bundle_path);
 				return true
 			}
 
