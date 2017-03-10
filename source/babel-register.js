@@ -1,5 +1,7 @@
 import path from 'path'
 
+// For some weird reason Babel `filename` has posix slashes
+// instead of standard Windows slashes on Windows operating system.
 const node_modules = `${path.posix.sep}node_modules${path.posix.sep}`
 
 // Exclude `node_modules` anywhere in the path,
@@ -15,8 +17,12 @@ const node_modules = `${path.posix.sep}node_modules${path.posix.sep}`
 //
 export function babel_register_options(universal_webpack_settings, webpack_configuration)
 {
-	const server_side_bundle_path = path.resolve(webpack_configuration.context, universal_webpack_settings.server.output)
+	let server_side_bundle_path = path.resolve(webpack_configuration.context, universal_webpack_settings.server.output)
 	
+	// For some weird reason Babel `filename` has posix slashes
+	// instead of standard Windows slashes on Windows operating system.
+	server_side_bundle_path = server_side_bundle_path.replace(/\\/g, path.posix.sep)
+
 	// `babel-register` options
 	const options =
 	{

@@ -1,3 +1,8 @@
+0.3.7 / 10.03.2016
+==================
+
+  * Fixed `babel-register`'s `ignore` function on Windows (because Babel seems to be using `/` instead of `\` in the file paths)
+
 0.3.6 / 06.03.2016
 ==================
 
