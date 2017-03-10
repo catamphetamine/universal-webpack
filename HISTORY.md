@@ -1,40 +1,40 @@
-0.3.6 / 06.03.2016
+0.3.6 / 06.03.2017
 ==================
 
   * Only checking `devServer` setting for `publicPath` in development mode
 
-0.3.4 / 02.03.2016
+0.3.4 / 02.03.2017
 ==================
 
   * Fixed npm "private" packages (`@private/package`) not being marked as external dependencies
 
-0.3.3 / 15.02.2016
+0.3.3 / 15.02.2017
 ==================
 
   * Renamed `extract-text-webpack-plugin` deprecated options: `fallbackLoader` -> `fallback`, `loader` -> `use`
 
-0.3.2 / 14.02.2016
+0.3.2 / 14.02.2017
 ==================
 
   * Added `configuration` named parameter to the `server()` caller (along with the old `chunks()` named function parameter)
 
-0.3.0 / 30.01.2016
+0.3.0 / 30.01.2017
 ==================
 
   * Instead of using `fake-style-loader` now using `css-loader/locals`
   * Not emitting `file-loader`'s files during the server side build now (make sure your favicon is included on the client side then)
 
-0.2.6 / 28.01.2016
+0.2.6 / 28.01.2017
 ==================
 
   * Fixed the latest version of extract text plugin
 
-0.2.5 / 24.01.2016
+0.2.5 / 24.01.2017
 ==================
 
   * Added `babel-register` options for server side startup speed up
 
-0.2.0 / 05.01.2016
+0.2.0 / 05.01.2017
 ==================
 
   * Now only supports Webpack 2 (which is gonna be released soon; use `@2.2.0-rc.3` in the meanwhile). Use the old `0.1.x` version for Webpack 1.
