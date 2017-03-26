@@ -144,5 +144,10 @@ export function normalize_rule_loaders(rule)
 		rule.use = [rule.use]
 	}
 
+	if (!Array.isArray(rule.use))
+	{
+		throw new Error(`Invalid Webpack configuration: "rule.use" must be an array:\n\n${JSON.stringify(rule, null, 2)}\n\nSee https://webpack.js.org/configuration/module/#rule-use`)
+	}
+
 	rule.use = rule.use.map(parse_loader)
 }
