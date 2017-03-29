@@ -64,21 +64,21 @@ Suppose you have a typical `webpack.config.js` file. Create two new files called
 ### webpack.config.client.babel.js
 
 ```js
-import { clientConfiguration } from 'universal-webpack'
+import { client } from 'universal-webpack/config'
 import settings from './universal-webpack-settings'
 import configuration from './webpack.config'
 
-export default clientConfiguration(configuration, settings)
+export default client(configuration, settings)
 ```
 
 ### webpack.config.server.babel.js
 
 ```js
-import { serverConfiguration } from 'universal-webpack'
+import { server } from 'universal-webpack/config'
 import settings from './universal-webpack-settings'
 import configuration from './webpack.config'
 
-export default serverConfiguration(configuration, settings)
+export default server(configuration, settings)
 ```
 
 ### universal-webpack-settings.json
@@ -95,7 +95,7 @@ export default serverConfiguration(configuration, settings)
 
 Use `webpack.config.client.babel.js` instead of the old `webpack.config.js` for client side Webpack builds.
 
-The `serverConfiguration()` function takes the client-side Webpack configuration and tunes it a bit for server-side usage ([`target: "node"`](https://webpack.github.io/docs/configuration.html#target)).
+The `server()` configuration function takes the client-side Webpack configuration and tunes it a bit for server-side usage ([`target: "node"`](https://webpack.github.io/docs/configuration.html#target)).
 
 The server-side bundle (`settings.server.output` file) is generated from `settings.server.input` file by Webpack when it's run with the `webpack.config.server.babel.js` configuration. An example of `settings.server.input` file may look like this (it must export a function):
 
@@ -161,7 +161,7 @@ The last thing to do is to create a startup file for the server side. This is th
 ### source/start-server.js
 
 ```js
-import { server } from 'universal-webpack'
+import server from 'universal-webpack/server'
 import settings from '../universal-webpack-settings'
 // `configuration.context` and `configuration.output.path` are used
 import configuration from '../webpack.config'
@@ -232,7 +232,7 @@ It emits no assets from the server-side code so make sure you include all assets
 
 ## `extract-text-webpack-plugin`
 
-The third argument – `options` object – may be passed to `clientConfiguration` function. If `options.development === false`, then it will apply `extract-text-webpack-plugin` to CSS styles automatically, i.e. it will extract all CSS styles into one big bundle file. This is considered the "best practice" for production deployment.
+The third argument – `options` object – may be passed to `client()` configuration function. If `options.development === false`, then it will apply `extract-text-webpack-plugin` to CSS styles automatically, i.e. it will extract all CSS styles into one big bundle file. This is considered the "best practice" for production deployment.
 
 ## Advanced configuration
 
@@ -286,7 +286,7 @@ import 'source-map-support/register'
 
 // The rest is the same as in the above example
 
-import { server } from 'universal-webpack'
+import server from 'universal-webpack/server'
 import settings from '../universal-webpack-settings'
 import configuration from '../webpack.config'
 
@@ -372,11 +372,11 @@ If both `development` and `css_bundle` options are set to `true`, then `universa
 There's a gotcha though. Because the whole CSS bundle gets inserted as a `<link rel="stylesheet"/>` tag in the `<head/>` it also means that the styles defined in that CSS bundle are static, not dynamic, and they aren't gonna "hot reload" themselves or something. So, my proposed solution is to have that `<link rel="stylesheet"/>` tag sit in the `<head/>` for a while (say, a couple of seconds) and then remove it from there. The styling of the webpage isn't gonna disappear at that moment because by that time the dynamic styles of `style-loader` have already kicked in. See [an example of how this can be done](https://github.com/halt-hammerzeit/webpack-react-redux-isomorphic-render-example/blob/daf84daaa00c0d37ccd9502f36c7af26d640bee2/code/page-server/web%20server.js#L51-L63).
 
 ```js
-import { clientConfiguration } from 'universal-webpack'
+import { client } from 'universal-webpack/config'
 import settings from './universal-webpack-settings'
 import configuration from './webpack.config'
 
-export default clientConfiguration(configuration, settings, { development: true, css_bundle: true })
+export default client(configuration, settings, { development: true, css_bundle: true })
 ```
 
 ## resolve.moduleDirectories

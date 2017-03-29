@@ -46,4 +46,12 @@ describe(`exports`, function()
 		_.clientConfiguration.should.be.a('function')
 		_.babelRegisterOptions.should.be.a('function')
 	})
+
+	it(`should export /config and /server`, function()
+	{
+		require('../config').client.should.be.a('function')
+		require('../config').server.should.be.a('function')
+
+		require('../server').should.be.a('function')
+	})
 })
