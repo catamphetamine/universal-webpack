@@ -161,12 +161,12 @@ The last thing to do is to create a startup file for the server side. This is th
 ### source/start-server.js
 
 ```js
-import server from 'universal-webpack/server'
+import startServer from 'universal-webpack/server'
 import settings from '../universal-webpack-settings'
 // `configuration.context` and `configuration.output.path` are used
 import configuration from '../webpack.config'
 
-server(configuration, settings)
+startServer(configuration, settings)
 ```
 
 ### source/start-server.babel.js
@@ -286,11 +286,11 @@ import 'source-map-support/register'
 
 // The rest is the same as in the above example
 
-import server from 'universal-webpack/server'
+import startServer from 'universal-webpack/server'
 import settings from '../universal-webpack-settings'
 import configuration from '../webpack.config'
 
-server(configuration, settings)
+startServer(configuration, settings)
 ```
 
 Without `source-map-support` enabled it would give me `No element indexed by XXX` error (which [means](https://github.com/mozilla/source-map/issues/76) that by default Node.js thinks there are references to other source maps and tries to load them but there are no such source maps).
