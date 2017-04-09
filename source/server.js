@@ -16,11 +16,15 @@ export default function server(webpack_configuration, settings)
 	// (built by Webpack)
 	const server_bundle_path = path.resolve(webpack_configuration.context || process.cwd(), settings.server.output)
 
+	const chunk_info_json_file_path = chunk_info_file_path(webpack_configuration, settings.chunk_info_filename)
+
 	// waits for the first Webpack server-side build to finish and produce `webpage_rendering_server.js`
 	return wait_for_file(server_bundle_path).then(function()
 	{
-		const chunk_info_json_file_path = chunk_info_file_path(webpack_configuration, settings.chunk_info_filename)
-
+		return wait_for_file(chunk_info_json_file_path)
+	})
+	.then(function()
+	{
 		// Will be passed to the server code
 		const additional =
 		{
