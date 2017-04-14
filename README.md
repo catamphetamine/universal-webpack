@@ -17,29 +17,7 @@ npm install webpack --save
 npm install extract-text-webpack-plugin --save
 ```
 
-I've been supporting Webpack 1 in this library for a long time but now the time has come to move to Webpack 2 since it's [almost ready to be released](https://github.com/webpack/webpack/milestone/10).
-
-See [Webpack 1 to 2 migration notes](https://webpack.js.org/guides/migrating/)
-
-For Webpack 1 use the `0.1.x` version of this library.
-
-## Motivation
-
-In summer 2015 I wrote [`webpack-isomorphic-tools`](https://github.com/halt-hammerzeit/webpack-isomorphic-tools) as an experiment to make isomorphic (universal) React rendering work on server-side when the project was built with Webpack. At that time I barely knew how that "Webpack" thing worked so I ended up actually reimplementing some of the Webpack functionality on the server-side.
-
-Still, the goal was met, the whole thing worked, and many people started using `webpack-isomorphic-tools` in their apps to implement isomorphic (universal) rendering.
-
-But while `webpack-isomorphic-tools` supports the core Webpack functionality (`resolve.alias`es and such) it still lacks some Webpack features like various plugins and other advanced stuff.
-
-So I did some research on Webpack builds for Node.js and came up with this proof-of-concept solution which seems to work good enough. It supports all Webpack features (all plugins, etc).
-
-## `universal-webpack` vs `webpack-isomorphic-tools`
-
-`webpack-isomorphic-tools` runs on the server-side and hooks into Node.js `require()` function with the help of `require-hacker` and does what needs to be done.
-
-`universal-webpack` doesn't hook into `require()` function - it's just a helper for transforming client-side Webpack configuration to a server-side Webpack configuration. It doesn't run on the server-side or something. It's just a Webpack configuration generator - turned out that Webpack has a `target: "node"` parameter which makes it output code that runs on Node.js without any issues.
-
-I wrote `webpack-isomorphic-tools` before `universal-webpack`, so `universal-webpack` is the recommended tool. However many people still use `webpack-isomorphic-tools` (including me) and find it somewhat less complicated for beginners.
+I've been supporting Webpack 1 in this library for a long time but now the time has come to move to Webpack 2. See [Webpack 1 to 2 migration notes](https://webpack.js.org/guides/migrating/). For Webpack 1 use the `0.1.x` version of this library.
 
 ## Installation
 
@@ -50,7 +28,7 @@ npm install extract-text-webpack-plugin --save
 
 ## Example project
 
-You may refer to [this sample project](https://github.com/halt-hammerzeit/webpack-react-redux-isomorphic-render-example) as an example of using this library (see `webpack` directory, `package.json` and `client/rendering-service/main.js`).
+You may refer to [this sample project](https://github.com/halt-hammerzeit/webpack-react-redux-isomorphic-render-example) as a reference example of using this library (see `webpack` directory, `package.json` and `client/rendering-service/main.js`).
 
 Other sample projects (from other github users who asked me to add these links to this readme):
 
@@ -408,6 +386,14 @@ require('babel-register')(
 	)
 )
 ```
+
+## `universal-webpack` vs `webpack-isomorphic-tools`
+
+`webpack-isomorphic-tools` runs on the server-side and hooks into Node.js `require()` function with the help of `require-hacker` and does what needs to be done.
+
+`universal-webpack` doesn't hook into `require()` function - it's just a helper for transforming client-side Webpack configuration to a server-side Webpack configuration. It doesn't run on the server-side or something. It's just a Webpack configuration generator - turned out that Webpack has a `target: "node"` parameter which makes it output code that runs on Node.js without any issues.
+
+I wrote `webpack-isomorphic-tools` before `universal-webpack`, so `universal-webpack` is the recommended tool. However many people still use `webpack-isomorphic-tools` (including me) and find it somewhat less complicated for beginners.
 
 ## License
 
