@@ -13,8 +13,8 @@ Helps setting up isomorphic (universal) Webpack build: the one that's working bo
 This library now **only supports Webpack 2**.
 
 ```sh
-npm install webpack@2.2.0 --save
-npm install extract-text-webpack-plugin@2.0.0-rc.2 --save
+npm install webpack --save
+npm install extract-text-webpack-plugin --save
 ```
 
 I've been supporting Webpack 1 in this library for a long time but now the time has come to move to Webpack 2 since it's [almost ready to be released](https://github.com/webpack/webpack/milestone/10).

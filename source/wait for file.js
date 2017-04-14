@@ -1,12 +1,12 @@
 import fs from 'fs'
 
-// Waits for `build/server.js` to be created 
-// after Webpack build process finishes.
+// Waits for a file to be created 
+// (e.g. after Webpack build process finishes).
 //
-// The Promise is resolved when `build/server.js` has been found 
-// (this is needed for development because `webpack-dev-server` 
-//  and your Node.js application server are run in parallel,
-//  and are restarted simultaneously).
+// The Promise is resolved when the file has been found 
+// (for example, this is needed for development because
+//  `webpack-dev-server` and Node.js application server
+//  are run in parallel).
 //
 export default function wait_for_file(path)
 {
@@ -54,7 +54,7 @@ export default function wait_for_file(path)
 					message_timer = 0
 
 					console.log(`("${path}" not found)`)
-					console.log('(waiting for Webpack build to finish)')
+					console.log('(waiting for the file to be generated; e.g. as a result of a Webpack build)')
 				}
 			}
 		)
