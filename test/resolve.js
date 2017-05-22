@@ -75,7 +75,7 @@ describe(`resolver`, function()
 
 		const settings =
 		{
-			exclude_from_externals:
+			excludeFromExternals:
 			[
 				'lodash-es',
 				/^es6-only(\/.*)?$/

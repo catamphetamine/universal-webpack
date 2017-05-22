@@ -206,9 +206,10 @@ These filenames are required for `<script src=.../>` and `<link rel="style" href
 
 ## Gotchas
 
-It emits no assets from the server-side code so make sure you include all assets at least on the client side (e.g. "favicon").
+* It emits no assets from the server-side code so make sure you include all assets at least on the client side (e.g. "favicon").
+* `resolve.root` won't work out-of-the-box while `resolve.alias`es do. For those using `resolve.root` I recommend switching to `resolve.alias`. By default no "modules" are bundled in a server-side bundle except for `resolve.alias`es and `excludeFromExternals` matches (see below).
 
-## `extract-text-webpack-plugin`
+## Using `extract-text-webpack-plugin`
 
 The third argument – `options` object – may be passed to `client()` configuration function. If `options.development === false`, then it will apply `extract-text-webpack-plugin` to CSS styles automatically, i.e. it will extract all CSS styles into one big bundle file. This is considered the "best practice" for production deployment.
 
@@ -232,12 +233,12 @@ The third argument – `options` object – may be passed to `client()` configur
 	//   https://github.com/halt-hammerzeit/universal-webpack/issues/10 )
 	//
 	// Another use case is including assets from `node_modules`:
-	// in order to do so one must add those assets to `exclude_from_externals`.
+	// in order to do so one must add those assets to `excludeFromExternals`.
 	// Otherwise, for example, when `require()`ing CSS files from `node_modules`
 	// Node.js will just throw `SyntaxError: Unexpected token .`
 	// because these CSS files need to be compiled by Webpack's `css-loader` first.
 	//
-	exclude_from_externals:
+	excludeFromExternals:
 	[
 		'lodash-es',
 		/^some-other-es6-only-module(\/.*)?$/
