@@ -206,7 +206,7 @@ These filenames are required for `<script src=.../>` and `<link rel="style" href
 
 ## Gotchas
 
-* It emits no assets from the server-side code so make sure you include all assets at least on the client side (e.g. "favicon").
+* It emits no assets on the server side so make sure you include all assets on the client side (e.g. "favicon").
 * `resolve.root` won't work out-of-the-box while `resolve.alias`es do. For those using `resolve.root` I recommend switching to `resolve.alias`. By default no "modules" are bundled in a server-side bundle except for `resolve.alias`es and `excludeFromExternals` matches (see below).
 
 ## Using `extract-text-webpack-plugin`
