@@ -22,6 +22,9 @@ export function find_style_rules(configuration)
 		const style_loader = rule.use.filter( loader_name_filter( 'style' ) )[0]
 
 		// Is it `extract-text-webpack-plugin` loader
+		// (the regular expression is a filesystem path
+		//  which is `.../extract-text-webpack-plugin/loader.js` for v2
+		//  and `.../extract-text-webpack-plugin/dist/loader.js` for v3)
 		const extract_text_plugin_loader = rule.use.filter( loader => /extract-text-webpack-plugin/.test(loader.loader) )[0]
 
 		return style_loader && !extract_text_plugin_loader
