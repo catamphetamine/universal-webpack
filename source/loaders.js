@@ -22,7 +22,7 @@ export function find_style_rules(configuration)
 		const style_loader = rule.use.filter( loader_name_filter( 'style' ) )[0]
 
 		// Is it `extract-text-webpack-plugin` loader
-		const extract_text_plugin_loader = rule.use.filter( loader => loader.loader.indexOf( 'extract-text-webpack-plugin/loader.js' ) >= 0 )[0]
+		const extract_text_plugin_loader = rule.use.filter( loader => /extract-text-webpack-plugin/.test(loader.loader) )[0]
 
 		return style_loader && !extract_text_plugin_loader
 	} )
