@@ -57,7 +57,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/halt-hammerzeit/universal-webpack.git"
+    "url": "git+https://github.com/catamphetamine/universal-webpack.git"
   },
   "keywords": [
     "webpack",
@@ -70,9 +70,9 @@
   "author": "Halt Hammerzeit <halt.hammerzeit.at@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/halt-hammerzeit/universal-webpack/issues"
+    "url": "https://github.com/catamphetamine/universal-webpack/issues"
   },
-  "homepage": "https://github.com/halt-hammerzeit/universal-webpack#readme",
+  "homepage": "https://github.com/catamphetamine/universal-webpack#readme",
   "bin": {
     "universal-webpack": "./bin/universal-webpack.js"
   },

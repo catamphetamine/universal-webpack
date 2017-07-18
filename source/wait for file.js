@@ -32,7 +32,7 @@ export default function wait_for_file(path)
 				}
 
 				// Check if the file contents have been written to disk
-				// https://github.com/halt-hammerzeit/universal-webpack/issues/24
+				// https://github.com/catamphetamine/universal-webpack/issues/24
 				const contents = fs.readFileSync(path, 'utf8')
 
 				// Check if the file contents is empty

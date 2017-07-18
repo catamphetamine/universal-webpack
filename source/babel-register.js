@@ -13,7 +13,7 @@ const node_modules = `${path.posix.sep}node_modules${path.posix.sep}`
 // https://github.com/babel/babel/blob/c8bd9e3ffb23e216d92fb70188fcf105381b8bb8/packages/babel-register/src/node.js#L90-L96
 //
 // Excluding the server-side bundle is said to speed up things a bit.
-// https://github.com/halt-hammerzeit/webpack-react-redux-isomorphic-render-example/issues/5
+// https://github.com/catamphetamine/webpack-react-redux-isomorphic-render-example/issues/5
 //
 export function babel_register_options(universal_webpack_settings, webpack_configuration)
 {

@@ -6,7 +6,7 @@
 0.3.8 / 29.03.2017
 ==================
 
-  * Added new exports: `universal-webpack/config` and `universal-webpack/server`. The old way of importing still works: these two are just the new approach discussed in a [relevant issue](https://github.com/halt-hammerzeit/universal-webpack/issues/23).
+  * Added new exports: `universal-webpack/config` and `universal-webpack/server`. The old way of importing still works: these two are just the new approach discussed in a [relevant issue](https://github.com/catamphetamine/universal-webpack/issues/23).
 
 0.3.7 / 10.03.2017
 ==================

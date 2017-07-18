@@ -6,7 +6,7 @@
 
 Helps setting up isomorphic (universal) Webpack build: the one that's working both on client and server.
 
-*Small Advertisement:* 📞 if you're looking for a React phone number component check out [`react-phone-number-input`](http://halt-hammerzeit.github.io/react-phone-number-input/)
+*Small Advertisement:* 📞 if you're looking for a React phone number component check out [`react-phone-number-input`](http://catamphetamine.github.io/react-phone-number-input/)
 
 ## Webpack 2
 
@@ -28,7 +28,7 @@ npm install extract-text-webpack-plugin --save
 
 ## Example project
 
-You may refer to [this sample project](https://github.com/halt-hammerzeit/webpack-react-redux-isomorphic-render-example) as a reference example of using this library (see `webpack` directory, `package.json` and `client/rendering-service/main.js`).
+You may refer to [this sample project](https://github.com/catamphetamine/webpack-react-redux-isomorphic-render-example) as a reference example of using this library (see `webpack` directory, `package.json` and `client/rendering-service/main.js`).
 
 Other sample projects (from other github users who asked me to add these links to this readme):
 
@@ -230,7 +230,7 @@ The third argument – `options` object – may be passed to `client()` configur
 	//
 	// Can be used, for example, for ES6-only `node_modules`.
 	// ( a more intelligent solution would be accepted
-	//   https://github.com/halt-hammerzeit/universal-webpack/issues/10 )
+	//   https://github.com/catamphetamine/universal-webpack/issues/10 )
 	//
 	// Another use case is including assets from `node_modules`:
 	// in order to do so one must add those assets to `excludeFromExternals`.
@@ -348,7 +348,7 @@ I came up with a solution which seems to be working good enough. To enable the a
 
 If both `development` and `css_bundle` options are set to `true`, then `universal-webpack` will enhance the client side Webpack configuration to also output all styles into a single CSS bundle (while retaining `style-loader`) which is later added to the webpage's `<head/>` as a `<link rel="stylesheet"/>` tag on the server side, therefore making that "flash of unstyled content" disappear.
 
-There's a gotcha though. Because the whole CSS bundle gets inserted as a `<link rel="stylesheet"/>` tag in the `<head/>` it also means that the styles defined in that CSS bundle are static, not dynamic, and they aren't gonna "hot reload" themselves or something. So, my proposed solution is to have that `<link rel="stylesheet"/>` tag sit in the `<head/>` for a while (say, a couple of seconds) and then remove it from there. The styling of the webpage isn't gonna disappear at that moment because by that time the dynamic styles of `style-loader` have already kicked in. See [an example of how this can be done](https://github.com/halt-hammerzeit/webpack-react-redux-isomorphic-render-example/blob/daf84daaa00c0d37ccd9502f36c7af26d640bee2/code/page-server/web%20server.js#L51-L63).
+There's a gotcha though. Because the whole CSS bundle gets inserted as a `<link rel="stylesheet"/>` tag in the `<head/>` it also means that the styles defined in that CSS bundle are static, not dynamic, and they aren't gonna "hot reload" themselves or something. So, my proposed solution is to have that `<link rel="stylesheet"/>` tag sit in the `<head/>` for a while (say, a couple of seconds) and then remove it from there. The styling of the webpage isn't gonna disappear at that moment because by that time the dynamic styles of `style-loader` have already kicked in. See [an example of how this can be done](https://github.com/catamphetamine/webpack-react-redux-isomorphic-render-example/blob/daf84daaa00c0d37ccd9502f36c7af26d640bee2/code/page-server/web%20server.js#L51-L63).
 
 ```js
 import { client } from 'universal-webpack/config'
@@ -403,8 +403,8 @@ I wrote `webpack-isomorphic-tools` before `universal-webpack`, so `universal-web
 [npm]: https://www.npmjs.org/package/universal-webpack
 [npm-badge]: https://img.shields.io/npm/v/universal-webpack.svg?style=flat-square
 
-[travis]: https://travis-ci.org/halt-hammerzeit/universal-webpack
-[travis-badge]: https://img.shields.io/travis/halt-hammerzeit/universal-webpack/master.svg?style=flat-square
+[travis]: https://travis-ci.org/catamphetamine/universal-webpack
+[travis-badge]: https://img.shields.io/travis/catamphetamine/universal-webpack/master.svg?style=flat-square
 
-[coveralls]: https://coveralls.io/r/halt-hammerzeit/universal-webpack?branch=master
-[coveralls-badge]: https://img.shields.io/coveralls/halt-hammerzeit/universal-webpack/master.svg?style=flat-square
+[coveralls]: https://coveralls.io/r/catamphetamine/universal-webpack?branch=master
+[coveralls-badge]: https://img.shields.io/coveralls/catamphetamine/universal-webpack/master.svg?style=flat-square
