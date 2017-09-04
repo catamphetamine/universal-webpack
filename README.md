@@ -139,23 +139,12 @@ The last thing to do is to create a startup file for the server side. This is th
 ### source/start-server.js
 
 ```js
-import startServer from 'universal-webpack/server'
-import settings from '../universal-webpack-settings'
+var startServer = require('universal-webpack/server')
+var settings = require('../universal-webpack-settings')
 // `configuration.context` and `configuration.output.path` are used
-import configuration from '../webpack.config'
+var configuration = require('../webpack.config')
 
 startServer(configuration, settings)
-```
-
-### source/start-server.babel.js
-
-```js
-// Enable ES6
-// (ignoring all `build` and `node_modules` folders for speed-up)
-require('babel-register')({ ignore: /\/(build|node_modules)\// })
-
-// Run `source/start-server.js`
-require('./source/start-server.js')
 ```
 
 Calling `source/start-server.js` will basically call the function exported from `source/server.js` built with Webpack.
@@ -171,7 +160,7 @@ webpack --watch --config "./webpack.config.server.babel.js" --colors --display-e
 ```
 
 ```bash
-nodemon "./source/start-server.babel" --watch "./build/server"
+nodemon "./source/start-server" --watch "./build/server"
 ```
 
 The above three commands are for development mode. For production mode the same command sequence would be:
@@ -179,7 +168,7 @@ The above three commands are for development mode. For production mode the same 
 ```bash
 webpack --config "./webpack.config.client.babel.js" --colors --display-error-details
 webpack --config "./webpack.config.server.babel.js" --colors --display-error-details
-node "./source/start-server.babel"
+node "./source/start-server"
 ```
 
 ## Chunks
@@ -261,13 +250,13 @@ I managed to get source maps working in my Node.js server-side code using [`sour
 
 ```js
 // Enables proper source map support in Node.js
-import 'source-map-support/register'
+require('source-map-support/register')
 
 // The rest is the same as in the above example
 
-import startServer from 'universal-webpack/server'
-import settings from '../universal-webpack-settings'
-import configuration from '../webpack.config'
+var startServer = require('universal-webpack/server')
+var settings = require('../universal-webpack-settings')
+var configuration = require('../webpack.config')
 
 startServer(configuration, settings)
 ```
@@ -371,21 +360,6 @@ resolve:
     ...
   }
 }
-```
-
-## Server-side startup time optimization
-
-In case `babel-register` is used to run the server-side bundle, there have been reports that leveraging the `ignore` option of `babel-register` might speed things up significantly by telling Babel explicitly not to parse the server-side bundle.
-
-```js
-// Prevents Babel from transpiling server-side bundle
-// resulting in faster server-side hot-reload (startup) times.
-require('babel-register')(
-	require('universal-webpack').babelRegisterOptions(
-		require('../webpack/universal-webpack-settings'),
-		require('../webpack/webpack.config')
-	)
-)
 ```
 
 ## `universal-webpack` vs `webpack-isomorphic-tools`

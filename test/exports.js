@@ -8,7 +8,6 @@ import
 	client_configuration,
 	prepare,
 	devtools,
-	babel_register_options,
 	serverConfiguration,
 	clientConfiguration,
 	babelRegisterOptions
@@ -24,11 +23,9 @@ describe(`exports`, function()
 		client_configuration.should.be.a('function')
 		prepare.should.be.a('function')
 		devtools.should.be.a('function')
-		babel_register_options.should.be.a('function')
 
 		serverConfiguration.should.be.a('function')
 		clientConfiguration.should.be.a('function')
-		babelRegisterOptions.should.be.a('function')
 	})
 
 	it(`should export in CommonJS`, function()
@@ -40,11 +37,9 @@ describe(`exports`, function()
 		_.client_configuration.should.be.a('function')
 		_.prepare.should.be.a('function')
 		_.devtools.should.be.a('function')
-		_.babel_register_options.should.be.a('function')
 
 		_.serverConfiguration.should.be.a('function')
 		_.clientConfiguration.should.be.a('function')
-		_.babelRegisterOptions.should.be.a('function')
 	})
 
 	it(`should export /config and /server`, function()

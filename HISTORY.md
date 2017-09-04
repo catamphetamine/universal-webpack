@@ -1,3 +1,8 @@
+0.4.0 / 04.09.2017
+==================
+
+  * Removed any mentions of `babel-register` from this library because the server-side bundle is already being compiled by `babel-loader`
+
 0.3.9 / 09.04.2017
 ==================
 
