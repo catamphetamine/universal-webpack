@@ -1,3 +1,8 @@
+0.5.0 / 23.12.2017
+==================
+
+  * Added `loadExternalModuleFileExtensions` which now "excludes from externals" various webpack-loaded assets like CSS files.
+
 0.4.0 / 04.09.2017
 ==================
 
