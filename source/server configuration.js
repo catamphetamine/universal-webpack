@@ -3,7 +3,7 @@ import util from 'util'
 import webpack from 'webpack'
 import validate_npm_package_path from 'validate-npm-package-name'
 
-import { clone, starts_with } from './helpers'
+import { clone, starts_with, ends_with } from './helpers'
 import { find_style_rules, loader_name_filter, parse_loader, stringify_loader, normalize_rule_loaders } from './loaders'
 
 // Tunes the client-side Webpack configuration for server-side build
@@ -174,12 +174,40 @@ export function is_external(request, webpack_configuration, settings)
 	}
 
 	// Allows camelCasing
+	const exclude_from_externals_extensions = settings.load_external_module_file_extensions || settings.loadExternalModuleFileExtensions ||
+	[
+		'css',
+		'png',
+		'jpg',
+		'svg',
+		'xml'
+	]
+
+	// Assets are being exluded from externals
+	// because they need loaders in order to be `require()`d.
+	const extname = path.extname(request)
+	if (extname)
+	{
+		const extension = extname.slice(1)
+
+		if (extension)
+		{
+			if (exclude_from_externals_extensions.indexOf(extension) >= 0)
+			{
+				// "The module is not external"
+				// (which means "load this module with a special loader")
+				return false
+			}
+		}
+	}
+
+	// Allows camelCasing
 	const exclude_from_externals = settings.exclude_from_externals || settings.excludeFromExternals
 
 	// Skip modules explicitly ignored by the user
 	if (exclude_from_externals)
 	{
-		for (let exclusion_pattern of exclude_from_externals)
+		for (const exclusion_pattern of exclude_from_externals)
 		{
 			let regexp = exclusion_pattern
 

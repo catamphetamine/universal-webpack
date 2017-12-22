@@ -223,16 +223,30 @@ The third argument – `options` object – may be passed to `client()` configur
 	// ( a more intelligent solution would be accepted
 	//   https://github.com/catamphetamine/universal-webpack/issues/10 )
 	//
-	// Another use case is including assets from `node_modules`:
-	// in order to do so one must add those assets to `excludeFromExternals`.
-	// Otherwise, for example, when `require()`ing CSS files from `node_modules`
-	// Node.js will just throw `SyntaxError: Unexpected token .`
-	// because these CSS files need to be compiled by Webpack's `css-loader` first.
-	//
 	excludeFromExternals:
 	[
 		'lodash-es',
 		/^some-other-es6-only-module(\/.*)?$/
+	],
+
+	// As stated above, all files inside `node_modules`, when `require()`d,
+	// would be resolved as "externals" which means Webpack wouldn't use
+	// loaders to process them, and therefore `require()`ing them
+	// would result in an error when running the server-side bundle.
+	//
+	// E.g. for CSS files Node.js would just throw `SyntaxError: Unexpected token .`
+	// because these CSS files need to be compiled by Webpack's `css-loader` first.
+	//
+	// Hence the "exclude from externals" file extensions list
+	// which by default is initialized with some common asset types:
+	//
+	loadExternalModuleFileExtensions:
+	[
+		'css',
+		'png',
+		'jpg',
+		'svg',
+		'xml'
 	],
 
 	// Enable `silent` flag to prevent client side webpack build
