@@ -25,28 +25,23 @@ export default function client_configuration(webpack_configuration, settings, op
 		new chunks_plugin(clone(configuration), { silent: settings.silent, chunk_info_filename: settings.chunk_info_filename })
 	)
 
-	// Not sure about the name yet
-	// // Normalize legacy options
-	// if (options.css_bundle)
-	// {
-	// 	console.warn("`css_bundle` option is now called `extract_styles`")
-	// 	options.extract_styles = options.css_bundle
-	// 	delete options.css_bundle
-	// }
+	// CSS bundle filename (if specified)
+	
+	const css_bundle = options.css_bundle || options.cssBundle
+
+	let css_bundle_filename = '[name]-[contenthash].css'
+
+	if (typeof css_bundle === 'string')
+	{
+		css_bundle_filename = css_bundle
+	}
 
 	// If it's a client-side development webpack build,
 	// and CSS bundle extraction is enabled,
 	// then extract all CSS styles into a file.
 	// (without removing them from the code)
-	if (options.development && options.css_bundle)
+	if (options.development && css_bundle)
 	{
-		let css_bundle_filename = '[name]-[contenthash].css'
-
-		if (typeof options.css_bundle === 'string')
-		{
-			css_bundle_filename = options.css_bundle
-		}
-
 		// Extract styles into a file
 		// (without removing them from the code in this case).
 		//
@@ -124,15 +119,8 @@ export default function client_configuration(webpack_configuration, settings, op
 	// Use `extract-text-webpack-plugin`
 	// to extract all CSS into a separate file
 	// (in production)
-	if (options.development === false && options.css_bundle !== false)
+	if (options.development === false && css_bundle !== false)
 	{
-		let css_bundle_filename = '[name]-[contenthash].css'
-
-		if (typeof options.css_bundle === 'string')
-		{
-			css_bundle_filename = options.css_bundle
-		}
-
 		// Extract styles into a file
 		// (removing them from the code in this case).
 		//

@@ -349,9 +349,9 @@ It's not really a bug, many projects live with it and it doesn't really affect t
 I came up with a solution which seems to be working good enough. To enable the anti-unstyled-flash feature one needs to pass the third parameter to the client-side webpack configuration creation function - an `options` object with:
 
  * `development` key set to `true` indicating that it's a development build configuration
- * `css_bundle` key set to `true`
+ * `cssBundle` key set to `true`
 
-If both `development` and `css_bundle` options are set to `true`, then `universal-webpack` will enhance the client side Webpack configuration to also output all styles into a single CSS bundle (while retaining `style-loader`) which is later added to the webpage's `<head/>` as a `<link rel="stylesheet"/>` tag on the server side, therefore making that "flash of unstyled content" disappear.
+If both `development` and `cssBundle` options are set to `true`, then `universal-webpack` will enhance the client side Webpack configuration to also output all styles into a single CSS bundle (while retaining `style-loader`) which is later added to the webpage's `<head/>` as a `<link rel="stylesheet"/>` tag on the server side, therefore making that "flash of unstyled content" disappear.
 
 There's a gotcha though. Because the whole CSS bundle gets inserted as a `<link rel="stylesheet"/>` tag in the `<head/>` it also means that the styles defined in that CSS bundle are static, not dynamic, and they aren't gonna "hot reload" themselves or something. So, my proposed solution is to have that `<link rel="stylesheet"/>` tag sit in the `<head/>` for a while (say, a couple of seconds) and then remove it from there. The styling of the webpage isn't gonna disappear at that moment because by that time the dynamic styles of `style-loader` have already kicked in. See [an example of how this can be done](https://github.com/catamphetamine/webpack-react-redux-isomorphic-render-example/blob/daf84daaa00c0d37ccd9502f36c7af26d640bee2/code/page-server/web%20server.js#L51-L63).
 
@@ -360,7 +360,7 @@ import { client } from 'universal-webpack/config'
 import settings from './universal-webpack-settings'
 import configuration from './webpack.config'
 
-export default client(configuration, settings, { development: true, css_bundle: true })
+export default client(configuration, settings, { development: true, cssBundle: true })
 ```
 
 ## resolve.moduleDirectories
