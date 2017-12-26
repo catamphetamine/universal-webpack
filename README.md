@@ -1,9 +1,10 @@
 # universal-webpack
 
 [![NPM Version][npm-badge]][npm]
+[![Test Coverage][coveralls-badge]][coveralls]
+
 <!-- Travis builds error beause of `npm install crlf -g` is not available there -->
 <!--[![Build Status][travis-badge]][travis]-->
-[![Test Coverage][coveralls-badge]][coveralls]
 
 **For starters:** consider skipping `universal-webpack` and trying [Next.js](https://github.com/zeit/next.js) first: it's super user-friendly, [very hyped](https://zeit.co/blog/next) and is supposed to be an ideal start for beginners. Master simpler things first, then move on to complex ones. Here be dragons.
 
