@@ -1,8 +1,16 @@
+import util from 'util'
 import extract_text_plugin from 'extract-text-webpack-plugin'
 
 import chunks_plugin from './chunks plugin'
 import { clone, starts_with } from './helpers'
-import { find_style_rules, loader_name_filter, normalize_rule_loaders } from './loaders'
+
+import
+{
+	find_loader,
+	get_style_rules,
+	normalize_configuration_rule_loaders
+}
+from './loaders'
 
 export default function client_configuration(webpack_configuration, settings, options = {})
 {
@@ -26,7 +34,7 @@ export default function client_configuration(webpack_configuration, settings, op
 	)
 
 	// CSS bundle filename (if specified)
-	
+
 	const css_bundle = options.css_bundle || options.cssBundle
 
 	let css_bundle_filename = '[name]-[contenthash].css'
@@ -57,20 +65,26 @@ export default function client_configuration(webpack_configuration, settings, op
 		//
 		const extract_css = new extract_text_plugin
 		({
-			filename: css_bundle_filename,
-			allChunks: true
+			filename  : css_bundle_filename,
+			allChunks : true
 		})
 
-		// Find module loaders with `style-loader`,
-		// and set those module loaders to `extract-text-webpack-plugin` loader
-		for (let rule of find_style_rules(configuration))
-		{
-			normalize_rule_loaders(rule)
+		// Normalize `modules.rules` loaders.
+		normalize_configuration_rule_loaders(configuration)
 
-			const style_loader = rule.use.filter(loader_name_filter('style'))[0]
+		// Find all rules using `style-loader`
+		// and replace `style-loader` with `extract-text-webpack-plugin` loader.
+		for (const rule of get_style_rules(configuration))
+		{
+			const style_loader = find_loader(rule, 'style-loader')
 
 			const before_style_loader = rule.use.slice(0, rule.use.indexOf(style_loader))
 			const after_style_loader  = rule.use.slice(rule.use.indexOf(style_loader) + 1)
+
+			if (before_style_loader.length > 0)
+			{
+				throw new Error('No loaders can preceed `style-loader` in a Webpack module rule.', util.inspect(rule))
+			}
 
 			// The first argument to the .extract() function is the name of the loader
 			// ("style-loader" in this case) to be applied to non-top-level-chunks in case of "allChunks: false" option.
@@ -81,14 +95,17 @@ export default function client_configuration(webpack_configuration, settings, op
 			//
 			// I'm also prepending another `style-loader` here
 			// to re-enable adding these styles to the <head/> of the page on-the-fly.
-			
+
 			const extract_css_loader = extract_css.extract
 			({
-				remove   : false,
-				fallback : before_style_loader,
-				use      : after_style_loader
+				remove    : false,
+				// `fallback` option is not really being used
+				// because `allChunks: true` option is used.
+				// fallback  : before_style_loader,
+				use       : after_style_loader
 			})
 
+			// Workaround for an old bug, may be obsolete now.
 			// https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/368
 			if (Array.isArray(extract_css_loader))
 			{
@@ -134,20 +151,28 @@ export default function client_configuration(webpack_configuration, settings, op
 		//
 		const extract_css = new extract_text_plugin
 		({
-			filename: css_bundle_filename,
-			allChunks: true
+			filename  : css_bundle_filename,
+			allChunks : true
 		})
+
+		// Normalize `modules.rules` loaders.
+		normalize_configuration_rule_loaders(configuration)
 
 		// Find module loaders with `style-loader`,
 		// and set those module loaders to `extract-text-webpack-plugin` loader
-		for (let rule of find_style_rules(configuration))
+		for (const rule of get_style_rules(configuration))
 		{
-			normalize_rule_loaders(rule)
+			const style_loader = find_loader(rule, 'style-loader')
 
-			const style_loader = rule.use.filter(loader_name_filter('style'))[0]
+			// const style_loader_and_before = rule.use.slice(0, rule.use.indexOf(style_loader) + 1)
 
-			const style_loader_and_before = rule.use.slice(0, rule.use.indexOf(style_loader) + 1)
-			const after_style_loader      = rule.use.slice(rule.use.indexOf(style_loader) + 1)
+			const before_style_loader = rule.use.slice(0, rule.use.indexOf(style_loader))
+			const after_style_loader  = rule.use.slice(rule.use.indexOf(style_loader) + 1)
+
+			if (before_style_loader.length > 0)
+			{
+				throw new Error('No loaders can preceed `style-loader` in a Webpack module rule.', util.inspect(rule))
+			}
 
 			// The first argument to the .extract() function is the name of the loader
 			// ("style-loader" in this case) to be applied to non-top-level-chunks in case of "allChunks: false" option.
@@ -155,10 +180,14 @@ export default function client_configuration(webpack_configuration, settings, op
 
 			const extract_css_loader = extract_css.extract
 			({
-				fallback : style_loader_and_before,
-				use      : after_style_loader
+				// `fallback` option is not really being used
+				// because `allChunks: true` option is used.
+				// fallback : style_loader_and_before,
+				use : after_style_loader
 			})
 
+			// Workaround for an old bug, may be obsolete now.
+			// https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/368
 			if (Array.isArray(extract_css_loader))
 			{
 				rule.use = extract_css_loader

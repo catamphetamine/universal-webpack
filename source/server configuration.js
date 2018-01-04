@@ -3,8 +3,21 @@ import util from 'util'
 import webpack from 'webpack'
 import validate_npm_package_path from 'validate-npm-package-name'
 
-import { clone, starts_with, ends_with } from './helpers'
-import { find_style_rules, loader_name_filter, parse_loader, stringify_loader, normalize_rule_loaders } from './loaders'
+import
+{
+	clone,
+	starts_with,
+	ends_with
+}
+from './helpers'
+
+import
+{
+	find_loader,
+	get_style_rules,
+	normalize_configuration_rule_loaders
+}
+from './loaders'
 
 // Tunes the client-side Webpack configuration for server-side build
 export default function server_configuration(webpack_configuration, settings)
@@ -56,8 +69,8 @@ export default function server_configuration(webpack_configuration, settings)
 
 	// https://webpack.github.io/docs/configuration.html#externals
 	//
-	// `externals` allows you to specify dependencies for your library 
-	// that are not resolved by webpack, but become dependencies of the output. 
+	// `externals` allows you to specify dependencies for your library
+	// that are not resolved by webpack, but become dependencies of the output.
 	// This means they are imported from the environment during runtime.
 	//
 	// So that Webpack doesn't bundle "node_modules" into server.js.
@@ -81,15 +94,18 @@ export default function server_configuration(webpack_configuration, settings)
 		return callback()
 	})
 
+	// Normalize `modules.rules` loaders.
+	normalize_configuration_rule_loaders(configuration)
+
 	// Replace `style-loader` and `css-loader` with `css-loader/locals`
 	// since it's no web browser and no files will be emitted.
-	replace_style_loader( configuration )
+	replace_style_loader(configuration)
 
 	// Add `emit: false` flag to `file-loader` and `url-loader`,
 	// since there's no need out emit files on the server side
 	// (can just use the assets emitted on client build
 	//  since the filenames are the same)
-	dont_emit_file_loader( configuration )
+	dont_emit_file_loader(configuration)
 
 	configuration.plugins = configuration.plugins || []
 
@@ -105,7 +121,7 @@ export default function server_configuration(webpack_configuration, settings)
 	(
 		// Resorted from using it here because
 		// if the `build/server` folder is not there
-		// when Nodemon starts then it simply won't detect 
+		// when Nodemon starts then it simply won't detect
 		// updates of the server-side bundle
 		// and therefore won't restart on code changes.
 		//
@@ -162,7 +178,7 @@ export function is_external(request, webpack_configuration, settings)
 	// If any aliases are specified, then resolve those aliases as non-external
 	if (webpack_configuration.resolve && webpack_configuration.resolve.alias)
 	{
-		for (let alias of Object.keys(webpack_configuration.resolve.alias))
+		for (const alias of Object.keys(webpack_configuration.resolve.alias))
 		{
 			// if (request === key || starts_with(request, key + '/'))
 			if (package_name === alias)
@@ -209,11 +225,9 @@ export function is_external(request, webpack_configuration, settings)
 	{
 		for (const exclusion_pattern of exclude_from_externals)
 		{
-			let regexp = exclusion_pattern
-
 			if (typeof exclusion_pattern === 'string')
 			{
-				if (request === exclusion_pattern 
+				if (request === exclusion_pattern
 					|| starts_with(request, exclusion_pattern + '/'))
 				{
 					// The module is not external
@@ -222,7 +236,7 @@ export function is_external(request, webpack_configuration, settings)
 			}
 			else if (exclusion_pattern instanceof RegExp)
 			{
-				if (regexp.test(request))
+				if (exclusion_pattern.test(request))
 				{
 					// The module is not external
 					return false
@@ -243,46 +257,64 @@ export function is_external(request, webpack_configuration, settings)
 // since there's no need out emit files on the server side
 // (can just use the assets emitted on client build
 //  since the filenames are the same)
-export function dont_emit_file_loader( configuration )
+export function dont_emit_file_loader(configuration)
 {
-	for ( let rule of configuration.module.rules )
+	for (const rule of configuration.module.rules)
 	{
-		normalize_rule_loaders( rule )
-
-		const file_loader = rule.use.filter( loader_name_filter( 'file' ) )[0]
-		const url_loader  = rule.use.filter( loader_name_filter( 'url' ) )[0]
-
-		if ( file_loader && url_loader )
+		if (rule.oneOf)
 		{
-			throw new Error('You have both "url-loader" and "file-loader" defined for rule which makes no sense', util.inspect(rule))
+			for (const subrule of rule.oneOf)
+			{
+				_dont_emit_file_loader(subrule)
+			}
+
+			continue
 		}
 
-		const loader = file_loader || url_loader
+		_dont_emit_file_loader(rule)
+	}
+}
 
-		if ( loader )
+// Adds `emitFile: false` flag to `file-loader` and `url-loader`,
+// since there's no need out emit files on the server side
+// (can just use the assets emitted on client build
+//  since the filenames are the same)
+function _dont_emit_file_loader(rule)
+{
+	const file_loader = find_loader(rule, 'file-loader')
+	const url_loader  = find_loader(rule, 'url-loader')
+
+	if (file_loader && url_loader)
+	{
+		throw new Error('You have both "url-loader" and "file-loader" defined for rule which makes no sense', util.inspect(rule))
+	}
+
+	const loader = file_loader || url_loader
+
+	if (loader)
+	{
+		loader.options =
 		{
-			loader.options = loader.options || {}
-			loader.options.emitFile = false
+			...loader.options,
+			emitFile : false
 		}
 	}
 }
 
 // Replaces `style-loader` and `css-loader` with `css-loader/locals`
 // since it's no web browser and no files will be emitted.
-export function replace_style_loader( configuration )
+export function replace_style_loader(configuration)
 {
-	for ( let rule of find_style_rules( configuration ) )
+	for (const rule of get_style_rules(configuration))
 	{
-		normalize_rule_loaders( rule )
+		const css_loader = find_loader(rule, 'css-loader')
 
-		// Replace `css-loader` with `css-loader/locals`.
-		// Remove `style-loader`.
-		const css_loader = rule.use.filter( loader_name_filter( 'css' ) )[0]
-
-		if ( css_loader )
+		if (css_loader)
 		{
+			// Replace `css-loader` with `css-loader/locals`.
 			css_loader.loader = 'css-loader/locals'
-			rule.use = rule.use.filter( loader => !loader_name_filter( 'style' )( loader ) )
+			// Drop `style-loader`.
+			rule.use = rule.use.filter((loader) => loader.loader !== 'style-loader')
 		}
 	}
 }

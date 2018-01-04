@@ -1,3 +1,12 @@
+0.6.0 / 05.01.2018
+==================
+
+  * Some code refactoring performed, some things could theoretically get broken, but it's unlikely.
+
+  * (breaking change) `universal-webpack` command no longer receives the optional `--config` argument: instead it only uses an optional `--basePath` argument which can either be set to Webpack configuration `.context` or it can be omitted in which case it's gonna be the folder from which the `universal-webpack` command is being run. This base path is being used to resolve the `server` path inside `./universal-webpack-settings.js`.
+
+  * Added support for [`oneOf` loaders](https://webpack.js.org/configuration/module/#rule-oneof).
+
 0.5.0 / 23.12.2017
 ==================
 

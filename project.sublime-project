@@ -6,5 +6,9 @@
 			"path": ".",
 			"folder_exclude_patterns": ["universal-webpack/node_modules", "universal-webpack/coverage", "universal-webpack/build", "universal-webpack/es6", "project.sublime-workspace"]
 		}
-	]
+	],
+	"settings":
+	{
+		"trim_trailing_white_space_on_save": true
+	}
 }

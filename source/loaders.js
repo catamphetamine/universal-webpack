@@ -5,8 +5,12 @@ import { is_object, ends_with } from './helpers'
 
 // https://webpack.js.org/configuration/module/
 
-// Finds module loaders with `style-loader`
-export function find_style_rules(configuration)
+// Finds module rules with `style-loader`.
+// If a rule has `oneOf` then a branch of `oneOf` is returned.
+//
+// `configuration` rule loaders must already be normalized.
+//
+export function get_style_rules(configuration)
 {
 	// Sanity check
 	if (!configuration.module.rules)
@@ -14,21 +18,47 @@ export function find_style_rules(configuration)
 		throw new Error('No `module.rules` found in Webpack configuration. Migrate your configuration to Webpack 2: https://webpack.js.org/guides/migrating/')
 	}
 
-	return configuration.module.rules.filter( ( rule ) =>
+	const style_rules = []
+
+	for (const rule of configuration.module.rules)
 	{
-		normalize_rule_loaders( rule )
+		// Recurse into `oneOf`.
+		// https://webpack.js.org/configuration/module/#rule-oneof
+		if (rule.oneOf)
+		{
+			for (const subrule of rule.oneOf)
+			{
+				if (is_style_rule(subrule))
+				{
+					style_rules.push(subrule)
+				}
+			}
 
-		// Check if this module loader has a `style-loader`
-		const style_loader = rule.use.filter( loader_name_filter( 'style' ) )[0]
+			continue
+		}
 
-		// Is it `extract-text-webpack-plugin` loader
-		// (the regular expression is a filesystem path
-		//  which is `.../extract-text-webpack-plugin/loader.js` for v2
-		//  and `.../extract-text-webpack-plugin/dist/loader.js` for v3)
-		const extract_text_plugin_loader = rule.use.filter( loader => /extract-text-webpack-plugin/.test(loader.loader) )[0]
+		if (is_style_rule(rule))
+		{
+			style_rules.push(rule)
+		}
+	}
 
-		return style_loader && !extract_text_plugin_loader
-	} )
+	return style_rules
+}
+
+// `rule` must already be normalized
+export function is_style_rule(rule)
+{
+	// Check if this module loader has a `style-loader`
+	const style_loader = find_loader(rule, 'style-loader')
+
+	// Is it `extract-text-webpack-plugin` loader
+	// (the regular expression is a filesystem path
+	//  which is `.../extract-text-webpack-plugin/loader.js` for v2
+	//  and `.../extract-text-webpack-plugin/dist/loader.js` for v3)
+	const extract_text_plugin_loader = rule.use.filter((loader) => /extract-text-webpack-plugin/.test(loader.loader))[0]
+
+	return style_loader && !extract_text_plugin_loader
 }
 
 // Converts loader string into a Webpack 2 loader structure
@@ -84,27 +114,41 @@ export function stringify_loader(loader)
 	return loader.loader + (loader.options ? '?' + querystring.stringify(loader.options) : '')
 }
 
-// Checks if the passed loader is `style-loader`
-export function loader_name_filter ( loader_name )
+// Checks if the passed loader is `loader_name`.
+export function find_loader(rule, loader_name)
 {
-	return function ( loader )
+	return rule.use.filter(_ => _.loader === loader_name)[0]
+}
+
+// Converts `loader` to `loaders`
+export function normalize_configuration_rule_loaders(configuration)
+{
+	for (const rule of configuration.module.rules)
 	{
-		const parsed = parse_loader( loader )
-
-		let name = parsed.loader
-
-		if ( ends_with( name, '-loader' ) )
-		{
-			name = name.substring( 0, name.lastIndexOf( '-loader' ) )
-		}
-
-		return name === loader_name
+		normalize_rule_loaders(rule)
 	}
 }
 
 // Converts `loader` to `loaders`
 export function normalize_rule_loaders(rule)
 {
+	// Recurse into `oneOf`.
+	// https://webpack.js.org/configuration/module/#rule-oneof
+	if (rule.oneOf)
+	{
+		for (const subrule of rule.oneOf)
+		{
+			if (!subrule.use)
+			{
+				throw new Error(`A "oneOf" subrule must have "use" property.`, util.inspect(subrule))
+			}
+
+			normalize_rule_loaders(subrule)
+		}
+
+		return
+	}
+
 	// Convert `loaders` to `use`
 	if (rule.loaders)
 	{
@@ -139,7 +183,7 @@ export function normalize_rule_loaders(rule)
 
 	if (!rule.use)
 	{
-		throw new Error(`Neither "loaders" nor "loader" nor "use" are present inside a module rule: ${util.inspect(rule)}`)
+		throw new Error(`Neither "loaders" nor "loader" nor "use" nor "oneOf" are present inside a module rule: ${util.inspect(rule)}`)
 	}
 
 	if (typeof rule.use === 'string')

@@ -8,10 +8,10 @@ import fs from 'fs-extra'
 // otherwise it won't detect any changes to the code
 // and therefore won't restart on code changes.
 //
-export default function prepare(settings, webpack_configuration)
+export default function prepare(settings, project_base_path)
 {
-	// By default, Webpack sets `context` to `process.cwd()`
-	const base_path = (webpack_configuration && webpack_configuration.context) || process.cwd()
+	// By default, Webpack sets `.context` to `process.cwd()`
+	const base_path = project_base_path || process.cwd()
 
 	if (!settings.server.output)
 	{
