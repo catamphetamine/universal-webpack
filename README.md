@@ -300,39 +300,7 @@ To accomplish that this library provides a command line tool: `universal-webpack
 
 The `prepare` command creates `settings.server.output` path folder, or clears it if it already exists.
 
-In a moderately sized React project server restart times can reach ~10 seconds. Therefore the right way to go is to extract React rendering server-side code into a separate Node.js process (service), and then in the main Node.js web server just proxy all unmatched URLs to this React rendering service, as explained in the following section. This way only React rendering service will be restarted, and the main Node.js web server will be left untouched.
-
-## Separate React rendering service from the main code
-
-If the sole purpose of using `universal-webpack` in your project is to enable server-side rendering of web pages, then the best practice is to extract the web page rendering code from the main Node.js application into a separate Node.js application (`reactRenderingService` in the example below), and then in the main Node.js application just proxy all unmatched URLs to this React rendering service.
-
-```js
-import express from 'express'
-import httpProxy from 'http-proxy'
-
-const app = express()
-
-const reactRenderingService = `http://localhost:3000`
-const proxy = httpProxy.createProxyServer({})
-
-// The usual web application middleware
-// (serving statics, REST API, etc)
-app.use(...)
-app.use(...)
-app.use(...)
-
-// Proxy all unmatched HTTP requests to webpage rendering service
-app.use(function(request, response)
-{
-  proxy.web(request, response, { target: reactRenderingService }, (error) =>
-  {
-  	console.error(error)
-  	response.status(500).send('Proxying failed for page rendering service')
-  })
-})
-```
-
-This way only the rendering service will have to be restarted (by nodemon) and rebuilt (by Webpack) on code changes.
+Note: In a big React project server restart times can reach ~10 seconds.
 
 ## Flash of unstyled content
 
@@ -375,6 +343,8 @@ resolve:
 ```
 
 ## `universal-webpack` vs `webpack-isomorphic-tools`
+
+Note: If you never heard of `webpack-isomorphic-tools` then you shouldn't read this section.
 
 `webpack-isomorphic-tools` runs on the server-side and hooks into Node.js `require()` function with the help of `require-hacker` and does what needs to be done.
 
