@@ -6,22 +6,16 @@
 <!-- Travis builds error beause of `npm install crlf -g` is not available there -->
 <!--[![Build Status][travis-badge]][travis]-->
 
-**For starters:** consider skipping `universal-webpack` and trying [Next.js](https://github.com/zeit/next.js) first: it's super user-friendly, [very hyped](https://zeit.co/blog/next) and is supposed to be an ideal start for beginners. Master simpler things first, then move on to complex ones. Here be dragons.
+**For beginners:** consider trying [Next.js](https://github.com/zeit/next.js) first: it's user-friendly, [hyped](https://zeit.co/blog/next) and is supposed to be a good start for people not wanting to deal with configuring Webpack manually. On the other hand, if you're an experienced Webpack user then setting up `universal-webpack` shouldn't be too difficult.
 
 This library generates client-side and server-side configuration for Webpack therefore enabling seamless client-side/server-side Webpack builds. Requires some initial set up and some prior knowledge of Webpack.
 
 *Small Advertisement:* 📞 if you're looking for a React phone number component check out [`react-phone-number-input`](http://catamphetamine.github.io/react-phone-number-input/)
 
-## Webpack 2
+## Webpack 1
 
-This library now **only supports Webpack 2**.
-
-```sh
-npm install webpack --save
-npm install extract-text-webpack-plugin --save
-```
-
-I've been supporting Webpack 1 in this library for a long time but now the time has come to move to Webpack 2. See [Webpack 1 to 2 migration notes](https://webpack.js.org/guides/migrating/). For Webpack 1 use the `0.1.x` version of this library.
+This library **no longer supports Webpack 1** starting from version `0.2.0`.
+See [Webpack 1 -> Webpack 2 migration guide](https://webpack.js.org/guides/migrating/).
 
 ## Installation
 
