@@ -71,7 +71,7 @@ export default server(configuration, settings)
 
 Use `webpack.config.client.babel.js` instead of the old `webpack.config.js` for client side Webpack builds.
 
-The `server()` configuration function takes the client-side Webpack configuration and tunes it a bit for server-side usage ([`target: "node"`](https://webpack.github.io/docs/configuration.html#target)).
+The `server()` configuration function takes the client-side Webpack configuration and tunes it a bit for server-side usage ([`target: "node"`](https://webpack.js.org/concepts/targets)).
 
 The server-side bundle (`settings.server.output` file) is generated from `settings.server.input` file by Webpack when it's run with the `webpack.config.server.babel.js` configuration. An example of `settings.server.input` file may look like this (it must export a function):
 
