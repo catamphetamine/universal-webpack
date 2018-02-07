@@ -6,7 +6,7 @@
 <!-- Travis builds error beause of `npm install crlf -g` is not available there -->
 <!--[![Build Status][travis-badge]][travis]-->
 
-**For beginners:** consider trying [Next.js](https://github.com/zeit/next.js) first: it's user-friendly, [hyped](https://zeit.co/blog/next) and is supposed to be a good start for people not wanting to deal with configuring Webpack manually. On the other hand, if you're an experienced Webpack user then setting up `universal-webpack` shouldn't be too difficult.
+**For beginners:** consider trying [Next.js](https://github.com/zeit/next.js) first: it's user-friendly and is supposed to be a good start for people not wanting to deal with configuring Webpack manually. On the other hand, if you're an experienced Webpack user then setting up `universal-webpack` shouldn't be too difficult.
 
 This library generates client-side and server-side configuration for Webpack therefore enabling seamless client-side/server-side Webpack builds. Requires some initial set up and some prior knowledge of Webpack.
 
