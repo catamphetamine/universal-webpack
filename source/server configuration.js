@@ -112,8 +112,19 @@ export default function server_configuration(webpack_configuration, settings)
 	// Remove HotModuleReplacementPlugin and CommonsChunkPlugin
 	configuration.plugins = configuration.plugins.filter(plugin =>
 	{
+		try
+		{
+			if (plugin.constructor === webpack.optimize.CommonsChunkPlugin)
+			{
+				return false
+			}
+		}
+		catch (error)
+		{
+			// Webpack 4 throws `RemovedPluginError`.
+		}
+
 		return plugin.constructor !== webpack.HotModuleReplacementPlugin
-			&& plugin.constructor !== webpack.optimize.CommonsChunkPlugin
 	})
 
 	// Add a couple of utility plugins

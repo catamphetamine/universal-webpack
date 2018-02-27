@@ -1,3 +1,8 @@
+0.6.1 / 27.02.2018
+==================
+
+  * Fixed Webpack 4 throwing "webpack.optimize.CommonsChunkPlugin has been removed, please use config.optimization.splitChunks instead" error.
+
 0.6.0 / 05.01.2018
 ==================
 
