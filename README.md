@@ -12,10 +12,6 @@ This library generates client-side and server-side configuration for Webpack the
 
 *Small Advertisement:* 📞 if you're looking for a React phone number component check out [`react-phone-number-input`](http://catamphetamine.github.io/react-phone-number-input/)
 
-## Webpack 4
-
-If you're upgrading a project from Webpack <= 3 to Webpack >= 4 then `extract-text-webpack-plugin` [should be replaced](https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/749) with `mini-css-extract-plugin`. If using `cssBundle: true` feature then also pass `useMiniCssExtractPlugin: true` option in case using `mini-css-extract-plugin` instead of `extract-text-webpack-plugin`.
-
 ## Installation
 
 ```
@@ -196,7 +192,7 @@ These filenames are required for `<script src=.../>` and `<link rel="style" href
 
 ## Using `extract-text-webpack-plugin` or `mini-css-extract-plugin`
 
-The third argument – `options` object – may be passed to `client()` configuration function. If `options.development === false`, then it will apply `extract-text-webpack-plugin` to CSS styles automatically, i.e. it will extract all CSS styles into one big bundle file. This is considered the "best practice" for production deployment. If using `mini-css-extract-plugin` instead of `extract-text-webpack-plugin` (which is recommended for Webpack >= 4) then also pass `useMiniCssExtractPlugin: true` option.
+The third argument – `options` object – may be passed to `client()` configuration function. If `options.development` is set to `false`, then it will apply `extract-text-webpack-plugin` to CSS styles automatically, i.e. it will extract all CSS styles into one big bundle file: this is considered the "best practice" for production deployment and using this option is more convenient then adding `extract-text-webpack-plugin` to production webpack configuration manually. If upgrading a project from Webpack <= 3 to Webpack >= 4 (or starting fresh with Webpack >= 4) then `extract-text-webpack-plugin` [should be replaced](https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/749) with `mini-css-extract-plugin`. In this case also pass `options.useMiniCssExtractPlugin` option set to `true`.
 
 ## Advanced configuration
 
