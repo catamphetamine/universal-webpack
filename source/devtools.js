@@ -1,3 +1,5 @@
+// This is for `extract-text-webpack-plugin` only.
+//
 // The following code is an advanced topic
 // and can be skipped safely.
 // This code is not required
@@ -22,7 +24,7 @@
 export default function devtools(parameters)
 {
 	const chunks = parameters.chunks()
-	
+
 	const style_url        = chunks.styles[parameters.entry]
 	const common_style_url = chunks.styles.common
 
@@ -32,11 +34,11 @@ export default function devtools(parameters)
 	`
 		document.addEventListener('DOMContentLoaded', function(event)
 		{
-			// The style-loader has already added <link/>s 
+			// The style-loader has already added <link/>s
 			// to its dynamic hot-reloadable styles,
 			// so remove the <link/> to the static CSS bundle
 			// inserted during server side page rendering.
-			
+
 			var stylesheet
 			var common_stylesheet
 
@@ -57,3 +59,36 @@ export default function devtools(parameters)
 
 	return script
 }
+
+// Smoke screen is for `mini-css-extract-plugin`.
+// Because prepending `style-loader` trick doesn't work for it.
+
+const smoke_screen_duration = 150
+
+export const smokeScreen = `
+	<div
+		id="universal-webpack-smoke-screen"
+		style="
+			position: fixed;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			z-index: 2147483647;
+			background: white;
+			opacity: 1;
+			transition: opacity ${smoke_screen_duration}ms ease-out
+		">
+	</div>
+`
+
+export const hideSmokeScreen = `
+	document.addEventListener('DOMContentLoaded', function(event)
+	{
+		// The style-loader has already added <link/>s
+		// to its dynamic hot-reloadable styles,
+		// so remove the white screen.
+		document.getElementById('universal-webpack-smoke-screen').style.opacity = 0
+		setTimeout(() => document.body.removeChild(document.getElementById('universal-webpack-smoke-screen')), ${smoke_screen_duration})
+	})
+`

@@ -12,16 +12,14 @@ This library generates client-side and server-side configuration for Webpack the
 
 *Small Advertisement:* 📞 if you're looking for a React phone number component check out [`react-phone-number-input`](http://catamphetamine.github.io/react-phone-number-input/)
 
-## Webpack 1
+## Webpack 4
 
-This library **no longer supports Webpack 1** starting from version `0.2.0`.
-See [Webpack 1 -> Webpack 2 migration guide](https://webpack.js.org/guides/migrating/).
+If you're upgrading a project from Webpack <= 3 to Webpack >= 4 then `extract-text-webpack-plugin` [should be replaced](https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/749) with `mini-css-extract-plugin`. If using `cssBundle: true` feature then also pass `useMiniCssExtractPlugin: true` option in case using `mini-css-extract-plugin` instead of `extract-text-webpack-plugin`.
 
 ## Installation
 
 ```
 npm install universal-webpack --save
-npm install extract-text-webpack-plugin --save
 ```
 
 ## Example project
@@ -196,9 +194,9 @@ These filenames are required for `<script src=.../>` and `<link rel="style" href
 * It emits no assets on the server side so make sure you include all assets on the client side (e.g. "favicon").
 * `resolve.root` won't work out-of-the-box while `resolve.alias`es do. For those using `resolve.root` I recommend switching to `resolve.alias`. By default no "modules" are bundled in a server-side bundle except for `resolve.alias`es and `excludeFromExternals` matches (see below).
 
-## Using `extract-text-webpack-plugin`
+## Using `extract-text-webpack-plugin` or `mini-css-extract-plugin`
 
-The third argument – `options` object – may be passed to `client()` configuration function. If `options.development === false`, then it will apply `extract-text-webpack-plugin` to CSS styles automatically, i.e. it will extract all CSS styles into one big bundle file. This is considered the "best practice" for production deployment.
+The third argument – `options` object – may be passed to `client()` configuration function. If `options.development === false`, then it will apply `extract-text-webpack-plugin` to CSS styles automatically, i.e. it will extract all CSS styles into one big bundle file. This is considered the "best practice" for production deployment. If using `mini-css-extract-plugin` instead of `extract-text-webpack-plugin` (which is recommended for Webpack >= 4) then also pass `useMiniCssExtractPlugin: true` option.
 
 ## Advanced configuration
 
@@ -306,7 +304,7 @@ Note: In a big React project server restart times can reach ~10 seconds.
 
 (this is an "advanced" section which can be safely skipped)
 
-A "flash of unstyled content" is a well-known thing. One can observe it when refreshing the page in development mode: because Webpack's `style-loader` adds styles to the page dynamically there's a short period (a second maybe) when there are no CSS styles applied to the webpage (in production mode `extract-text-webpack-plugin` is used instead of `style-loader` so there's no "flash of unstyled content").
+A "flash of unstyled content" is a well-known thing. One can observe it when refreshing the page in development mode: because Webpack's `style-loader` adds styles to the page dynamically there's a short period (a second maybe) when there are no CSS styles applied to the webpage (in production mode `extract-text-webpack-plugin` or `mini-css-extract-plugin` is used instead of `style-loader` so there's no "flash of unstyled content").
 
 It's not really a bug, many projects live with it and it doesn't really affect the development process that much, so one can safely skip reading this section. It's just if you're a perfectionist then it can get a little itchy.
 

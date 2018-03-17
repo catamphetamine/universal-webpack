@@ -8,6 +8,8 @@ import
 	client_configuration,
 	prepare,
 	devtools,
+	smokeScreen,
+	hideSmokeScreen,
 	serverConfiguration,
 	clientConfiguration,
 	babelRegisterOptions
@@ -23,6 +25,8 @@ describe(`exports`, function()
 		client_configuration.should.be.a('function')
 		prepare.should.be.a('function')
 		devtools.should.be.a('function')
+		smokeScreen.should.be.a('string')
+		hideSmokeScreen.should.be.a('string')
 
 		serverConfiguration.should.be.a('function')
 		clientConfiguration.should.be.a('function')
@@ -37,6 +41,8 @@ describe(`exports`, function()
 		_.client_configuration.should.be.a('function')
 		_.prepare.should.be.a('function')
 		_.devtools.should.be.a('function')
+		_.smokeScreen.should.be.a('string')
+		_.hideSmokeScreen.should.be.a('string')
 
 		_.serverConfiguration.should.be.a('function')
 		_.clientConfiguration.should.be.a('function')

@@ -1,3 +1,8 @@
+0.6.2 / 17.03.2018
+==================
+
+  * Added support for using `mini-css-extract-plugin` instead of `extract-text-webpack-plugin` for Webpack 4. If using `cssBundle: true` feature then also pass `useMiniCssExtractPlugin: true` option in case using `mini-css-extract-plugin` instead of `extract-text-webpack-plugin`.
+
 0.6.1 / 27.02.2018
 ==================
 

@@ -7,6 +7,8 @@ exports = module.exports =
 	client_configuration   : require('./build/client configuration').default,
 	prepare                : require('./build/prepare').default,
 	devtools               : require('./build/devtools').default,
+	smokeScreen            : require('./build/devtools').smokeScreen,
+	hideSmokeScreen        : require('./build/devtools').hideSmokeScreen,
 
 	// for camelCased guys
 	serverConfiguration    : require('./build/server configuration').default,
