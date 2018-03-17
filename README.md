@@ -22,11 +22,6 @@ npm install universal-webpack --save
 
 You may refer to [this sample project](https://github.com/catamphetamine/webpack-react-redux-isomorphic-render-example) as a reference example of using this library (see `webpack` directory, `package.json` and `client/rendering-service/main.js`).
 
-Other sample projects (from other github users who asked me to add these links to this readme):
-
-  * [one](https://github.com/NSLS/universal-webpack-boilerplate)
-  * [two](https://github.com/krasevych/react-redux-styled-hot-universal)
-
 ## Usage
 
 Suppose you have a typical `webpack.config.js` file. Create two new files called `webpack.config.client.babel.js` and `webpack.config.server.babel.js` with the following contents:
