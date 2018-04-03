@@ -9,6 +9,7 @@ exports = module.exports =
 	devtools               : require('./build/devtools').default,
 	smokeScreen            : require('./build/devtools').smokeScreen,
 	hideSmokeScreen        : require('./build/devtools').hideSmokeScreen,
+	hideSmokeScreenAfter   : require('./build/devtools').hideSmokeScreenAfter,
 
 	// for camelCased guys
 	serverConfiguration    : require('./build/server configuration').default,
