@@ -1,3 +1,8 @@
+0.6.3 / 03.04.2018
+==================
+
+  * Changed `smokeScreen` and `hideSmokeScreen` into functions of duration (in ms).
+
 0.6.2 / 17.03.2018
 ==================
 

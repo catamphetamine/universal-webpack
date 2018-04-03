@@ -65,7 +65,7 @@ export default function devtools(parameters)
 
 const smoke_screen_duration = 150
 
-export const smokeScreen = `
+export const smokeScreen = (duration = smoke_screen_duration) => `
 	<div
 		id="universal-webpack-smoke-screen"
 		style="
@@ -77,18 +77,18 @@ export const smokeScreen = `
 			z-index: 2147483647;
 			background: white;
 			opacity: 1;
-			transition: opacity ${smoke_screen_duration}ms ease-out
+			transition: opacity ${duration}ms ease-out
 		">
 	</div>
 `
 
-export const hideSmokeScreen = `
+export const hideSmokeScreen = (duration = smoke_screen_duration) => `
 	document.addEventListener('DOMContentLoaded', function(event)
 	{
 		// The style-loader has already added <link/>s
 		// to its dynamic hot-reloadable styles,
 		// so remove the white screen.
 		document.getElementById('universal-webpack-smoke-screen').style.opacity = 0
-		setTimeout(() => document.body.removeChild(document.getElementById('universal-webpack-smoke-screen')), ${smoke_screen_duration})
+		setTimeout(() => document.body.removeChild(document.getElementById('universal-webpack-smoke-screen')), ${duration})
 	})
 `

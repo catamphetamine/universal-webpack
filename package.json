@@ -1,6 +1,6 @@
 {
   "name": "universal-webpack",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Isomorphic Webpack",
   "main": "index.common.js",
   "module": "index.es6.js",
