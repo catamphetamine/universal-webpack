@@ -63,7 +63,7 @@ export default function devtools(parameters)
 // Smoke screen is for `mini-css-extract-plugin`.
 // Because prepending `style-loader` trick doesn't work for it.
 
-const smoke_screen_duration = 150
+const fade_duration = 150
 
 export const smokeScreen = `
 	<div
@@ -77,7 +77,7 @@ export const smokeScreen = `
 			z-index: 2147483647;
 			background: white;
 			opacity: 1;
-			transition: opacity ${smoke_screen_duration}ms ease-out
+			transition: opacity ${fade_duration}ms ease-out
 		">
 	</div>
 `
@@ -89,6 +89,26 @@ export const hideSmokeScreen = `
 		// to its dynamic hot-reloadable styles,
 		// so remove the white screen.
 		document.getElementById('universal-webpack-smoke-screen').style.opacity = 0
-		setTimeout(() => document.body.removeChild(document.getElementById('universal-webpack-smoke-screen')), ${smoke_screen_duration})
+		setTimeout(() => document.body.removeChild(document.getElementById('universal-webpack-smoke-screen')), ${fade_duration})
+	})
+`
+
+export const hideSmokeScreenAfter = (delay = 0) => `
+	document.addEventListener('DOMContentLoaded', function(event)
+	{
+		setTimeout(function()
+		{
+			// The style-loader has already added <link/>s
+			// to its dynamic hot-reloadable styles,
+			// so remove the white screen.
+
+			document.getElementById('universal-webpack-smoke-screen').style.opacity = 0
+
+			setTimeout(function() {
+				document.body.removeChild(document.getElementById('universal-webpack-smoke-screen'))
+			},
+			${fade_duration})
+		},
+		${delay})
 	})
 `

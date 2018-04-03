@@ -1,3 +1,8 @@
+0.6.4 / 03.04.2018
+==================
+
+  * Added `hideSmokeScreenAfter` - a function of delay (in ms).
+
 0.6.2 / 17.03.2018
 ==================
 
