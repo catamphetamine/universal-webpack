@@ -20,7 +20,7 @@ npm install universal-webpack --save
 
 ## Example project
 
-You may refer to [this sample project](https://github.com/catamphetamine/webpack-react-redux-isomorphic-render-example) as a reference example of using this library (see `webpack` directory, `package.json` and `client/rendering-service/main.js`).
+You may refer to [this sample project](https://github.com/catamphetamine/webpack-react-redux-server-side-render-example) as a reference example of using this library (see `webpack` directory, `package.json` and `client/rendering-service/main.js`).
 
 ## Usage
 
@@ -306,7 +306,7 @@ I came up with a solution which seems to be working good enough. To enable the a
 
 If both `development` and `cssBundle` options are set to `true`, then `universal-webpack` will enhance the client side Webpack configuration to also output all styles into a single CSS bundle (while retaining `style-loader`) which is later added to the webpage's `<head/>` as a `<link rel="stylesheet"/>` tag on the server side, therefore making that "flash of unstyled content" disappear.
 
-There's a gotcha though. Because the whole CSS bundle gets inserted as a `<link rel="stylesheet"/>` tag in the `<head/>` it also means that the styles defined in that CSS bundle are static, not dynamic, and they aren't gonna "hot reload" themselves or something. So, my proposed solution is to have that `<link rel="stylesheet"/>` tag sit in the `<head/>` for a while (say, a couple of seconds) and then remove it from there. The styling of the webpage isn't gonna disappear at that moment because by that time the dynamic styles of `style-loader` have already kicked in. See [an example of how this can be done](https://github.com/catamphetamine/webpack-react-redux-isomorphic-render-example/blob/daf84daaa00c0d37ccd9502f36c7af26d640bee2/code/page-server/web%20server.js#L51-L63).
+There's a gotcha though. Because the whole CSS bundle gets inserted as a `<link rel="stylesheet"/>` tag in the `<head/>` it also means that the styles defined in that CSS bundle are static, not dynamic, and they aren't gonna "hot reload" themselves or something. So, my proposed solution is to have that `<link rel="stylesheet"/>` tag sit in the `<head/>` for a while (say, a couple of seconds) and then remove it from there. The styling of the webpage isn't gonna disappear at that moment because by that time the dynamic styles of `style-loader` have already kicked in. See [an example of how this can be done](https://github.com/catamphetamine/webpack-react-redux-server-side-render-example/blob/daf84daaa00c0d37ccd9502f36c7af26d640bee2/code/page-server/web%20server.js#L51-L63).
 
 ```js
 import { client } from 'universal-webpack/config'
