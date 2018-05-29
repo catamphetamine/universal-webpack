@@ -4,63 +4,23 @@ import fs   from 'fs-extra'
 import output_webpack_stats from './output webpack stats'
 import { chunk_info_file_path } from './chunks'
 
-export default function Chunk_file_names_plugin(configuration, options)
+export default function ChunkFileNamesPlugin(configuration, options)
 {
 	this.configuration = configuration
 	this.options = options
 }
 
-Chunk_file_names_plugin.prototype.apply = function(compiler)
+ChunkFileNamesPlugin.prototype.apply = function(compiler)
 {
-	// // Webpack configuration
-	// // (has wrong `output.path` at this point
-	// //  so `output.path` has to be passed when constructing an instance)
-	// const webpack_configuration = compiler.options
-	const webpack_configuration = this.configuration
+	const onDone = (stats) => writeChunkFileNames(stats, this.options, this.configuration)
 
-	const options = this.options
-
-	// chunk filename info file path
-	const output_file_path = chunk_info_file_path(webpack_configuration, options.chunk_info_filename)
-
-	// when all is done
-	// https://github.com/webpack/docs/wiki/plugins
-	compiler.plugin('done', function(stats)
-	{
-		const json = stats.toJson
-		({
-			context: webpack_configuration.context || process.cwd(),
-
-			// Add built modules information to chunk information.
-			// What for is it here? I don't know. It's a copy & paste from the Webpack author's code.
-			chunkModules: true,
-
-			// // The following modules will be excluded from Webpack stats Json file.
-			// // What for is it here? I don't know. It's a copy & paste from the Webpack author's code.
-			// exclude:
-			// [
-			// 	/node_modules[\\\/]react(-router)?[\\\/]/,
-			// 	/node_modules[\\\/]items-store[\\\/]/
-			// ]
-		})
-
-		// output some info to the console if in development mode
-		if (!options.silent)
-		{
-			// outputs stats info to the console
-			// (only needed in development mode)
-			output_webpack_stats(stats, json)
-		}
-
-		// "publicPath" (will be prepended to chunk file names)
-		const assets_base_url = (process.env.NODE_ENV !== 'production' && webpack_configuration.devServer && webpack_configuration.devServer.publicPath) ? webpack_configuration.devServer.publicPath : json.publicPath
-
-		// Generate chunk filename info
-		const chunk_filename_info = filename_info(json, assets_base_url)
-
-		// Write chunk filename info to disk
-		fs.outputFileSync(output_file_path, JSON.stringify(chunk_filename_info))
-	})
+	// Fixes "DeprecationWarning: Tapable.plugin is deprecated. Use new API on `.hooks` instead".
+	// (backwards compatible)
+	if (compiler.hooks) {
+		compiler.hooks.done.tap('UniversalWebpackChunkFileNamesPlugin', onDone)
+	} else {
+		compiler.plugin('done', onDone)
+	}
 }
 
 // Generates chunk filename info
@@ -122,4 +82,41 @@ function filename_info(json, assets_base_url)
 	})
 
 	return assets_chunks
+}
+
+function writeChunkFileNames(stats, options, webpack_configuration)
+{
+	const json = stats.toJson
+	({
+		context: webpack_configuration.context || process.cwd(),
+
+		// Add built modules information to chunk information.
+		// What for is it here? I don't know. It's a copy & paste from the Webpack author's code.
+		chunkModules: true,
+
+		// // The following modules will be excluded from Webpack stats Json file.
+		// // What for is it here? I don't know. It's a copy & paste from the Webpack author's code.
+		// exclude:
+		// [
+		// 	/node_modules[\\\/]react(-router)?[\\\/]/,
+		// 	/node_modules[\\\/]items-store[\\\/]/
+		// ]
+	})
+
+	// output some info to the console if in development mode
+	if (!options.silent)
+	{
+		// outputs stats info to the console
+		// (only needed in development mode)
+		output_webpack_stats(stats, json)
+	}
+
+	// "publicPath" (will be prepended to chunk file names)
+	const assets_base_url = (process.env.NODE_ENV !== 'production' && webpack_configuration.devServer && webpack_configuration.devServer.publicPath) ? webpack_configuration.devServer.publicPath : json.publicPath
+
+	// chunk filename info file path
+	const output_file_path = chunk_info_file_path(webpack_configuration, options.chunk_info_filename)
+
+	// Write chunk filename info to disk
+	fs.outputFileSync(output_file_path, JSON.stringify(filename_info(json, assets_base_url)))
 }
