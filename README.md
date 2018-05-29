@@ -15,7 +15,7 @@ This library generates client-side and server-side configuration for Webpack the
 ## Installation
 
 ```
-npm install universal-webpack --save
+npm install universal-webpack --save-dev
 ```
 
 ## Example project
