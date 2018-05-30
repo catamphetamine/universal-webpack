@@ -4,6 +4,7 @@
   "description": "Isomorphic Webpack",
   "main": "index.common.js",
   "module": "index.es6.js",
+  "sideEffects": false,
   "peerDependencies": {
     "webpack": ">=2"
   },
