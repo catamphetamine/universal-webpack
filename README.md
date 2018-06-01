@@ -293,27 +293,20 @@ Note: In a big React project server restart times can reach ~10 seconds.
 
 ## Flash of unstyled content
 
-(this is an "advanced" section which can be safely skipped)
+A "flash of unstyled content" is a well-known dev-mode Webpack phenomenon. One can observe it when refreshing the page in development mode: because Webpack's `style-loader` adds styles to the page dynamically there's a short period of time (a second maybe) when there are no CSS styles applied to the webpage (in production mode `mini-css-extract-plugin` or `extract-text-webpack-plugin` is used instead of `style-loader` so there's no "flash of unstyled content").
 
-A "flash of unstyled content" is a well-known thing. One can observe it when refreshing the page in development mode: because Webpack's `style-loader` adds styles to the page dynamically there's a short period (a second maybe) when there are no CSS styles applied to the webpage (in production mode `extract-text-webpack-plugin` or `mini-css-extract-plugin` is used instead of `style-loader` so there's no "flash of unstyled content").
-
-It's not really a bug, many projects live with it and it doesn't really affect the development process that much, so one can safely skip reading this section. It's just if you're a perfectionist then it can get a little itchy.
-
-I came up with a solution which seems to be working good enough. To enable the anti-unstyled-flash feature one needs to pass the third parameter to the client-side webpack configuration creation function - an `options` object with:
-
- * `development` key set to `true` indicating that it's a development build configuration
- * `cssBundle` key set to `true`
-
-If both `development` and `cssBundle` options are set to `true`, then `universal-webpack` will enhance the client side Webpack configuration to also output all styles into a single CSS bundle (while retaining `style-loader`) which is later added to the webpage's `<head/>` as a `<link rel="stylesheet"/>` tag on the server side, therefore making that "flash of unstyled content" disappear.
-
-There's a gotcha though. Because the whole CSS bundle gets inserted as a `<link rel="stylesheet"/>` tag in the `<head/>` it also means that the styles defined in that CSS bundle are static, not dynamic, and they aren't gonna "hot reload" themselves or something. So, my proposed solution is to have that `<link rel="stylesheet"/>` tag sit in the `<head/>` for a while (say, a couple of seconds) and then remove it from there. The styling of the webpage isn't gonna disappear at that moment because by that time the dynamic styles of `style-loader` have already kicked in. See [an example of how this can be done](https://github.com/catamphetamine/webpack-react-redux-server-side-render-example/blob/daf84daaa00c0d37ccd9502f36c7af26d640bee2/code/page-server/web%20server.js#L51-L63).
+It's not really a bug, because it's only for development mode. Still, if you're a perfectionist then it can be annoying. The most basic workaround for this is to simply show a white "smoke screen" and then hide it after a pre-defined timeout.
 
 ```js
-import { client } from 'universal-webpack/config'
-import settings from './universal-webpack-settings'
-import configuration from './webpack.config'
+import { smokeScreen, hideSmokeScreenAfter } from 'universal-webpack'
 
-export default client(configuration, settings, { development: true, cssBundle: true })
+<body>
+  ${smokeScreen}
+</body>
+
+<script>
+  ${hideSmokeScreenAfter(100)}
+</script>
 ```
 
 ## resolve.moduleDirectories
