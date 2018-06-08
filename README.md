@@ -139,15 +139,15 @@ Calling `source/start-server.js` will basically call the function exported from 
 In the end you run all the above things like this (in parallel):
 
 ```bash
-webpack-dev-server --hot --inline --config "./webpack.config.client.babel.js" --port XXXX --colors --display-error-details
+webpack-serve --hot --require babel-register --config ./[webpack.config.client.dev.babel.js](https://github.com/catamphetamine/webpack-react-redux-server-side-render-example/blob/master/webpack/webpack.config.client.development.babel.js)
 ```
 
 ```bash
-webpack --watch --config "./webpack.config.server.babel.js" --colors --display-error-details
+webpack --watch --config ./[webpack.config.server.dev.babel.js](https://github.com/catamphetamine/webpack-react-redux-server-side-render-example/blob/master/webpack/webpack.config.server.development.babel.js) --colors --display-error-details
 ```
 
 ```bash
-nodemon "./source/start-server" --watch "./build/server"
+nodemon ./source/start-server --watch ./build/server
 ```
 
 The above three commands are for development mode. For production mode the same command sequence would be:
