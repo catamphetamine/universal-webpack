@@ -155,7 +155,9 @@ export default function server_configuration(webpack_configuration, settings)
 	return configuration
 }
 
-// Checks if a require()d dependency is external
+// Checks if a require()d dependency is external.
+// Could also use https://www.npmjs.com/package/webpack-node-externals.
+// Still the self-made alias-aware solution works ok.
 export function is_external(request, webpack_configuration, settings)
 {
 	// If someone finds a way to mark all assets (jpg, png, css, scss)
