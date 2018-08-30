@@ -189,7 +189,21 @@ These filenames are required for `<script src=.../>` and `<link rel="style" href
 
 ## Using `extract-text-webpack-plugin` or `mini-css-extract-plugin`
 
-The third argument – `options` object – may be passed to `client()` configuration function. If `options.development` is set to `false`, then it will apply `extract-text-webpack-plugin` to CSS styles automatically, i.e. it will extract all CSS styles into one big bundle file: this is considered the "best practice" for production deployment and using this option is more convenient then adding `extract-text-webpack-plugin` to production webpack configuration manually. If upgrading a project from Webpack <= 3 to Webpack >= 4 (or starting fresh with Webpack >= 4) then `extract-text-webpack-plugin` [should be replaced](https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/749) with `mini-css-extract-plugin`. In this case also pass `options.useMiniCssExtractPlugin` option set to `true`.
+The third argument – `options` object – may be passed to `client()` configuration function. If `options.development` is set to `false`, then it will apply `extract-text-webpack-plugin` to CSS styles automatically, i.e. it will extract all CSS styles into separate `*.css` files (one for each Webpack "chunk"): this is considered a slightly better approach for production deployment instead of just leaving all CSS in `*.js` chunk files (due to static file caching in a browser). Using `options.development=false` option is therefore just a convenience shortcut which one may use instead of adding `extract-text-webpack-plugin` to production client-side webpack configuration manually. If upgrading a project from Webpack <= 3 to Webpack >= 4 (or starting fresh with Webpack >= 4) then `extract-text-webpack-plugin` [should be replaced](https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/749) with `mini-css-extract-plugin` (because starting from Webpack 4 `extract-text-webpack-plugin` is considered deprecated). In this case also pass `options.useMiniCssExtractPlugin=true` option.
+
+```js
+import { clientConfiguration } from 'universal-webpack'
+import settings from './universal-webpack-settings'
+import baseConfiguration from './webpack.config'
+
+const configuration = clientConfiguration(baseConfiguration, settings, {
+  // Extract all CSS into separate `*.css` files (one for each chunk)
+  // using `mini-css-extract-plugin`
+  // instead of leaving that CSS embedded directly in `*.js` chunk files.
+  development : false,
+  useMiniCssExtractPlugin : true
+})
+```
 
 ## Advanced configuration
 
