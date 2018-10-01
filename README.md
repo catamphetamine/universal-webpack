@@ -139,7 +139,7 @@ Calling `source/start-server.js` will basically call the function exported from 
 In the end you run all the above things like this (in parallel):
 
 ```bash
-webpack-serve --hot-client --require babel-register --config ./webpack.config.client.dev.babel.js
+webpack-dev-server --hot --config ./webpack.config.client.dev.babel.js
 ```
 
 ```bash
