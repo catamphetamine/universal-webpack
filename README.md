@@ -33,6 +33,7 @@ import { client } from 'universal-webpack/config'
 import settings from './universal-webpack-settings'
 import configuration from './webpack.config'
 
+// Create client-side Webpack config.
 export default client(configuration, settings)
 ```
 
@@ -43,8 +44,73 @@ import { server } from 'universal-webpack/config'
 import settings from './universal-webpack-settings'
 import configuration from './webpack.config'
 
+// Create server-side Webpack config.
 export default server(configuration, settings)
 ```
+
+Where `./universal-webpack-settings.json` is a configuration file for `universal-webpack` (see below).
+
+Now, use `webpack.config.client.babel.js` instead of the old `webpack.config.js` for client side Webpack builds. Your setup also most likely differentiates between a "development" client side Webpack build and a "production" one, in which case `webpack.config.client.babel.js` is further split into two files — `webpack.config.client.dev.babel.js` and `webpack.config.client.prod.babel.js` — each of which inherits from `webpack.config.client.babel.js` and makes the necessary changes to it as defined by your particular setup.
+
+And, `webpack.config.server.babel.js` file will be used for server-side Webpack builds. And, analogous to the client-side config, it also most likely is gonna be split into "development" and "production" configs, as defined by your particular setup.
+
+Setting up the server side requires an additional step: creating the "entry" file for running the server. The reason is that client-side config is created from `webpack.config.js` which already has Webpack ["entry"](https://webpack.js.org/concepts/entry-points/) defined. Usually it's something like `./src/index.js` which is the "main" file for the client-side application. Server-side needs such a "main" file too and it must be configured as the server-side Webpack configuration "entry". This library defines a specific requirement for a server-side "entry" file: it must export a function which is gonna be called by the library when the server is ready to start. An example of a server-side "entry" file:
+
+### source/server.js
+
+```js
+import path from 'path'
+import http from 'http'
+import express from 'express'
+import httpProxy from 'http-proxy'
+
+// React routes.
+// (shared with the client side)
+import routes from '../client/routes.js'
+
+// Redux reducers.
+// (shared with the client side)
+import reducers from '../client/reducers.js'
+
+// The server code must export a function
+// (`parameters` may contain some miscellaneous library-specific stuff)
+export default function(parameters)
+{
+	// Create HTTP server.
+	const app = new express()
+	const server = new http.Server(app)
+
+	// Serve static files.
+	app.use(express.static(path.join(__dirname, '..', 'build/assets')))
+
+	// Proxy API calls to API server.
+	const proxy = httpProxy.createProxyServer({ target: 'http://localhost:xxxx' })
+	app.use('/api', (req, res) => proxy.web(req, res))
+
+	// React application rendering.
+	app.use((req, res) => {
+		// Match current URL to the corresponding React page.
+		routerMatchURL(routes, req.originalUrl).then((error, routingResult) => {
+			if (error) {
+				throw error
+			}
+			// Render React page.
+			const page = createPageElement(routingResult, reducers)
+			res.status(200)
+			res.send('<!doctype html><html>...' + ReactDOM.renderToString(page) + '...</html>')
+		})
+		.catch((error) => {
+			res.status(500)
+			return res.send('Server error')
+		})
+	})
+
+	// Start the HTTP server.
+	server.listen()
+}
+```
+
+The server-side "entry" file path must be configured in `./universal-webpack-settings.json` as `server.input`:
 
 ### universal-webpack-settings.json
 
@@ -58,105 +124,54 @@ export default server(configuration, settings)
 }
 ```
 
-Use `webpack.config.client.babel.js` instead of the old `webpack.config.js` for client side Webpack builds.
+With the server-side "entry" configured, a "server-side" Webpack build will now produce a "server-side" bundle which can be run using Node.js (just call the function exported from the bundle).
 
-The `server()` configuration function takes the client-side Webpack configuration and tunes it a bit for server-side usage ([`target: "node"`](https://webpack.js.org/concepts/targets)).
-
-The server-side bundle (`settings.server.output` file) is generated from `settings.server.input` file by Webpack when it's run with the `webpack.config.server.babel.js` configuration. An example of `settings.server.input` file may look like this (it must export a function):
-
-### source/server.js
-
-```js
-// express.js
-import path from 'path'
-import http from 'http'
-import express from 'express'
-import http_proxy from 'http-proxy'
-
-// react-router
-import routes from '../client/routes.js'
-
-// Redux
-import store from '../client/store.js'
-
-// The server code must export a function
-// (`parameters` may contain some miscellaneous library-specific stuff)
-export default function(parameters)
-{
-	// Create HTTP server
-	const app = new express()
-	const server = new http.Server(app)
-
-	// Serve static files
-	app.use(express.static(path.join(__dirname, '..', 'build/assets')))
-
-	// Proxy API calls to API server
-	const proxy = http_proxy.createProxyServer({ target: 'http://localhost:xxxx' })
-	app.use('/api', (req, res) => proxy.web(req, res))
-
-	// React application rendering
-	app.use((req, res) =>
-	{
-		// Match current URL to the corresponding React page
-		// (can use `react-router`, `redux-router`, `react-router-redux`, etc)
-		react_router_match_url(routes, req.originalUrl).then((error, result) =>
-		{
-			if (error)
-			{
-				res.status(500)
-				return res.send('Server error')
-			}
-
-			// Render React page
-
-			const page = redux.provide(result, store)
-
-			res.status(200)
-			res.send('<!doctype html>' + '\n' + ReactDOM.renderToString(<Html>{page}</Html>))
-		})
-	})
-
-	// Start the HTTP server
-	server.listen()
-}
-```
-
-The last thing to do is to create a startup file for the server side. This is the file you're gonna run with Node.js, not the file provided above.
+For server-side rendering use case this library also provides a server-side bundle runner which passes a `parameters` argument to the main server-side function. The `parameters` argument provides a `chunks()` function which provides the URLs to the compiled javascript and CSS files (see the "Chunks" section below). An example of using the library's runner:
 
 ### source/start-server.js
 
 ```js
+// The runner.
 var startServer = require('universal-webpack/server')
+
+// The server-side bundle path info.
 var settings = require('../universal-webpack-settings')
-// `configuration.context` and `configuration.output.path` are used
+
+// Only `configuration.context` and `configuration.output.path`
+// parameters are used from the whole Webpack config.
 var configuration = require('../webpack.config')
 
+// Run the server.
 startServer(configuration, settings)
 ```
 
-Calling `source/start-server.js` will basically call the function exported from `source/server.js` built with Webpack.
+Running `node source/start-server.js` will basically call the function exported from `source/server.js`.
 
-In the end you run all the above things like this (in parallel):
+Finally, to run all the things required for "development" mode (in parallel):
 
 ```bash
+# Client-side build.
 webpack-dev-server --hot --config ./webpack.config.client.dev.babel.js
 ```
 
 ```bash
+# Server-side build.
 webpack --watch --config ./webpack.config.server.dev.babel.js --colors --display-error-details
 ```
 
 ```bash
+# Run the server.
 nodemon ./source/start-server --watch ./build/server
 ```
 
-The above three commands are for development mode. And they are using `.dev` Webpack configuration files which have been customized for development mode ([client](https://github.com/catamphetamine/webpack-react-redux-server-side-render-example/blob/master/webpack/webpack.config.client.development.babel.js), [server](https://github.com/catamphetamine/webpack-react-redux-server-side-render-example/blob/master/webpack/webpack.config.server.development.babel.js)).
-
-For production mode the same command sequence would be:
+For production mode the command sequence would be:
 
 ```bash
+# Build the client.
 webpack --config "./webpack.config.client.babel.js" --colors --display-error-details
+# Build the server.
 webpack --config "./webpack.config.server.babel.js" --colors --display-error-details
+# Run the server.
 node "./source/start-server"
 ```
 
