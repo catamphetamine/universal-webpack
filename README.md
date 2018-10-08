@@ -60,11 +60,11 @@ Setting up the server side requires an additional step: creating the "entry" fil
 
 ```js
 {
-	"server":
-	{
-		"input": "./source/server.js",
-		"output": "./build/server/server.js"
-	}
+  "server":
+  {
+    "input": "./source/server.js",
+    "output": "./build/server/server.js"
+  }
 }
 ```
 
