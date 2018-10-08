@@ -48,7 +48,7 @@ import configuration from './webpack.config'
 export default server(configuration, settings)
 ```
 
-Where `./universal-webpack-settings.json` is a configuration file for `universal-webpack` (see below).
+Where `./universal-webpack-settings.json` is a configuration file for `universal-webpack` (see below, leave empty for now).
 
 Now, use `webpack.config.client.babel.js` instead of the old `webpack.config.js` for client side Webpack builds. Your setup also most likely differentiates between a "development" client side Webpack build and a "production" one, in which case `webpack.config.client.babel.js` is further split into two files — `webpack.config.client.dev.babel.js` and `webpack.config.client.prod.babel.js` — each of which inherits from `webpack.config.client.babel.js` and makes the necessary changes to it as defined by your particular setup.
 
