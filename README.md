@@ -20,7 +20,7 @@ npm install universal-webpack --save-dev
 
 ## Example project
 
-You may refer to [this sample project](https://github.com/catamphetamine/webpack-react-redux-server-side-render-example) as a reference example of using this library (see `webpack` directory, `package.json` and `client/rendering-service/main.js`).
+You may refer to [this sample project](https://github.com/catamphetamine/webpack-react-redux-server-side-render-example) as a reference example of using this library (see `webpack` directory, `package.json` and `rendering-service/main.js`).
 
 ## Usage
 
