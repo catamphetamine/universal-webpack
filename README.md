@@ -54,7 +54,21 @@ Now, use `webpack.config.client.babel.js` instead of the old `webpack.config.js`
 
 And, `webpack.config.server.babel.js` file will be used for server-side Webpack builds. And, analogous to the client-side config, it also most likely is gonna be split into "development" and "production" configs, as defined by your particular setup.
 
-Setting up the server side requires an additional step: creating the "entry" file for running the server. The reason is that client-side config is created from `webpack.config.js` which already has Webpack ["entry"](https://webpack.js.org/concepts/entry-points/) defined. Usually it's something like `./src/index.js` which is the "main" file for the client-side application. Server-side needs such a "main" file too and it must be configured as the server-side Webpack configuration "entry" (the library does that). This library defines a specific requirement for a server-side "entry" file: it must export a function which is gonna be called by the library when the server is ready to start. An example of a server-side "entry" file:
+Setting up the server side requires an additional step: creating the "entry" file for running the server. The reason is that client-side config is created from `webpack.config.js` which already has Webpack ["entry"](https://webpack.js.org/concepts/entry-points/) defined. Usually it's something like `./src/index.js` which is the "main" file for the client-side application. Server-side needs such a "main" file too and the path to it must be configured in `./universal-webpack-settings.json` as `server.input`:
+
+### universal-webpack-settings.json
+
+```js
+{
+	"server":
+	{
+		"input": "./source/server.js",
+		"output": "./build/server/server.js"
+	}
+}
+```
+
+With the server-side "entry" file path configured, the server-side config created by this library will have the Webpack "entry" parameter set up properly. A "server-side" Webpack build will now produce a "server-side" bundle (`./build/server/server.js`) which can be run using Node.js. An example of an "entry" file:
 
 ### source/server.js
 
@@ -72,9 +86,9 @@ import routes from '../client/routes.js'
 // (shared with the client side)
 import reducers from '../client/reducers.js'
 
-// The server code must export a function
-// (`parameters` may contain some miscellaneous library-specific stuff)
-export default function(parameters)
+// Starts the server.
+// (`parameters` may contain some parameters)
+export default function startServer(parameters)
 {
 	// Create HTTP server.
 	const app = new express()
@@ -108,25 +122,28 @@ export default function(parameters)
 	// Start the HTTP server.
 	server.listen()
 }
+
+// Run the server.
+startServer()
 ```
 
-The server-side "entry" file path must be configured in `./universal-webpack-settings.json` as `server.input`:
+The main use-case for `universal-webpack` though is most likely "Server-Side Rendering" which means that the server is somehow gonna need to know the actual URLs for the compiled javascript and CSS files. Specifically for this case this library provides a special "runner" for the server-side bundle which requires that the server-side bundle just exports a "start server" function, without actually running the server, and then such "start server" function will be called with a special `parameters` argument which holds the actual URLs for the compiled javascript and CSS files (see the "Chunks" section below).
 
-### universal-webpack-settings.json
+So in this case the changes to the server file are gonna be:
+
+### source/server.js
 
 ```js
-{
-	"server":
-	{
-		"input": "./source/server.js",
-		"output": "./build/server/server.js"
-	}
+...
+export default function startServer(parameters) {
+	...
 }
+// Don't start the server manually.
+// // Run the server.
+// startServer()
 ```
 
-With the server-side "entry" configured, a "server-side" Webpack build will now produce a "server-side" bundle which can be run using Node.js (just call the function exported from the bundle).
-
-For server-side rendering use case this library also provides a server-side bundle runner which passes a `parameters` argument to the main server-side function. The `parameters` argument provides a `chunks()` function which provides the URLs to the compiled javascript and CSS files (see the "Chunks" section below). An example of using the library's runner:
+And the server-side runner will be called like this:
 
 ### source/start-server.js
 
@@ -145,7 +162,7 @@ var configuration = require('../webpack.config')
 startServer(configuration, settings)
 ```
 
-Running `node source/start-server.js` will basically call the function exported from `source/server.js`.
+Running `node source/start-server.js` will basically call the function exported from `source/server.js` with the `parameters` argument.
 
 Finally, to run all the things required for "development" mode (in parallel):
 
