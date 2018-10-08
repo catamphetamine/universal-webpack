@@ -126,7 +126,7 @@ function startServer()
 startServer()
 ```
 
-The main use-case for `universal-webpack` though is most likely "Server-Side Rendering" which means that the server is somehow gonna need to know the actual URLs for the compiled javascript and CSS files. Specifically for this case this library provides a special "runner" for the server-side bundle which requires that the server-side bundle just exports a "start server" function, without actually running the server, and then such "start server" function will be called with a special `parameters` argument which holds the actual URLs for the compiled javascript and CSS files (see the "Chunks" section below).
+The main use-case for `universal-webpack` though is most likely "Server-Side Rendering" which means that the server is somehow gonna need to know the actual URLs for the compiled javascript and CSS files (which contain random-generated md5 hashes). Specifically for this case this library provides a special "runner" for the server-side bundle which requires that the server-side bundle just exports a "start server" function, without actually running the server, and then such "start server" function will be called with a special `parameters` argument which holds the actual URLs for the compiled javascript and CSS files (see the "Chunks" section below).
 
 So in this case the changes to the server file are gonna be:
 
