@@ -87,8 +87,7 @@ import routes from '../client/routes.js'
 import reducers from '../client/reducers.js'
 
 // Starts the server.
-// (`parameters` may contain some parameters)
-export default function startServer(parameters)
+function startServer()
 {
 	// Create HTTP server.
 	const app = new express()
