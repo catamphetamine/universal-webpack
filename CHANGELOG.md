@@ -1,3 +1,8 @@
+0.6.8 / 24.12.2018
+==================
+
+  * Added support for `css-loader@2` via `UNIVERSAL_WEBPACK_CSS_LOADER_V2=true` environment variable.
+
 0.6.4 / 03.04.2018
 ==================
 
