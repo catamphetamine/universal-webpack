@@ -327,7 +327,14 @@ export function replace_style_loader(configuration)
 			// Replace `css-loader` with `css-loader/locals`.
 			// Also there's a stupid difference between `css-loader@2` and `css-loader@1`:
 			// https://github.com/catamphetamine/universal-webpack/issues/101
-			css_loader.loader = process.env.UNIVERSAL_WEBPACK_CSS_LOADER_V2 ? 'css-loader/exportOnlyLocals' : 'css-loader/locals'
+			if (process.env.UNIVERSAL_WEBPACK_CSS_LOADER_V2) {
+				css_loader.options = {
+					...css_loader.options,
+					exportOnlyLocals: true
+				}
+			} else {
+				css_loader.loader = 'css-loader/locals'
+			}
 			// Drop `style-loader`.
 			rule.use = rule.use.filter((loader) => loader.loader !== 'style-loader')
 		}
