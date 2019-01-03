@@ -48,7 +48,7 @@ function filename_info(json, assets_base_url)
 
 		return chunk
 			// filter by extension
-			.filter(name => path.extname(name) === `.${extension}`)
+			.filter(name => path.extname(name).split('?')[0] === `.${extension}`)
 			// adjust the real path (can be http, filesystem)
 			.map(name => assets_base_url + name)
 	}
