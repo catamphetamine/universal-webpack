@@ -24,17 +24,19 @@ export interface UniversalConfiguration {
     }
 }
 
+export interface ClientConfigurationOptions {
+    development?: boolean,
+    useMiniCssExtractPlugin?: boolean
+}
+
 // Server Runner
 export function server(webpackConfig: webpack.Configuration, settings: UniversalConfiguration): any;
 
 // Server Configuration
-export function server_configuration(webpackConfig: webpack.Configuration, settings: UniversalConfiguration): webpack.Configuration;
 export function serverConfiguration(webpackConfig: webpack.Configuration, settings: UniversalConfiguration): webpack.Configuration;
 
-
 // Client Configuration
-export function client_configuration(webpackConfig: webpack.Configuration, settings: UniversalConfiguration): webpack.Configuration;
-export function clientConfiguration(webpackConfig: webpack.Configuration, settings: UniversalConfiguration): webpack.Configuration;
+export function clientConfiguration(webpackConfig: webpack.Configuration, settings: UniversalConfiguration, options?: ClientConfigurationOptions): webpack.Configuration;
 
 // Prepare
 export function prepare(settings: UniversalConfiguration, webpackConfig: webpack.Configuration): void;
