@@ -25,8 +25,9 @@ export interface UniversalConfiguration {
 }
 
 export interface ClientConfigurationOptions {
-    development?: boolean,
-    useMiniCssExtractPlugin?: boolean
+    development?: boolean;
+    useMiniCssExtractPlugin?: boolean;
+    cssBundle?: boolean;
 }
 
 // Server Runner
