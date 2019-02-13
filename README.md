@@ -242,6 +242,8 @@ const configuration = clientConfiguration(baseConfiguration, settings, {
 
 ## Advanced configuration
 
+`./universal-webpack-settings.json` configuration file also supports the following optional configuration parameters:
+
 ```js
 {
 	// By default, all `require()`d packages
