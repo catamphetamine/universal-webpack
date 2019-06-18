@@ -204,6 +204,52 @@ describe(`server configuration`, function()
 		}])
 	})
 
+	it(`should replace "style-loader" and "css-loader" with "css-loader?onlyLocals=true" on the server side for css-loader@3`, function()
+	{
+		const configuration =
+		{
+			module:
+			{
+				rules:
+				[{
+					test: /\.css$/,
+					use:
+					[{
+						loader: 'after-loader'
+					},
+					{
+						loader: 'style-loader'
+					},
+					{
+						loader: 'css-loader'
+					},
+					{
+						loader: 'before-loader'
+					}]
+				}]
+			}
+		}
+
+		process.env.UNIVERSAL_WEBPACK_CSS_LOADER_V3 = true
+		replace_style_loader(configuration)
+		process.env.UNIVERSAL_WEBPACK_CSS_LOADER_V3 = undefined
+
+		// Generic
+		configuration.module.rules[0].use.should.deep.equal
+		([{
+			loader: 'after-loader'
+		},
+		{
+			loader: 'css-loader',
+			options: {
+				onlyLocals: true
+			}
+		},
+		{
+			loader: 'before-loader'
+		}])
+	})
+
 	it(`should build`, function(done)
 	{
 		done()

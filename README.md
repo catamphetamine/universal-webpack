@@ -240,6 +240,10 @@ const configuration = clientConfiguration(baseConfiguration, settings, {
 
 `css-loader@2` [dropped](https://github.com/catamphetamine/universal-webpack/issues/101) `css-loader/locals` loader and replaced it with `exportOnlyLocals` option. That was a really stupid change and because of that this library will not be able to work correctly with both versions by default: it has to be either one of them which is `css-loader@1`. To switch this library into `css-loader@2`-compatible mode set `UNIVERSAL_WEBPACK_CSS_LOADER_V2` environment variable to `true`.
 
+## CSS loader v3
+
+`css-loader@3` [renamed](https://github.com/catamphetamine/universal-webpack/issues/109) `exportOnlyLocals` option to `onlyLocals`. To switch this library into `css-loader@3`-compatible mode set `UNIVERSAL_WEBPACK_CSS_LOADER_V3` environment variable to `true`.
+
 ## Advanced configuration
 
 `./universal-webpack-settings.json` configuration file also supports the following optional configuration parameters:
