@@ -25,7 +25,7 @@ ChunkFileNamesPlugin.prototype.apply = function(compiler)
 
 // Generates chunk filename info
 // (`assets_base_url` will be prepended to chunk file names)
-function filename_info(json, assets_base_url)
+function filename_info(json, assets_base_url, options)
 {
 	const assets_by_chunk = json.assetsByChunkName
 
@@ -53,8 +53,23 @@ function filename_info(json, assets_base_url)
 			.map(name => assets_base_url + name)
 	}
 
+	// leave only initial ( non dynamic ) chunks
+	function filterNonInitialChunks(chunkName) {
+		const chunkObj = json.chunks.find(chunkObj => chunkObj.names && chunkObj.names[0] === chunkName);
+		return chunkObj && chunkObj.initial;
+	}
+
+	function hasInitialChunks() {
+		return !!(json.chunks && json.chunks.length && json.chunks.find(chunkObj => chunkObj.initial));
+	}
+
+	let chunkNames = Object.keys(assets_by_chunk);
+	if (hasInitialChunks() && options.skipDynamicChunks) {
+		chunkNames = chunkNames.filter(filterNonInitialChunks);
+	}
+
 	// for each chunk name ("main", "common", ...)
-	Object.keys(assets_by_chunk).forEach(function(name)
+	chunkNames.forEach(function(name)
 	{
 		// log.debug(`getting javascript and styles for chunk "${name}"`)
 
@@ -118,5 +133,5 @@ function writeChunkFileNames(stats, options, webpack_configuration)
 	const output_file_path = chunk_info_file_path(webpack_configuration, options.chunk_info_filename)
 
 	// Write chunk filename info to disk
-	fs.outputFileSync(output_file_path, JSON.stringify(filename_info(json, assets_base_url)))
+	fs.outputFileSync(output_file_path, JSON.stringify(filename_info(json, assets_base_url, options)))
 }
