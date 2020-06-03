@@ -24,9 +24,9 @@ You may refer to [this sample project](https://github.com/catamphetamine/webpack
 
 ## Usage
 
-Suppose you have a typical `webpack.config.js` file. Create two new files called `webpack.config.client.babel.js` and `webpack.config.server.babel.js` with the following contents:
+Suppose you have a typical `webpack.config.js` file. Create two new files called `webpack.config.client.js` and `webpack.config.server.js` with the following contents:
 
-### webpack.config.client.babel.js
+### webpack.config.client.js
 
 ```js
 import { client } from 'universal-webpack/config'
@@ -37,7 +37,7 @@ import configuration from './webpack.config'
 export default client(configuration, settings)
 ```
 
-### webpack.config.server.babel.js
+### webpack.config.server.js
 
 ```js
 import { server } from 'universal-webpack/config'
@@ -50,9 +50,9 @@ export default server(configuration, settings)
 
 Where `./universal-webpack-settings.json` is a configuration file for `universal-webpack` (see below, leave empty for now).
 
-Now, use `webpack.config.client.babel.js` instead of the old `webpack.config.js` for client side Webpack builds. Your setup also most likely differentiates between a "development" client side Webpack build and a "production" one, in which case `webpack.config.client.babel.js` is further split into two files — `webpack.config.client.dev.babel.js` and `webpack.config.client.prod.babel.js` — each of which inherits from `webpack.config.client.babel.js` and makes the necessary changes to it as defined by your particular setup.
+Now, use `webpack.config.client.js` instead of the old `webpack.config.js` for client side Webpack builds. Your setup also most likely differentiates between a "development" client side Webpack build and a "production" one, in which case `webpack.config.client.js` is further split into two files — `webpack.config.client.dev.js` and `webpack.config.client.prod.js` — each of which inherits from `webpack.config.client.js` and makes the necessary changes to it as defined by your particular setup.
 
-And, `webpack.config.server.babel.js` file will be used for server-side Webpack builds. And, analogous to the client-side config, it also most likely is gonna be split into "development" and "production" configs, as defined by your particular setup.
+And, `webpack.config.server.js` file will be used for server-side Webpack builds. And, analogous to the client-side config, it also most likely is gonna be split into "development" and "production" configs, as defined by your particular setup.
 
 Setting up the server side requires an additional step: creating the "entry" file for running the server. The reason is that client-side config is created from `webpack.config.js` which already has Webpack ["entry"](https://webpack.js.org/concepts/entry-points/) defined. Usually it's something like `./src/index.js` which is the "main" file for the client-side application. Server-side needs such a "main" file too and the path to it must be configured in `./universal-webpack-settings.json` as `server.input`:
 
@@ -167,12 +167,12 @@ Finally, to run all the things required for "development" mode (in parallel):
 
 ```bash
 # Client-side build.
-webpack-dev-server --hot --config ./webpack.config.client.dev.babel.js
+webpack-dev-server --hot --config ./webpack.config.client.dev.js
 ```
 
 ```bash
 # Server-side build.
-webpack --watch --config ./webpack.config.server.dev.babel.js --colors --display-error-details
+webpack --watch --config ./webpack.config.server.dev.js --colors --display-error-details
 ```
 
 ```bash
@@ -184,9 +184,9 @@ For production mode the command sequence would be:
 
 ```bash
 # Build the client.
-webpack --config "./webpack.config.client.babel.js" --colors --display-error-details
+webpack --config "./webpack.config.client.js" --colors --display-error-details
 # Build the server.
-webpack --config "./webpack.config.server.babel.js" --colors --display-error-details
+webpack --config "./webpack.config.server.js" --colors --display-error-details
 # Run the server.
 node "./source/start-server"
 ```
