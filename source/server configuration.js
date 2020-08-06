@@ -331,12 +331,12 @@ export function replace_style_loader(configuration)
 				// First standardize on object shape. `modules` can be a boolean or a
 				// string, but if it's falsey, it means modules aren't even enabled.
 				if (css_loader.options.modules) {
+					let modules = css_loader.options.modules;
 					if (css_loader.options.modules === true) {
-						css_loader.options.modules = { modules: "local" };
+						modules = { modules: "local" };
 					} else if (typeof css_loader.options.modules === "string") {
-						css_loader.options.modules = { mode: css_loader.options.modules };
+						modules = { mode: css_loader.options.modules };
 					}
-					const modules = css_loader.options.modules;
 				css_loader.options = {
 					...css_loader.options,
 						modules: {
