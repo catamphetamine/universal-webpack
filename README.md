@@ -244,6 +244,10 @@ const configuration = clientConfiguration(baseConfiguration, settings, {
 
 `css-loader@3` [renamed](https://github.com/catamphetamine/universal-webpack/issues/109) `exportOnlyLocals` option to `onlyLocals`. To switch this library into `css-loader@3`-compatible mode set `UNIVERSAL_WEBPACK_CSS_LOADER_V3` environment variable to `true`.
 
+## CSS loader v4
+
+`css-loader@4` [moved](https://github.com/webpack-contrib/css-loader/blob/master/CHANGELOG.md#400-2020-07-25) `onlyLocals` option into `modules` as `exportOnlyLocals`. To switch this library into `css-loader@4`-compatible mode set `UNIVERSAL_WEBPACK_CSS_LOADER_V4` environment variable to `true`.
+
 ## Advanced configuration
 
 `./universal-webpack-settings.json` configuration file also supports the following optional configuration parameters:

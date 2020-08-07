@@ -327,7 +327,25 @@ export function replace_style_loader(configuration)
 			// Replace `css-loader` with `css-loader/locals`.
 			// Also there's a stupid difference between `css-loader@2` and `css-loader@1`:
 			// https://github.com/catamphetamine/universal-webpack/issues/101
-			if (process.env.UNIVERSAL_WEBPACK_CSS_LOADER_V3) {
+			if (process.env.UNIVERSAL_WEBPACK_CSS_LOADER_V4) {
+				// First standardize on object shape. `modules` can be a boolean or a
+				// string, but if it's falsey, it means modules aren't even enabled.
+				if (css_loader.options.modules) {
+					let modules = css_loader.options.modules;
+					if (css_loader.options.modules === true) {
+						modules = { modules: "local" };
+					} else if (typeof css_loader.options.modules === "string") {
+						modules = { mode: css_loader.options.modules };
+					}
+				css_loader.options = {
+					...css_loader.options,
+						modules: {
+							...modules,
+							exportOnlyLocals: true,
+						},
+					};
+				}
+			} else if (process.env.UNIVERSAL_WEBPACK_CSS_LOADER_V3) {
 				css_loader.options = {
 					...css_loader.options,
 					onlyLocals: true
