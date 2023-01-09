@@ -26,7 +26,6 @@ export interface UniversalConfiguration {
 
 export interface ClientConfigurationOptions {
     development?: boolean;
-    useMiniCssExtractPlugin?: boolean;
     cssBundle?: boolean;
 }
 

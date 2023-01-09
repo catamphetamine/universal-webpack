@@ -7,5 +7,13 @@
 	"plugins":
 	[
 		"@babel/transform-runtime"
-	]
+	],
+
+	"env": {
+		"es6": {
+			"presets": [
+				["@babel/env", { "modules": false }]
+			]
+		}
+	}
 }

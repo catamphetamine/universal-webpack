@@ -1,0 +1,5 @@
+{
+	"name": "universal-webpack/server",
+	"type": "commonjs",
+	"private": true
+}

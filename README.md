@@ -216,9 +216,9 @@ These filenames are required for `<script src=.../>` and `<link rel="style" href
 * It emits no assets on the server side so make sure you include all assets on the client side (e.g. "favicon").
 * `resolve.root` won't work out-of-the-box while `resolve.alias`es do. For those using `resolve.root` I recommend switching to `resolve.alias`. By default no "modules" are bundled in a server-side bundle except for `resolve.alias`es and `excludeFromExternals` matches (see below).
 
-## Using `extract-text-webpack-plugin` or `mini-css-extract-plugin`
+## Using `mini-css-extract-plugin`
 
-The third argument – `options` object – may be passed to `client()` configuration function. If `options.development` is set to `false`, then it will apply `extract-text-webpack-plugin` to CSS styles automatically, i.e. it will extract all CSS styles into separate `*.css` files (one for each Webpack "chunk"): this is considered a slightly better approach for production deployment instead of just leaving all CSS in `*.js` chunk files (due to static file caching in a browser). Using `options.development=false` option is therefore just a convenience shortcut which one may use instead of adding `extract-text-webpack-plugin` to production client-side webpack configuration manually. If upgrading a project from Webpack <= 3 to Webpack >= 4 (or starting fresh with Webpack >= 4) then `extract-text-webpack-plugin` [should be replaced](https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/749) with `mini-css-extract-plugin` (because starting from Webpack 4 `extract-text-webpack-plugin` is considered deprecated). In this case also pass `options.useMiniCssExtractPlugin=true` option.
+The third argument – `options` object – may be passed to `client()` configuration function. If `options.development` is set to `false`, then it will apply `mini-css-extract-plugin` to CSS styles automatically, i.e. it will extract all CSS styles into separate `*.css` files (one for each Webpack "chunk"): this is considered a slightly better approach for production deployment instead of just leaving all CSS in `*.js` chunk files (due to static file caching in a browser). Using `options.development=false` option is therefore just a convenience shortcut which one may use instead of adding `mini-css-extract-plugin` to production client-side webpack configuration manually.
 
 ```js
 import { clientConfiguration } from 'universal-webpack'
@@ -229,8 +229,7 @@ const configuration = clientConfiguration(baseConfiguration, settings, {
   // Extract all CSS into separate `*.css` files (one for each chunk)
   // using `mini-css-extract-plugin`
   // instead of leaving that CSS embedded directly in `*.js` chunk files.
-  development : false,
-  useMiniCssExtractPlugin : true
+  development: false
 })
 ```
 
@@ -340,7 +339,7 @@ Note: In a big React project server restart times can reach ~10 seconds.
 
 ## Flash of unstyled content
 
-A "flash of unstyled content" is a well-known dev-mode Webpack phenomenon. One can observe it when refreshing the page in development mode: because Webpack's `style-loader` adds styles to the page dynamically there's a short period of time (a second maybe) when there are no CSS styles applied to the webpage (in production mode `mini-css-extract-plugin` or `extract-text-webpack-plugin` is used instead of `style-loader` so there's no "flash of unstyled content").
+A "flash of unstyled content" is a well-known dev-mode Webpack phenomenon. One can observe it when refreshing the page in development mode: because Webpack's `style-loader` adds styles to the page dynamically there's a short period of time (a second maybe) when there are no CSS styles applied to the webpage (in production mode `mini-css-extract-plugin` is used instead of `style-loader` so there's no "flash of unstyled content").
 
 It's not really a bug, because it's only for development mode. Still, if you're a perfectionist then it can be annoying. The most basic workaround for this is to simply show a white "smoke screen" and then hide it after a pre-defined timeout.
 

@@ -1,61 +1,63 @@
 import chai from 'chai'
 chai.should()
 
+import _ from '../index.cjs'
+
+import { client as ConfigClient, server as ConfigServer } from '../config.js'
+// import Server from '../server.js'
+
+import ConfigCJS from '../config.cjs'
+import ServerCJS from '../server.cjs'
+
 import
 {
-	server,
-	server_configuration,
-	client_configuration,
 	prepare,
 	devtools,
 	smokeScreen,
 	hideSmokeScreen,
 	hideSmokeScreenAfter,
 	serverConfiguration,
-	clientConfiguration,
-	babelRegisterOptions
+	clientConfiguration
 }
-from '../index.es6'
+from '../index.js'
 
 describe(`exports`, function()
 {
 	it(`should export in ES6`, function()
 	{
-		server.should.be.a('function')
-		server_configuration.should.be.a('function')
-		client_configuration.should.be.a('function')
 		prepare.should.be.a('function')
 		devtools.should.be.a('function')
 		smokeScreen.should.be.a('string')
 		hideSmokeScreen.should.be.a('string')
 		hideSmokeScreenAfter.should.be.a('function')
-
 		serverConfiguration.should.be.a('function')
 		clientConfiguration.should.be.a('function')
 	})
 
 	it(`should export in CommonJS`, function()
 	{
-		const _ = require('../index.common')
-
-		_.server.should.be.a('function')
-		_.server_configuration.should.be.a('function')
-		_.client_configuration.should.be.a('function')
 		_.prepare.should.be.a('function')
 		_.devtools.should.be.a('function')
 		_.smokeScreen.should.be.a('string')
 		_.hideSmokeScreen.should.be.a('string')
 		_.hideSmokeScreenAfter.should.be.a('function')
-
 		_.serverConfiguration.should.be.a('function')
 		_.clientConfiguration.should.be.a('function')
 	})
 
 	it(`should export /config and /server`, function()
 	{
-		require('../config').client.should.be.a('function')
-		require('../config').server.should.be.a('function')
+		ConfigClient.should.be.a('function')
+		ConfigServer.should.be.a('function')
 
-		require('../server').should.be.a('function')
+		// Server.should.be.a('function')
+	})
+
+	it(`should export /config and /server (CommonJS)`, function()
+	{
+		ConfigCJS.client.should.be.a('function')
+		ConfigCJS.server.should.be.a('function')
+
+		ServerCJS.should.be.a('function')
 	})
 })

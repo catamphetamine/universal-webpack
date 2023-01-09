@@ -3,6 +3,16 @@
 
 * Minimum supported `css-loader` version is `4.x` now. Removed all previously used `UNIVERSAL_WEBPACK_CSS_LOADER_VX` environment variable workarounds.
 
+* `extract-text-webpack-plugin` is no longer used for CSS. `mini-css-extract-plugin` supercedes it. Removed `useMiniCssExtractPlugin` option.
+
+* Migrated the package to use Node.js `type: "module"` parameter.
+
+* Removed export `server`: `import { server } from 'universal-webpack'`. Use `import server from 'universal-webpack/server'` instead.
+
+* Removed non-camel-cased exports:
+  * `server_configuration`
+  * `client_configuration`
+
 0.7.0 / 19.07.2021
 ===================
 

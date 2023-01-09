@@ -10,7 +10,7 @@ import
 	normalize_rule_loaders,
 	normalize_configuration_rule_loaders
 }
-from '../source/loaders'
+from '../source/loaders.js'
 
 describe(`webpack loader utilities`, function()
 {

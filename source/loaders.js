@@ -1,7 +1,7 @@
 import util from 'util'
 import querystring from 'querystring'
 
-import { is_object, ends_with } from './helpers'
+import { is_object, ends_with } from './helpers.js'
 
 // https://webpack.js.org/configuration/module/
 
