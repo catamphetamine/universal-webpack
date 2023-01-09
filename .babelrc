@@ -1,13 +1,11 @@
 {
 	"presets":
 	[
-		"env"
+		"@babel/env"
 	],
 
 	"plugins":
 	[
-		"transform-runtime",
-		"transform-object-rest-spread",
-		"transform-class-properties"
+		"@babel/transform-runtime"
 	]
 }

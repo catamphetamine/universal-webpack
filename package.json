@@ -1,6 +1,6 @@
 {
   "name": "universal-webpack",
-  "version": "0.6.12",
+  "version": "0.8.0",
   "description": "Isomorphic Webpack",
   "main": "index.common.js",
   "module": "index.es6.js",
@@ -9,18 +9,18 @@
     "webpack": ">=2"
   },
   "dependencies": {
+    "@babel/runtime": "^7.14.6",
     "colors": "^1.4.0",
     "fs-extra": "^0.30.0",
     "minimist": "^1.2.5",
     "validate-npm-package-name": "^2.2.2"
   },
   "devDependencies": {
-    "babel-cli": "^6.6.5",
-    "babel-core": "^6.26.3",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-plugin-transform-runtime": "^6.6.0",
-    "babel-preset-env": "^1.7.0",
+    "@babel/cli": "^7.14.5",
+    "@babel/core": "^7.14.6",
+    "@babel/plugin-transform-runtime": "^7.14.5",
+    "@babel/preset-env": "^7.14.7",
+    "@babel/register": "^7.14.5",
     "better-npm-run": "0.0.14",
     "chai": "^3.5.0",
     "crlf": "^1.1.1",
@@ -33,9 +33,9 @@
     "webpack": "^4.44.1"
   },
   "scripts": {
-    "test": "mocha --require babel-core/register --colors --bail --reporter spec test/ --recursive",
-    "test-coverage": "istanbul cover node_modules/mocha/bin/_mocha -- --require babel-core/register --colors --reporter dot test/ --recursive",
-    "test-travis": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --require babel-core/register --colors --reporter spec test/ --recursive",
+    "test": "mocha --require @babel/register --colors --bail --reporter spec test/ --recursive",
+    "test-coverage": "istanbul cover node_modules/mocha/bin/_mocha -- --require @babel/register --colors --reporter dot test/ --recursive",
+    "test-travis": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --require @babel/register --colors --reporter spec test/ --recursive",
     "clean-for-build": "rimraf ./build/**/*",
     "build-commonjs-modules": "better-npm-run build-commonjs-modules",
     "build-es6-modules": "better-npm-run build-es6-modules",
@@ -58,7 +58,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/catamphetamine/universal-webpack.git"
+    "url": "git+https://gitlab.com/catamphetamine/universal-webpack.git"
   },
   "keywords": [
     "webpack",
@@ -71,9 +71,9 @@
   "author": "catamphetamine <purecatamphetamine@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/catamphetamine/universal-webpack/issues"
+    "url": "https://gitlab.com/catamphetamine/universal-webpack/issues"
   },
-  "homepage": "https://github.com/catamphetamine/universal-webpack#readme",
+  "homepage": "https://gitlab.com/catamphetamine/universal-webpack#readme",
   "bin": {
     "universal-webpack": "./bin/universal-webpack.js"
   },

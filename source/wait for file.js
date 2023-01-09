@@ -1,9 +1,9 @@
 import fs from 'fs'
 
-// Waits for a file to be created 
+// Waits for a file to be created
 // (e.g. after Webpack build process finishes).
 //
-// The Promise is resolved when the file has been found 
+// The Promise is resolved when the file has been found
 // (for example, this is needed for development because
 //  `webpack-dev-server` and Node.js application server
 //  are run in parallel).
@@ -21,10 +21,10 @@ export default function wait_for_file(path)
 
 		tick
 		(
-			async () =>
+			() =>
 			{
 				// Check if the file exists in the filesystem
-				const exists = await fs_exists(path)
+				const exists = fs.existsSync(path)
 
 				if (!exists)
 				{
@@ -63,25 +63,14 @@ export default function wait_for_file(path)
 
 function tick(check_condition, interval, done, not_done_yet)
 {
-	check_condition().then(function(condition_is_met)
+	const condition_is_met = check_condition()
+
+	if (condition_is_met)
 	{
-		if (condition_is_met)
-		{
-			return done()
-		}
+		return done()
+	}
 
-		not_done_yet()
+	not_done_yet()
 
-		setTimeout(() => tick(check_condition, interval, done, not_done_yet), interval)
-	})
-}
-
-// Checks if a filesystem path exists.
-// Returns a promise
-export function fs_exists(path)
-{
-	return new Promise((resolve, reject) => 
-	{
-		fs.exists(path, exists => resolve(exists))
-	})
+	setTimeout(() => tick(check_condition, interval, done, not_done_yet), interval)
 }

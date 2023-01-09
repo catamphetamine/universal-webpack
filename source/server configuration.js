@@ -97,7 +97,7 @@ export default function server_configuration(webpack_configuration, settings)
 	// Normalize `modules.rules` loaders.
 	normalize_configuration_rule_loaders(configuration)
 
-	// Replace `style-loader` and `css-loader` with `css-loader/locals`
+	// Replace `style-loader` and `css-loader` with `css-loader?exportOnlyLocals=true`
 	// since it's no web browser and no files will be emitted.
 	replace_style_loader(configuration)
 
@@ -289,8 +289,8 @@ export function dont_emit_file_loader(configuration)
 }
 
 // Adds `emitFile: false` flag to `file-loader` and `url-loader`,
-// since there's no need out emit files on the server side
-// (can just use the assets emitted on client build
+// since there's no need to emit files on the server side
+// (it can just use the assets emitted on client build
 //  since the filenames are the same)
 function _dont_emit_file_loader(rule)
 {
@@ -314,7 +314,7 @@ function _dont_emit_file_loader(rule)
 	}
 }
 
-// Replaces `style-loader` and `css-loader` with `css-loader/locals`
+// Replaces `style-loader` and `css-loader` with `css-loader?exportOnlyLocals=true`
 // since it's no web browser and no files will be emitted.
 export function replace_style_loader(configuration)
 {
@@ -324,39 +324,20 @@ export function replace_style_loader(configuration)
 
 		if (css_loader)
 		{
-			// Replace `css-loader` with `css-loader/locals`.
-			// Also there's a stupid difference between `css-loader@2` and `css-loader@1`:
-			// https://github.com/catamphetamine/universal-webpack/issues/101
-			if (process.env.UNIVERSAL_WEBPACK_CSS_LOADER_V4) {
-				// First standardize on object shape. `modules` can be a boolean or a
-				// string, but if it's falsey, it means modules aren't even enabled.
-				if (css_loader.options.modules) {
-					let modules = css_loader.options.modules;
-					if (css_loader.options.modules === true) {
-						modules = { modules: "local" };
-					} else if (typeof css_loader.options.modules === "string") {
-						modules = { mode: css_loader.options.modules };
+			let modules = css_loader.options && css_loader.options.modules
+			if (modules === undefined || modules === true) {
+				modules = {}
+			} else if (typeof modules === 'string') {
+				modules = { mode: modules }
+			}
+			if (modules) {
+				css_loader.options = {
+					...css_loader.options,
+					modules: {
+						...modules,
+						exportOnlyLocals: true
 					}
-				css_loader.options = {
-					...css_loader.options,
-						modules: {
-							...modules,
-							exportOnlyLocals: true,
-						},
-					};
 				}
-			} else if (process.env.UNIVERSAL_WEBPACK_CSS_LOADER_V3) {
-				css_loader.options = {
-					...css_loader.options,
-					onlyLocals: true
-				}
-			} else if (process.env.UNIVERSAL_WEBPACK_CSS_LOADER_V2) {
-				css_loader.options = {
-					...css_loader.options,
-					exportOnlyLocals: true
-				}
-			} else {
-				css_loader.loader = 'css-loader/locals'
 			}
 			// Drop `style-loader`.
 			rule.use = rule.use.filter((loader) => loader.loader !== 'style-loader')

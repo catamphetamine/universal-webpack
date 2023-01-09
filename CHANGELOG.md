@@ -1,3 +1,23 @@
+0.8.0 / 09.01.2022
+==================
+
+* Minimum supported `css-loader` version is `4.x` now. Removed all previously used `UNIVERSAL_WEBPACK_CSS_LOADER_VX` environment variable workarounds.
+
+0.7.0 / 19.07.2021
+===================
+
+  * Updated Babel: 6 -> 7
+
+0.6.15 / 11.01.2021
+===================
+
+  * [Added](https://gitlab.com/catamphetamine/universal-webpack/-/issues/1#note_482163723) the support for Webpack 5 ["Asset Modules"](https://webpack.js.org/guides/asset-modules/).
+
+0.6.13 / 07.08.2020
+==================
+
+  * [@alecf](https://github.com/alecf) added support for `css-loader@4` via `UNIVERSAL_WEBPACK_CSS_LOADER_V4=true` environment variable.
+
 0.6.12 / 18.06.2019
 ==================
 

@@ -56,7 +56,7 @@ export function is_style_rule(rule)
 	// (the regular expression is a filesystem path
 	//  which is `.../extract-text-webpack-plugin/loader.js` for v2
 	//  and `.../extract-text-webpack-plugin/dist/loader.js` for v3)
-	const extract_text_plugin_loader = rule.use.filter((loader) => /extract-text-webpack-plugin/.test(loader.loader))[0]
+	const extract_text_plugin_loader = rule.use && rule.use.filter((loader) => /extract-text-webpack-plugin/.test(loader.loader))[0]
 
 	return style_loader && !extract_text_plugin_loader
 }
@@ -117,7 +117,7 @@ export function stringify_loader(loader)
 // Checks if the passed loader is `loader_name`.
 export function find_loader(rule, loader_name)
 {
-	return rule.use.filter(_ => _.loader === loader_name)[0]
+	return rule.use && rule.use.filter(_ => _.loader === loader_name)[0]
 }
 
 // Converts `loader` to `loaders`
@@ -138,9 +138,9 @@ export function normalize_rule_loaders(rule)
 	{
 		for (const subrule of rule.oneOf)
 		{
-			if (!subrule.use)
+			if (!subrule.use && !subrule.type)
 			{
-				throw new Error(`A "oneOf" subrule must have "use" property.`, util.inspect(subrule))
+				throw new Error(`A "oneOf" subrule must have a "use" or "type" property.`, util.inspect(subrule))
 			}
 
 			normalize_rule_loaders(subrule)
@@ -181,20 +181,15 @@ export function normalize_rule_loaders(rule)
 		delete rule.loader
 	}
 
-	if (!rule.use)
-	{
-		throw new Error(`Neither "loaders" nor "loader" nor "use" nor "oneOf" are present inside a module rule: ${util.inspect(rule)}`)
+	if (rule.use) {
+		if (typeof rule.use === 'string') {
+			rule.use = [rule.use]
+		}
+		if (!Array.isArray(rule.use)) {
+			throw new Error(`Invalid Webpack configuration: "rule.use" must be an array:\n\n${JSON.stringify(rule, null, 2)}\n\nSee https://webpack.js.org/configuration/module/#rule-use`)
+		}
+		rule.use = rule.use.map(parse_loader)
+	} else if (!rule.type) {
+		throw new Error(`Neither "loaders" nor "loader" nor "use" nor "oneOf" nor "type" are present inside a module rule: ${util.inspect(rule)}`)
 	}
-
-	if (typeof rule.use === 'string')
-	{
-		rule.use = [rule.use]
-	}
-
-	if (!Array.isArray(rule.use))
-	{
-		throw new Error(`Invalid Webpack configuration: "rule.use" must be an array:\n\n${JSON.stringify(rule, null, 2)}\n\nSee https://webpack.js.org/configuration/module/#rule-use`)
-	}
-
-	rule.use = rule.use.map(parse_loader)
 }

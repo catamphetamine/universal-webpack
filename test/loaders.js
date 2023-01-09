@@ -283,6 +283,21 @@ describe(`webpack loader utilities`, function()
 			}]
 		})
 
+		// No `loader` is specified, but `type` is specified:
+		// doesn't throw a rule validation error in such case.
+
+		loader =
+		{
+			query:
+			{
+				query: 'true',
+				gay: 'porn'
+			},
+			type: 'asset'
+		}
+
+		normalize_rule_loaders(loader)
+
 		// No `loader` is specified
 
 		loader =
@@ -295,7 +310,7 @@ describe(`webpack loader utilities`, function()
 		}
 
 		execute = () => normalize_rule_loaders(loader)
-		execute.should.throw(`Neither "loaders" nor "loader" nor "use" nor "oneOf" are present inside a module rule`)
+		execute.should.throw(`Neither "loaders" nor "loader" nor "use" nor "oneOf" nor "type" are present inside a module rule`)
 
 		// Convert compound `loader` to `use` array
 

@@ -11,9 +11,6 @@
 # npm errors
 npm-debug.log
 
-# github pages
-/gh-pages/
-
 # for OS X users
 .DS_Store
 

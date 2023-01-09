@@ -10,9 +10,7 @@
 
 This library generates client-side and server-side configuration for Webpack therefore enabling seamless client-side/server-side Webpack builds. Requires some initial set up and some prior knowledge of Webpack.
 
-*Small Advertisement:* 📞 if you're looking for a React phone number component check out [`react-phone-number-input`](http://catamphetamine.github.io/react-phone-number-input/)
-
-## Installation
+## Install
 
 ```
 npm install universal-webpack --save-dev
@@ -22,7 +20,7 @@ npm install universal-webpack --save-dev
 
 You may refer to [this sample project](https://github.com/catamphetamine/webpack-react-redux-server-side-render-example) as a reference example of using this library (see `webpack` directory, `package.json` and `rendering-service/main.js`).
 
-## Usage
+## Use
 
 Suppose you have a typical `webpack.config.js` file. Create two new files called `webpack.config.client.babel.js` and `webpack.config.server.babel.js` with the following contents:
 
@@ -236,18 +234,6 @@ const configuration = clientConfiguration(baseConfiguration, settings, {
 })
 ```
 
-## CSS loader v2
-
-`css-loader@2` [dropped](https://github.com/catamphetamine/universal-webpack/issues/101) `css-loader/locals` loader and replaced it with `exportOnlyLocals` option. That was a really stupid change and because of that this library will not be able to work correctly with both versions by default: it has to be either one of them which is `css-loader@1`. To switch this library into `css-loader@2`-compatible mode set `UNIVERSAL_WEBPACK_CSS_LOADER_V2` environment variable to `true`.
-
-## CSS loader v3
-
-`css-loader@3` [renamed](https://github.com/catamphetamine/universal-webpack/issues/109) `exportOnlyLocals` option to `onlyLocals`. To switch this library into `css-loader@3`-compatible mode set `UNIVERSAL_WEBPACK_CSS_LOADER_V3` environment variable to `true`.
-
-## CSS loader v4
-
-`css-loader@4` [moved](https://github.com/webpack-contrib/css-loader/blob/master/CHANGELOG.md#400-2020-07-25) `onlyLocals` option into `modules` as `exportOnlyLocals`. To switch this library into `css-loader@4`-compatible mode set `UNIVERSAL_WEBPACK_CSS_LOADER_V4` environment variable to `true`.
-
 ## Advanced configuration
 
 `./universal-webpack-settings.json` configuration file also supports the following optional configuration parameters:
@@ -394,6 +380,10 @@ Note: If you never heard of `webpack-isomorphic-tools` then you shouldn't read t
 `universal-webpack` doesn't hook into `require()` function - it's just a helper for transforming client-side Webpack configuration to a server-side Webpack configuration. It doesn't run on the server-side or something. It's just a Webpack configuration generator - turned out that Webpack has a `target: "node"` parameter which makes it output code that runs on Node.js without any issues.
 
 I wrote `webpack-isomorphic-tools` before `universal-webpack`, so `universal-webpack` is the recommended tool. However many people still use `webpack-isomorphic-tools` (including me) and find it somewhat less complicated for beginners.
+
+## GitHub
+
+On March 9th, 2020, GitHub, Inc. silently [banned](https://medium.com/@catamphetamine/how-github-blocked-me-and-all-my-libraries-c32c61f061d3) my account (and all my libraries) without any notice. I opened a support ticked but they didn't answer. Because of that, I had to move all my libraries to [GitLab](https://gitlab.com/catamphetamine).
 
 ## License
 
