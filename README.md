@@ -285,7 +285,10 @@ const configuration = clientConfiguration(baseConfiguration, settings, {
 	silent: true,
 
 	// By default, chunk_info_filename is `webpack-chunks.json`
-	chunk_info_filename: 'submodule-webpack-chunks.json'
+	chunk_info_filename: 'submodule-webpack-chunks.json',
+
+	// Will not inlcude chunks that are not required for initial page load. ( dynamicly imported, etc. )
+	skipDynamicChunks: false
 }
 ```
 
